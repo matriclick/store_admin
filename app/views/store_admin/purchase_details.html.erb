@@ -1,0 +1,30 @@
+<h1>Transacciones</h1>
+<%= render 'layouts/date_range_selector' %>
+<p>Total Vendido: <%= number_to_currency @purchases.sum(:paid_amount), precision: 0 %></p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+	  <th>Código Compra</th>
+      <th>Fecha</th>
+      <th>Monto</th>
+      <th>Medio de Pago</th>
+      <th>Correo Comprador</th>
+	  <th># Productos</th>
+	  <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @purchases.each do |purchase| %>
+      <tr>
+		<td><%= purchase.id %></td>
+        <td><%=l purchase.created_at.in_time_zone(@time_zone) %></td>
+        <td><%= number_to_currency purchase.shopping_cart.price, precision: 0 %></td>
+        <td><%= purchase.payment_method.name unless purchase.payment_method.nil? %></td>
+        <td><%= purchase.buyer_email %></td>
+        <td><%= purchase.shopping_cart.shopping_cart_items.sum(:quantity) %></td>
+		<td><a href="#myModal" role="button" class="btn btn-mini" data-toggle="modal">Ver Productos Comprados</a></td>
+		<%= render 'purchase_detail_modal', purchase: purchase %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

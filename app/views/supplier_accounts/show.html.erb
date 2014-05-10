@@ -1,0 +1,46 @@
+<%- model_class = SupplierAccount -%>
+<div class="page-header">
+  <h1><%= @supplier_account.name %></h1>
+</div>
+<h2>Usuarios</h2>
+<%= form_tag(supplier_account_add_user_path, :method => "put", :html => {class: 'form-horizontal', role: 'form'}) do %>
+	<div class="input-group">
+		<%= autocomplete_field_tag :user_email, @user_email, supplier_accounts_autocomplete_user_email_path, class: 'form-control' %> 
+       	<span class="input-group-btn">
+			<%= submit_tag("Agregar",  class: "btn btn-default",  style: "vertical-align: top;" ) %>
+  		</span>
+  	</div><!-- /input-group -->
+	<span>Solo puedes agregar usuarios que aparecen en la lista que se despliega automáticamente al completar el campo de texto</span>
+<% end %>
+<hr>
+<h2>Permisos</h2>
+<ul>
+<% @supplier_account.users.each do |user| %>
+	<dl class="dl-horizontal">
+  		<dt><strong>Correo:</strong></dt>
+  		<dd>
+			<%= user.email %> <%= link_to 'edit', 
+			supplier_account_edit_user_privileges_path(id: @supplier_account.id, user_id: user.id) %> 
+			<%= link_to 'remove', 
+				supplier_account_remove_user_path(id: @supplier_account.id, user_id: user.id), method: :put %>
+			<br />
+			<span style="font-size:10px;">Permisos:
+				<% user.store_admin_privileges.each do |privilege| %>
+					<%= privilege.name %> | 
+				<% end %>
+			</span>
+		</dd>
+	</dl>
+<% end %>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              supplier_accounts_path, :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_supplier_account_path(@supplier_account), :class => 'btn' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              supplier_account_path(@supplier_account),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>

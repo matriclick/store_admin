@@ -1,0 +1,13 @@
+<%= f.fields_for :product_images do |image| %>
+<div class="control-group">
+	<div class="controls">
+		<%= image_tag image.object.photo.url(:tiny) %>
+		<%= image.file_field :photo %>
+		<%= image.link_to_remove 'Eliminar', :class => 'btn btn-default btn-mini' %>
+	</div>
+</div>
+<% end %>
+
+<div>
+<%= f.link_to_add 'Agregar Imagen', :product_images, :class => 'btn btn-primary btn-mini' %>
+</div>

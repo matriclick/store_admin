@@ -1,0 +1,26 @@
+<h1>Permisos de <%= @user.email %></h1>
+<hr>
+<%= form_for(@user, :url => supplier_account_update_user_path(id: @supplier_account.id, user_id: @user.id), :validate => true, :method => :post, :html => {role: 'form', class: 'form'}) do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+      <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+	<div style="margin:10px 0px 10px 20px">
+	<% for store_admin_privilege in StoreAdminPrivilege.all %>
+		<p><%= check_box_tag("user[store_admin_privilege_ids][]", store_admin_privilege.id, (@user.store_admin_privileges.include? store_admin_privilege), 
+				:class => "store_admin_privilege_#{store_admin_privilege.id}") %>
+		<%= store_admin_privilege.name %></p>
+	<% end %>
+	</div>
+
+  <div class="actions">
+    <%= f.submit 'Guardar', :class => "btn btn-primary" %>
+  </div>
+<% end %>

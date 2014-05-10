@@ -1,0 +1,38 @@
+<div class="row">
+<% @shopping_cart.shopping_cart_items.each do |sci| %>
+	<div class="span3">
+		<div class="well" style="text-align:center">
+			<%= link_to raw('&times;'), store_admin_remove_product_from_cart_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id, shopping_cart_item_id: sci.id),
+				 	method: 'put', class: "close" %>
+			<b><%= sci.product_stock_size.product.name.capitalize %></b>
+			<div style="margin-top:10px"><%= image_tag(sci.product_stock_size.product.product_images.first.photo.url(:index_dress)) %></div>
+			<div style="margin-top:10px">
+		  	<strong>Precio:</strong> <%= number_to_currency sci.product_stock_size.product.price %> | 
+			<strong>Talla:</strong> <%= sci.product_stock_size.size.name unless sci.product_stock_size.size.nil? %> | 
+			<strong>Color:</strong> <%= sci.product_stock_size.color.to_s if !sci.product_stock_size.color.nil? %>
+			</div>
+		</div>
+	</div>
+<% end %>
+</div>
+
+<div class="well" style="margin-top:20px">
+	<b>Total: <%= number_to_currency @shopping_cart.price, precision: 0 %></b>
+</div>
+
+<div class="well" style="margin-top:20px">
+	<%= form_tag(store_admin_generate_purchase_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), method: :put) %>
+		<%= text_field_tag(:email_buyer, '', placeholder: 'Correo comprador (opcional)', class: "form-control", style: 'font-weight:lighter; width:100%') %>
+		<div>
+			<% PaymentMethod.all.each do |pm| %>
+				<label class="radio-inline">
+				  <input type="radio" name="medio_pago" value="<%= pm.id %>"> 
+					<span style="font-weight:lighter; font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;"><%= pm.name.capitalize %></span>
+				</label>
+			<% end %>
+		</div>
+		<div style="margin-top:20px">
+			<%= submit_tag "Pagar", class: "btn btn-default", style: 'width:100%' %> 
+		</div>
+	</form>
+</div>

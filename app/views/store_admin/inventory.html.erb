@@ -1,0 +1,20 @@
+<%= javascript_include_tag("https://www.google.com/jsapi", "chartkick") %>
+<h1>Inventario</h1>
+<hr>
+<h2>Antiguedad</h2>
+<%= column_chart({
+	"0 a 30 días" => 
+		@products.where('products.created_at <= ? and products.created_at >= ?', Time.now.localtime, Time.now.localtime - 30.days).count,
+	"30 a 60 días" => 
+		@products.where('products.created_at < ? and products.created_at >= ?', Time.now.localtime - 30.days, Time.now.localtime - 60.days).count,
+	"60 a 90 días" => 
+		@products.where('products.created_at < ? and products.created_at >= ?', Time.now.localtime - 60.days, Time.now.localtime - 60.days).count,
+	"más de 90 días" => 
+		@products.where('products.created_at < ? and products.created_at >= ?', Time.now.localtime - 90.days, Time.now.localtime - 100.years).count}) %>
+<hr>
+<h2>Categorías</h2>
+<%= bar_chart(@product_categories.map { |pc| [pc.name.capitalize, pc.products.size] }) %>
+<hr>
+<%= form_tag(store_admin_inventory_path(format: "csv"), :method => "get", :html => {class: 'form-horizontal', role: 'form'}) do %>
+	<%= submit_tag("Descargar Reporte",  class: "btn btn-default btn-sm", "data-loading-text" => "Descargando...") %>
+<% end %>

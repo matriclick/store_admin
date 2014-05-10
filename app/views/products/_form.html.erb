@@ -1,0 +1,40 @@
+<%= nested_form_for [@supplier_account, @product], :html => {:multipart => true, :class => 'form-horizontal' } do |f| %>
+<%= f.hidden_field :supplier_account_id, :value => @supplier_account.id %>
+<h2>Información General</h2>
+	<div class="control-group">
+	  <%= f.label :name, :class => 'control-label' %>
+	  <div class="controls">
+	    <%= f.text_field :name, :class => 'text_field' %>
+	  </div>
+	</div>
+	<div class="control-group">
+	  <%= f.label :description, :class => 'control-label' %>
+	  <div class="controls">
+	    <%= f.text_field :description, :class => 'text_field' %>
+	  </div>
+	</div>
+	<div class="control-group">
+	  <%= f.label :price, :class => 'control-label' %>
+	  <div class="controls">
+	    <%= f.text_field :price, :class => 'text_field' %>
+	  </div>
+	</div>
+	<div class="control-group">
+	  <%= f.label :cost, :class => 'control-label' %>
+	  <div class="controls">
+	    <%= f.text_field :cost, :class => 'text_field' %>
+	  </div>
+	</div>	
+<h2>Categorías</h2>
+	<%= render 'product_categories', :f => f %>
+<h2>Stock</h2>
+	<%= render 'product_stock_size_fields', :f => f %>
+<h2>Imágenes</h2>
+	<%= render 'product_image_fields', :f => f %>
+	
+	<div class="form-actions">
+	  <%= f.submit nil, :class => 'btn btn-primary' %>
+	  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+	              supplier_account_products_path, :class => 'btn' %>
+	</div>
+<% end %>

@@ -1,0 +1,9 @@
+<div class="control-group">
+	  <div class="controls">
+<% @supplier_account.product_categories.each_with_index do |pc, i| %>
+	<label class="checkbox inline">
+	  <%= check_box_tag("product[product_category_ids][]", pc.id, (@product.product_categories.include? pc)) %> <%= pc.name.capitalize %>
+	</label>
+<% end %>
+	</div>
+</div>

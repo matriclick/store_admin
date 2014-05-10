@@ -1,0 +1,66 @@
+<%- model_class = Product -%>
+<div class="page-header">
+  <h1><%= @product.name %></h1>
+</div>
+
+<h2>Información General</h2>
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+  <dd><%= @product.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
+  <dd><%= @product.description %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:price) %>:</strong></dt>
+  <dd><%= @product.price %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:cost) %>:</strong></dt>
+  <dd><%= @product.cost %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:supplier_account_id) %>:</strong></dt>
+  <dd><%= @product.supplier_account_id %></dd>
+</dl>
+<h2>Categorías</h2>
+<div class="well">
+	<% if @product.product_categories.size > 0 %>
+		<% @product.product_categories.each do |pc| %>
+			<span class="label"><%= pc.name %></span>
+		<% end %>
+	<% else %>
+		Este producto no tiene categorías asociadas
+	<% end %>
+</div>
+<h2>Stock</h2>
+<div class="well">
+<% if @product.product_stock_sizes.size > 0 %>
+<ul>
+	<% @product.product_stock_sizes.each do |psz| %>
+		<li>
+			<b><%= psz.stock %></b> - <%= psz.size.name %> - <%= psz.color %><br />
+			<%= image_tag("/system/barcodes/"+@product.supplier_account.name+'/'+psz.size.name+'_'+psz.color+'_'+@product.id.to_s+"_barcode.png") %><br />
+			<p style="margin-bottom:10px; font-weight:lighter; font-size:11px"><%= Barby::EAN13.new(psz.generate_barcode) %></p>
+		</li>
+	<% end %>
+</ul>
+<% else %>
+	Sin stock
+<% end %>
+</div>
+<h2>Imágenes</h2>
+<div class="well">
+<% if @product.product_images.size > 0 %>
+	<% @product.product_images.each do |product_image| %>
+		<%= image_tag product_image.photo.url(:index_dress) %>
+	<% end %>
+<% else %>
+	No se han agregado imágenes para este producto
+<% end %>
+</div>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              supplier_account_products_path, :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_supplier_account_product_path(supplier_account_id: @supplier_account.id, id: @product.id), :class => 'btn' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              supplier_account_product_path(supplier_account_id: @supplier_account.id, id: @product.id),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>

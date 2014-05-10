@@ -1,0 +1,14 @@
+<%= f.fields_for :product_stock_sizes do |pdz| %>
+<div class="control-group">
+	<div class="controls">
+		<%= pdz.text_field :stock, placeholder: 'Stock' %>
+		<%= pdz.collection_select :size_id, Size.all, :id, :name, {:prompt => 'Talla', :allow_blank => false} %>
+		<%= pdz.text_field :color, placeholder: 'Color' %>
+		<%= pdz.link_to_remove 'Eliminar', :class => 'btn btn-default btn-mini' %>
+	</div>
+</div>
+<% end %>
+
+<div>
+	<%= f.link_to_add 'Agregar Talla/Color', :product_stock_sizes, :class => 'btn btn-primary btn-mini' %>
+</div>

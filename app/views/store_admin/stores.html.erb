@@ -1,0 +1,12 @@
+<% if user_signed_in? %>
+<h1>Selecciona la tienda</h1>
+<% current_user.supplier_accounts.each do |sa| %>
+	<div class="well">
+		<h2><%= link_to sa.name, point_of_sale_path(sa) %></h2>
+	</div>
+<% end %>
+<% else %>
+<div class="well">
+	No hay tiendas asociadas a este usuario
+</div>
+<% end %>
