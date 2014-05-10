@@ -1,6 +1,6 @@
 class SizesController < ApplicationController
   before_action :set_size, only: [:show, :edit, :update, :destroy]
-  before_action :set_supplier_account
+  before_action :set_supplier_account, :check_if_user_has_related_supplier_account
   
   # GET /sizes
   # GET /sizes.json

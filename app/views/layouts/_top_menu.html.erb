@@ -7,7 +7,7 @@
 			<%= link_to @supplier_account.name, user_root_path, class: 'brand' %>	  
 		<% end %>
 	  	<% if user_signed_in? %>
-			<% unless @supplier_account.blank? %>
+			<% unless @supplier_account.nil? or @supplier_account.id.nil? %>
 				<ul class="nav navbar-nav">
 					<li><%= link_to 'Punto de Venta', point_of_sale_path(id: @supplier_account.id) %></li>
 					<li><%= link_to 'Gestión de Productos', supplier_account_products_path(supplier_account_id: @supplier_account.id) %></a></li>
@@ -21,6 +21,9 @@
 	        	<li class="dropdown">
 		          <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="100" data-close-others="true">Tu Cuenta <b class="caret"></b></a>
 		          <ul class="dropdown-menu">
+					<% if user_signed_in? and current_user.is_admin? %>
+					<li><%= link_to 'Administrar Tiendas', supplier_accounts_path %></li>
+					<% end %>
 					<li><%= link_to 'Cambiar clave', edit_user_registration_path %></li>
 					<li role="presentation" class="divider"></li>
 					<li><%= link_to 'Salir de '+current_user.email, destroy_user_session_path, method: :delete, :rel => 'nofollow' %></li>

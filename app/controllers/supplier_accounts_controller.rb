@@ -3,7 +3,7 @@ class SupplierAccountsController < ApplicationController
   autocomplete :user, :email
 
   before_action :authenticate_admin, except: [:show, :add_user, :remove_user, :edit_user_privileges, :update_user]
-  before_action :set_supplier_account, only: [:show, :edit, :update, :destroy, :add_user, :remove_user, :edit_user_privileges, :update_user]
+  before_action :set_supplier_account, :check_if_user_has_related_supplier_account, only: [:show, :edit, :update, :destroy, :add_user, :remove_user, :edit_user_privileges, :update_user]
 
   def add_user
     user = User.where(:email => params[:user_email]).first

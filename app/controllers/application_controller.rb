@@ -11,6 +11,14 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def check_if_user_has_related_supplier_account
+    if !current_user.is_admin?
+      if !current_user.supplier_accounts.include?(@supplier_account)
+        redirect_to root_path, notice: 'No tienes permisos para acceder a esta sección'
+      end
+    end
+  end
+  
   def add_time_zone_variable
     unless cookies[:time_zone].blank?
       @time_zone = cookies[:time_zone] 

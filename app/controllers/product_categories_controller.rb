@@ -1,6 +1,6 @@
 class ProductCategoriesController < ApplicationController
   before_action :set_product_category, only: [:show, :edit, :update, :destroy]
-  before_action :set_supplier_account
+  before_action :set_supplier_account, :check_if_user_has_related_supplier_account
   # GET /product_categories
   # GET /product_categories.json
   def index

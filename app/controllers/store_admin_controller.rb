@@ -1,6 +1,7 @@
 class StoreAdminController < ApplicationController
-  before_action :set_supplier_account, except: [:stores]
+  before_action :set_supplier_account, :check_if_user_has_related_supplier_account, except: [:stores]
   before_action :set_date_range, only: [:purchase_details, :sales_summary]
+  
   def point_of_sale
     @shopping_cart = params[:shopping_cart_id].blank? ? ShoppingCart.create(user_id: current_user.id) : ShoppingCart.find(params[:shopping_cart_id])
   end
@@ -58,7 +59,7 @@ class StoreAdminController < ApplicationController
   end
   
   def generate_purchase
-#    begin
+    begin
       @shopping_cart = ShoppingCart.find params[:shopping_cart_id]
       #Disable Cart
       @shopping_cart.update_attribute :status, 'comprado'
@@ -70,9 +71,9 @@ class StoreAdminController < ApplicationController
       payment_method = params[:medio_pago]
       Purchase.create(payment_method_id: payment_method, buyer_email: buyer_email, shopping_cart_id: @shopping_cart.id, supplier_account_id: @supplier_account.id, paid_amount: @shopping_cart.price)
       redirect_to point_of_sale_path(id: @supplier_account.id), notice: 'Venta generada exitosamente'
- #   rescue Exception => exc    
-  #    redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), notice: 'Error desconocido al generar la compra'
-   # end
+    rescue Exception => exc    
+      redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), notice: 'Error desconocido al generar la compra'
+    end
   end
   
   def remove_product_from_cart
