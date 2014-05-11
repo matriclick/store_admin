@@ -2,14 +2,19 @@
 <div class="page-header">
   <h1>Productos</h1>
 </div>
+<form class="form-search">
+  <input type="text" class="input-medium search-query" placeholder="Nombre, Descripción, Color o Precio" style="width:50%">
+  <button type="submit" class="btn"><%= t 'search' %></button>
+</form>
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:price) %></th>
-      <th><%= model_class.human_attribute_name(:cost) %></th>
-      <th><%= model_class.human_attribute_name(:supplier_account_id) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t 'name' %></th>
+      <th><%=t 'price' %></th>
+      <th><%=t 'cost' %></th>
+      <th><%=t 'supplier_account' %></th>
+      <th><%=t 'stock' %></th>
+      <th><%=t 'created_at' %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -20,6 +25,7 @@
         <td><%= number_to_currency product.price, precision: 0 %></td>
         <td><%= number_to_currency product.cost, precision: 0 %></td>
         <td><%= product.supplier_account.name %></td>
+		<td><%= raw product.product_stock_sizes.map{ |psz| '<b>'+psz.stock.to_s+'</b> - '+psz.size.name+' - '+psz.color }.join('<br />') %></td>
         <td><%=l product.created_at.in_time_zone(@time_zone) %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

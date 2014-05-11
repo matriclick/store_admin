@@ -39,10 +39,8 @@ class StoreAdminController < ApplicationController
   def add_product_to_cart_from_barcode
     begin
       @shopping_cart = ShoppingCart.find params[:shopping_cart_id] if !params[:shopping_cart_id].nil? 
-      barcode = params[:barcode]
-      product_stock_size_id = barcode[0..11].to_i    
-    
-      product_stock_size = ProductStockSize.find product_stock_size_id
+      barcode = params[:barcode] 
+      product_stock_size = ProductStockSize.find_by_barcode barcode
       unless product_stock_size.blank?
         if product_stock_size.stock == 0
           redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), notice: 'Error: Producto Agotado en el Sistema'

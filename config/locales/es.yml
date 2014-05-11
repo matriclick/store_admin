@@ -201,19 +201,36 @@ es:
       destroy: "Eliminar"
       new: "Nuevo"
       edit: "Editar"
+      update: "Actualizar"
     titles:
       edit: "Editar %{model}"
       save: "Guardar %{model}"
       new: "Nuevo %{model}"
       delete: "Eliminar %{model}"
-  payment_profile: "Perfil de pago"
-  bank_name: "Nombre del banco"
-  account_number: "Número de cuenta"
-  account_type: "Tipo de cuenta"
+      update: "Actualizar %{model}"
+  activerecord:
+    models:
+      product: Producto
+      size: Talla
+      product_category: Categoría
+    attributes:
+      size:
+        name: "Nombre"
+        supplier_account_id: "Tienda"
+        created_at: 'Fecha de Creación'
+      product_category:
+        name: "Nombre"
+        supplier_account_id: "Tienda"
+        created_at: 'Fecha de Creación'          
+  name: "Nombre"
+  search: 'Buscar'
+  price: "Precio Venta"
+  cost: "Costo"
+  supplier_account: "Tienda"
   rut: "RUT"
   user: "Usuario"
-  new_transaction: "Nueva Transacción"
-  back_home: "Volver al Inicio"
+  description: "Descripción"
+  product: "Producto"
   account_configuration: "Configuración de Cuenta"
   allow_netting: "Permitir Netear Deudas"
   collection_frecuency: "Frecuencia en que se enviará el correo recordatorio del pago (en días)"

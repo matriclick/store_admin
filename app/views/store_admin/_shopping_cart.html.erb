@@ -26,8 +26,7 @@
 		<div>
 			<% PaymentMethod.all.each do |pm| %>
 				<label class="radio-inline">
-				  <input type="radio" name="medio_pago" value="<%= pm.id %>"> 
-					<span style="font-weight:lighter; font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;"><%= pm.name.capitalize %></span>
+				  <input type="radio" name="medio_pago" style="margin-top:0px" value="<%= pm.id %>"> <%= pm.name.capitalize %>
 				</label>
 			<% end %>
 		</div>

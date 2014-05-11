@@ -34,7 +34,23 @@
 		<li>
 			<b><%= psz.stock %></b> - <%= psz.size.name %> - <%= psz.color %><br />
 			<%= image_tag("/system/barcodes/"+@product.supplier_account.name+'/'+psz.size.name+'_'+psz.color+'_'+@product.id.to_s+"_barcode.png") %><br />
-			<p style="margin-bottom:10px; font-weight:lighter; font-size:11px"><%= Barby::EAN13.new(psz.generate_barcode) %></p>
+			<p><%= psz.barcode %> <a href="#<%= psz.barcode %>" role="button" data-toggle="modal">(editar)</a></p>
+			<!-- Modal -->
+			<div id="<%= psz.barcode %>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			  <div class="modal-header">
+			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			    <h3 id="myModalLabel"><%= psz.size.name %> - <%= psz.color %></h3>
+			  </div>
+	          <%= form_tag(supplier_account_update_barcode_path(supplier_account_id: @supplier_account.id, id: @product.id, product_stock_size_id: psz.id), :method => "put") do %>
+			  <div class="modal-body" style='text-align:center'>	
+				<%= text_field_tag :barcode, '', :placeholder => 'Ingresa el nuevo código de barras', :class => "input-medium search-query", style: 'width:80%' %>
+			  </div>
+			  <div class="modal-footer">
+			    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+				<%= submit_tag("Actualizar",  class: "btn btn-primary") %>
+			  </div>
+			  <% end %>	
+			</div>
 		</li>
 	<% end %>
 </ul>

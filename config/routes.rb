@@ -24,6 +24,7 @@ StoreAdmin::Application.routes.draw do
   post 'set_time_zone' => 'application#set_time_zone', as: 'set_time_zone_path'
 
   resources :supplier_accounts do
+    put 'product/:id/update_barcode/:product_stock_size_id' => 'products#update_barcode', as: 'update_barcode'
     resources :products
     resources :sizes
     resources :product_categories

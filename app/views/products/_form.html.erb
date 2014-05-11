@@ -2,29 +2,29 @@
 <%= f.hidden_field :supplier_account_id, :value => @supplier_account.id %>
 <h2>Información General</h2>
 	<div class="control-group">
-	  <%= f.label :name, :class => 'control-label' %>
+	  <%= f.label :name, t('name'), :class => 'control-label' %>
 	  <div class="controls">
 	    <%= f.text_field :name, :class => 'text_field' %>
 	  </div>
 	</div>
 	<div class="control-group">
-	  <%= f.label :description, :class => 'control-label' %>
-	  <div class="controls">
-	    <%= f.text_field :description, :class => 'text_field' %>
-	  </div>
-	</div>
-	<div class="control-group">
-	  <%= f.label :price, :class => 'control-label' %>
+	  <%= f.label :price, t('price'), :class => 'control-label' %>
 	  <div class="controls">
 	    <%= f.text_field :price, :class => 'text_field' %>
 	  </div>
 	</div>
 	<div class="control-group">
-	  <%= f.label :cost, :class => 'control-label' %>
+	  <%= f.label :cost, t('cost'), :class => 'control-label' %>
 	  <div class="controls">
 	    <%= f.text_field :cost, :class => 'text_field' %>
 	  </div>
-	</div>	
+	</div>
+	<div class="control-group">
+	  <%= f.label :description, t('description'), :class => 'control-label' %>
+	  <div class="controls">
+	    <%= f.text_area :description, rows: 4, :class => 'text_field' %>
+	  </div>
+	</div>
 <h2>Categorías</h2>
 	<%= render 'product_categories', :f => f %>
 <h2>Stock</h2>

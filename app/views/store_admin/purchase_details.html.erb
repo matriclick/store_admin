@@ -1,4 +1,8 @@
 <h1>Transacciones</h1>
+<form class="form-search">
+  <input type="text" class="input-medium search-query">
+  <button type="submit" class="btn"><%= t 'search' %></button>
+</form>
 <%= render 'layouts/date_range_selector' %>
 <p>Total Vendido: <%= number_to_currency @purchases.sum(:paid_amount), precision: 0 %></p>
 <table class="table table-striped">

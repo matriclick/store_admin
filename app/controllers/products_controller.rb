@@ -4,7 +4,7 @@ require 'barby/barcode/ean_13'
 require 'barby/outputter/png_outputter'
 
 class ProductsController < ApplicationController
-  before_action :set_product, only: [:show, :edit, :update, :destroy]
+  before_action :set_product, only: [:show, :edit, :update, :destroy, :update_barcode]
   before_action :set_supplier_account, :check_if_user_has_related_supplier_account
   
   # GET /products
@@ -16,14 +16,7 @@ class ProductsController < ApplicationController
   # GET /products/1
   # GET /products/1.json
   def show
-    @product.product_stock_sizes.each do |psz|
-      @barcode_value = psz.generate_barcode
-      @full_path = "#{Rails.root}/public/system/barcodes/"+@product.supplier_account.name+'/'+psz.size.name+'_'+psz.color+'_'+@product.id.to_s+"_barcode.png"  
-      dir = File.dirname(@full_path)
-      FileUtils.mkdir_p(dir) unless File.directory?(dir)
-      barcode = Barby::EAN13.new(@barcode_value)
-      File.open(@full_path, 'w') { |f| f.write barcode.to_png(:margin => 3, :height => 55) }
-    end
+    ProductStockSize.all.each(&:save)
   end
 
   # GET /products/new
@@ -64,7 +57,21 @@ class ProductsController < ApplicationController
       end
     end
   end
-
+  
+  #PUT
+  def update_barcode
+    @product_stock_size = ProductStockSize.find params[:product_stock_size_id]
+    
+    respond_to do |format|
+      if @product_stock_size.assign_manual_barcode(params[:barcode])
+        format.html { redirect_to supplier_account_product_path(supplier_account_id: @supplier_account.id, id: @product.id), notice: 'Código de barras actualizado.' }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to supplier_account_product_path(supplier_account_id: @supplier_account.id, id: @product.id), notice: 'Error: Código en formato EAN-13 incorrecto.' }
+        format.json { render json: @product.errors, status: :unprocessable_entity }
+      end
+    end
+  end
   # DELETE /products/1
   # DELETE /products/1.json
   def destroy
