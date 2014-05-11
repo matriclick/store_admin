@@ -1,3 +1,9 @@
+<script>
+	$(function() {
+		$("#barcode").focus();
+	});
+</script>
+
 <h2>Punto de venta</h2>
 <%= form_tag(store_admin_add_product_to_cart_from_barcode_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), method: :post, html: {class: 'form-group'}) %>
 	<div class="input-group">
