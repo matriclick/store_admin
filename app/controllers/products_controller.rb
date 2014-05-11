@@ -10,13 +10,12 @@ class ProductsController < ApplicationController
   # GET /products
   # GET /products.json
   def index
-    @products = Product.all
+    @products = @supplier_account.find_products(params[:q])
   end
 
   # GET /products/1
   # GET /products/1.json
   def show
-    ProductStockSize.all.each(&:save)
   end
 
   # GET /products/new

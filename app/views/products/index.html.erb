@@ -1,11 +1,18 @@
+<script>
+	$(function() {
+		$("#q").focus();
+	});
+</script>
+
 <%- model_class = Product -%>
 <div class="page-header">
   <h1>Productos</h1>
 </div>
-<form class="form-search">
-  <input type="text" class="input-medium search-query" placeholder="Ingresa el código de barra, Nombre, Descripción, Color o Precio" style="width:50%">
-  <button type="submit" class="btn"><%= t 'search' %></button>
-</form>
+<%= form_tag(request.fullpath, :method => "get", :html => {class: 'form-search'}) do %>
+	<%= text_field_tag(:q, @q, class: "input-medium search-query", placeholder: "Ingresa el código de barra, Nombre, Descripción, Color o Precio", style: "width:50%") %>
+	<%= submit_tag t('search'), class: "btn" %>
+<% end %>
+
 <table class="table table-striped">
   <thead>
     <tr>
