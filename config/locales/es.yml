@@ -222,6 +222,13 @@ es:
         name: "Nombre"
         supplier_account_id: "Tienda"
         created_at: 'Fecha de Creación'          
+      product:
+        name: "Nombre"
+        supplier_account_id: "Tienda"
+        created_at: 'Fecha de Creación'
+        description: 'Descripción'
+        price: 'Previo Venta'
+        cost: 'Costo'
   name: "Nombre"
   search: 'Buscar'
   price: "Precio Venta"
