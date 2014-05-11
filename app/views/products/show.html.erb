@@ -1,8 +1,3 @@
-<script>
-	$(document).on('shown', ".modal", function() {
-	    $('#barcode').focus();
-	});
-</script>
 <%- model_class = Product -%>
 
 <div class="page-header">
@@ -42,6 +37,11 @@
 			<%= image_tag("/system/barcodes/"+@product.supplier_account.name+'/'+psz.size.name+'_'+psz.color+'_'+@product.id.to_s+"_barcode.png") %><br />
 			<p><%= psz.barcode %> <a href="#<%= psz.barcode %>" role="button" data-toggle="modal">(editar)</a></p>
 			<!-- Modal -->
+			<script>
+				$(document).on('shown', "<%= '#'+psz.barcode %>", function() {
+					$(".search-query").focus();
+				});
+			</script>
 			<div id="<%= psz.barcode %>" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			  <div class="modal-header">
 			    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
