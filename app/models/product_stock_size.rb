@@ -9,7 +9,7 @@ class ProductStockSize < ActiveRecord::Base
   
   
   def generate_barcode(force = false)
-    if self.barcode.empty? or force
+    if self.barcode.blank? or force
       barcode = self.id.to_s
       length = barcode.length
       if length < 12
