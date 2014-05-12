@@ -18,7 +18,8 @@ class StoreAdminController < ApplicationController
   end
   
   def purchase_details
-    @purchases = @supplier_account.purchases.where('purchases.created_at >= ? and purchases.created_at <= ?', @from, @to).order 'purchases.created_at DESC'
+    @q = params[:q]
+    @purchases = @supplier_account.get_purchases(@from, @to, @q)
   end
   
   def sales_summary
@@ -65,9 +66,10 @@ class StoreAdminController < ApplicationController
       @shopping_cart.shopping_cart_items.each do |sci|
         sci.product_stock_size.update_attribute :stock, sci.product_stock_size.stock - 1
       end
-      buyer_email = params[:email_buyer]
-      payment_method = params[:medio_pago]
-      Purchase.create(payment_method_id: payment_method, buyer_email: buyer_email, shopping_cart_id: @shopping_cart.id, supplier_account_id: @supplier_account.id, paid_amount: @shopping_cart.price)
+      purchase = Purchase.create(payment_method_id: params[:medio_pago], buyer_email: params[:email_buyer], shopping_cart_id: @shopping_cart.id, supplier_account_id: @supplier_account.id, paid_amount: @shopping_cart.price)
+      unless purchase.buyer_email.blank?
+        Notifications.purchase_details(purchase).deliver
+      end
       redirect_to point_of_sale_path(id: @supplier_account.id), notice: 'Venta generada exitosamente'
     rescue Exception => exc    
       redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), notice: 'Error desconocido al generar la compra'

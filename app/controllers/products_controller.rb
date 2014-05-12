@@ -10,6 +10,7 @@ class ProductsController < ApplicationController
   # GET /products
   # GET /products.json
   def index
+    @q = params[:q]
     @products = @supplier_account.find_products(params[:q])
   end
 

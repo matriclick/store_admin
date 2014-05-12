@@ -1,0 +1,14 @@
+<% content_for :content do %>
+	<p>¡Felicitaciones por tu compra!</p>
+	<p>Productos comprados:</p>
+	<ul>
+	<% @purchase.shopping_cart.shopping_cart_items.each do |sci| %>
+		<li><%= sci.quantity %> <%= sci.product_stock_size.product.name %> <%= sci.product_stock_size.size.name %> <%= sci.product_stock_size.color %></li>
+	<% end %>
+	</ul>
+	<p>Código de tu compra: <%= @purchase.id %></p>
+	<p>Medio de pago: <%= @purchase.payment_method.name %></p>
+	<p>Total de tu compra: <%= number_to_currency @purchase.paid_amount, precision: 0 %></p>
+<% end %>
+
+<%= render "layouts/email" %>

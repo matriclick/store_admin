@@ -28,6 +28,14 @@ class SupplierAccount < ActiveRecord::Base
     end
   end
   
+  def get_purchases(from, to, q)
+    if q.blank?
+      return self.purchases.where('purchases.created_at >= ? and purchases.created_at <= ?', from, to).order 'purchases.created_at DESC'
+    else
+      return self.purchases.where('id = ? or buyer_email like "%'+q+'%"', q).order 'purchases.created_at DESC'
+    end
+  end
+  
   private
 
     def is_number?(object)

@@ -11,15 +11,12 @@ class ProductStockSize < ActiveRecord::Base
   def generate_barcode(force = false)
     if self.barcode.blank? or force
       barcode = self.id.to_s
-      puts '****** '+barcode
       length = barcode.length
       if length < 12
         (12 - length).times do 
           barcode = '0'+barcode
-          puts '****** '+barcode
         end
       end
-      puts '****** '+barcode
       barcode_object = Barby::EAN13.new(barcode) #Automatically adds the checksum digit at the end completing the 13th digit
       self.update_attribute :barcode, barcode_object.to_s
       save_barcode_image(barcode_object)

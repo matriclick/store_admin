@@ -10,9 +10,11 @@
 </div>
 <%= form_tag(request.fullpath, :method => "get", :html => {class: 'form-search'}) do %>
 	<%= text_field_tag(:q, @q, class: "input-medium search-query", placeholder: "Ingresa el código de barra, Nombre, Descripción, Color o Precio", style: "width:50%") %>
-	<%= submit_tag t('search'), class: "btn" %>
+	<%= submit_tag t('search'), class: "btn btn-primary" %>
+	<%= link_to 'Ver todos', supplier_account_products_path(supplier_account_id: @supplier_account.id), class: "btn" %>
 <% end %>
 
+<% unless @products.size == 0 %>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -47,6 +49,11 @@
     <% end %>
   </tbody>
 </table>
+<% else %>
+<div class="well">
+	No se han encontrado productos para esta búsqueda.
+</div>
+<% end %>
 
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_supplier_account_product_path,

@@ -1,9 +1,17 @@
+<script>
+	$(function() {
+		$("#q").focus();
+	});
+</script>
+
 <h1>Transacciones</h1>
-<form class="form-search">
-  <input type="text" class="input-medium search-query">
-  <button type="submit" class="btn"><%= t 'search' %></button>
-</form>
+<%= form_tag(request.fullpath, :method => "get", :html => {class: 'form-search'}) do %>
+	<%= text_field_tag(:q, @q, class: "input-medium search-query", placeholder: "Código de compra o correo del comprador (busca todo el historial)", style: "width:50%") %>
+	<%= submit_tag t('search'), class: "btn btn-primary" %>
+	<%= link_to 'Ver hoy', store_admin_purchase_details_path, class: "btn" %>
+<% end %>
 <%= render 'layouts/date_range_selector' %>
+<% unless @purchases.size == 0 %>
 <p>Total Vendido: <%= number_to_currency @purchases.sum(:paid_amount), precision: 0 %></p>
 <table class="table table-striped">
   <thead>
@@ -32,3 +40,8 @@
     <% end %>
   </tbody>
 </table>
+<% else %>
+<div class="well">
+	No se han encontrado compras
+</div>
+<% end %>
