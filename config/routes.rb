@@ -25,6 +25,7 @@ StoreAdmin::Application.routes.draw do
 
   resources :supplier_accounts do
     put 'product/:id/update_barcode/:product_stock_size_id' => 'products#update_barcode', as: 'update_barcode'
+    get :autocomplete_user_email, :on => :collection
     resources :products
     resources :sizes
     resources :product_categories

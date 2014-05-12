@@ -1,27 +1,15 @@
 <%- model_class = SupplierAccount -%>
 <div class="page-header">
-  <h1><%= @supplier_account.name %></h1>
+  <h1>Usuarios de <%= @supplier_account.name %></h1>
 </div>
-<h2>Usuarios</h2>
-<%= form_tag(supplier_account_add_user_path, :method => "put", :html => {class: 'form-horizontal', role: 'form'}) do %>
-	<div class="input-group">
-		<%= autocomplete_field_tag :user_email, @user_email, supplier_accounts_autocomplete_user_email_path, class: 'form-control' %> 
-       	<span class="input-group-btn">
-			<%= submit_tag("Agregar",  class: "btn btn-default",  style: "vertical-align: top;" ) %>
-  		</span>
-  	</div><!-- /input-group -->
-	<span>Solo puedes agregar usuarios que aparecen en la lista que se despliega automáticamente al completar el campo de texto</span>
-<% end %>
-<hr>
-<h2>Permisos</h2>
 <ul>
 <% @supplier_account.users.each do |user| %>
 	<dl class="dl-horizontal">
   		<dt><strong>Correo:</strong></dt>
-  		<dd>
-			<%= user.email %> <%= link_to 'edit', 
+  		<dd style="vertical-align:top;">
+			<%= user.email %> <%= link_to raw('<i class="icon-edit" style="font-size:18px; margin:0px 5px 0px 5px"></i>'), 
 			supplier_account_edit_user_privileges_path(id: @supplier_account.id, user_id: user.id) %> 
-			<%= link_to 'remove', 
+			<%= link_to raw('<i class="icon-remove" style="font-size:20px"></i>'), 
 				supplier_account_remove_user_path(id: @supplier_account.id, user_id: user.id), method: :put %>
 			<br />
 			<span style="font-size:10px;">Permisos:
@@ -32,7 +20,17 @@
 		</dd>
 	</dl>
 <% end %>
-
+<hr>
+<h2>Agregar Usuario</h2>
+<%= form_tag(supplier_account_add_user_path, :method => "put", :html => {class: 'form-horizontal', role: 'form'}) do %>
+	<div class="input-group">
+		<%= autocomplete_field_tag :user_email, '', supplier_accounts_autocomplete_user_email_path, class: 'form-control' %> 
+       	<span class="input-group-btn">
+			<%= submit_tag("Agregar",  class: "btn btn-default",  style: "vertical-align: top;" ) %>
+  		</span>
+  	</div><!-- /input-group -->
+	<span>Solo puedes agregar usuarios que aparecen en la lista que se despliega automáticamente al completar el campo de texto</span>
+<% end %>
 <% if current_user.is_admin? %>
 	<div class="form-actions">
 	  <%= link_to t('.back', :default => t("helpers.links.back")),

@@ -12,10 +12,12 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.ui.all
+//= require autocomplete-rails
 //= require jquery.cookie
 //= require bootstrap-datepicker
 //= require twitter/bootstrap
-//= require turbolinks
+//= require jquery.turbolinks
 //= require jquery_nested_form
 //= require_tree .
 
