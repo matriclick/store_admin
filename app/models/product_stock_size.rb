@@ -11,7 +11,11 @@ class ProductStockSize < ActiveRecord::Base
   def generate_barcode(force = false)
     if self.barcode.blank? or force
       pdzs = ProductStockSize.where('product_id = ? and color = ? and size_id = ?', self.product_id, self.color, self.size_id)
-      barcode = pdzs.first.id.to_s
+      if pdzs.size > 1
+        barcode = pdzs.first.barcode[0..11]
+      else
+        barcode = pdzs.first.id.to_s
+      end
       length = barcode.length
       if length < 12
         (12 - length).times do 
