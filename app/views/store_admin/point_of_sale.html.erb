@@ -4,6 +4,9 @@
 	});
 </script>
 
+<div class="pull-right">
+	<%= link_to 'Ingresar Datos del Día', new_supplier_account_daily_store_datum_path(supplier_account_id: @supplier_account.id), class: 'btn btn-default' %>
+</div>
 <h2>Punto de venta</h2>
 <%= form_tag(store_admin_add_product_to_cart_from_barcode_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), method: :post, html: {class: 'form-group'}) %>
 	<div class="input-group">
@@ -14,8 +17,49 @@
 	</div><!-- /input-group -->
 </form>
 <hr>
-<% unless @shopping_cart.nil? %>
+<% unless @shopping_cart.nil? or @shopping_cart.price == 0 %>
 	<%= render 'shopping_cart' %>
+	<%= form_tag(store_admin_generate_purchase_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), method: :put, class: 'form-horizontal') %>
+		<div class="well" style="margin-top:20px">
+			<b>Sub-Total: <%= number_to_currency @shopping_cart.price, precision: 0 %></b>
+		</div>
+		<div class="well" style="margin-top:20px;">
+			<b>Descuento
+				<%= text_field_tag(:percentage_discount, '', placeholder: '% de descuento', class: "form-control", 
+									onchange: 'calculate_subtotal_with_discount(this, '+@shopping_cart.price.to_s+', "percentage")') %> o 
+				<%= text_field_tag(:absolute_discount, '', placeholder: 'Monto de descuento', class: "form-control", 
+									onchange: 'calculate_subtotal_with_discount(this, '+@shopping_cart.price.to_s+', "absolute")') %>
+			</b><br />
+			<i>Completar solo una alternativa (porcentaje o un valor absoluto). Si no hay descuento dejar en blanco.</i>
+		</div>
+		<div class="well" style="margin-top:20px">
+			<b>Total a pagar: <span id="total"><%= number_to_currency @shopping_cart.price, precision: 0 %></span></b>
+		</div>
+		<div class="well" style="margin-top:20px">
+			<h4>Datos del cliente</h4>
+			<%= render 'customer_fields' %>
+		</div>
+		<div class="well" style="margin-top:20px">
+			<h4>Datos del Pago</h4>
+			<% PaymentMethod.all.each do |pm| %>
+				<div class="control-group" style="margin-bottom:5px">
+			    <%= label_tag pm.id, pm.name.capitalize, :class => 'control-label' %>
+				    <div class="controls">
+						<input type="radio" name="medio_pago" value="<%= pm.id %>" class="form-control">
+				    </div>
+				</div>
+			<% end %>
+			<div class="control-group">
+		    <%= label_tag :invoice_number, 'Número de boleta', :class => 'control-label' %>
+		    <div class="controls">
+		      <%= text_field_tag(:invoice_number, '', placeholder: 'Número de boleta', class: "form-control") %>
+		    </div>
+		  </div>
+		</div>
+		<div class="well" style="margin-top:20px">
+			<%= submit_tag "Pagar", class: "btn btn-primary", style: 'width:100%' %> 
+		</div>
+	</form>
 <% else %>
 	<div class="well">
 		No se han agregado productos

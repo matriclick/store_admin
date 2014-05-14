@@ -1,0 +1,21 @@
+<%= form_for [@supplier_account, @daily_store_datum], :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.hidden_field :supplier_account_id, :value => @supplier_account.id %>
+  <div class="control-group">
+    <%= f.label :date, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :date, :class => 'text_field datepicker' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :came_in_clients, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :came_in_clients, :class => 'text_field' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                supplier_account_daily_store_data_path, :class => 'btn' %>
+  </div>
+<% end %>

@@ -1,0 +1,2 @@
+module DailyStoreDataHelper
+end

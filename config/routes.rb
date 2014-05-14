@@ -1,7 +1,6 @@
 StoreAdmin::Application.routes.draw do
 
-  get "store_admin/stores", as: :user_root
-    
+  get "store_admin/stores", as: :user_root    
   get "store_admin/:id/point_of_sale" => 'store_admin#point_of_sale', as: 'point_of_sale'
   get "store_admin/:id/products" => 'store_admin#products', as: 'store_admin_products'
   get "store_admin/:id/users" => 'store_admin#users', as: 'store_admin_users'
@@ -22,13 +21,17 @@ StoreAdmin::Application.routes.draw do
   get 'supplier_accounts/autocomplete_user_email' => 'supplier_accounts#autocomplete_user_email'
   
   post 'set_time_zone' => 'application#set_time_zone', as: 'set_time_zone_path'
-
+  post 'check_if_costumer_exists' => 'application#check_if_costumer_exists', as: 'check_if_costumer_exists_path'
+  
   resources :supplier_accounts do
     put 'product/:id/update_barcode/:product_stock_size_id' => 'products#update_barcode', as: 'update_barcode'
     get :autocomplete_user_email, :on => :collection
     resources :products
     resources :sizes
     resources :product_categories
+    resources :customers
+    resources :daily_store_data
+    resources :warehouses
   end
 
   devise_for :users

@@ -5,16 +5,17 @@ class ProductStockSize < ActiveRecord::Base
   after_save :generate_barcode
   belongs_to :product
   belongs_to :size
+  belongs_to :warehouse
   has_one :shopping_cart_item
-  
   
   def generate_barcode(force = false)
     if self.barcode.blank? or force
-      barcode = self.id.to_s
+      pdzs = ProductStockSize.where('product_id = ? and color = ? and size_id = ?', self.product_id, self.color, self.size_id)
+      barcode = pdzs.first.id.to_s
       length = barcode.length
       if length < 12
         (12 - length).times do 
-          barcode = '0'+barcode
+          barcode = '1'+barcode
         end
       end
       barcode_object = Barby::EAN13.new(barcode) #Automatically adds the checksum digit at the end completing the 13th digit

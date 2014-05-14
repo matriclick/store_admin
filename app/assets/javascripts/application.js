@@ -38,3 +38,43 @@ $(document).ready(function() {
 		format: "yyyy-mm-dd"
 	});
 })
+
+function check_if_costumer_exists(object, type) {
+	$.ajax({
+        url: "/check_if_costumer_exists",
+        type: "POST",
+        dataType: "html",
+		headers: {
+		   'X-Transaction': 'POST Timezone',
+		   'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+        data: { 'type': type, 'value' : object.value }, 
+		success: function(data) {
+			if(data != "null") {
+				var json = JSON.parse(data)
+				$('#customer_rut').val(json['rut']);
+				$('#customer_name').val(json['name']);
+				$('#customer_email').val(json['email']);
+				$('#customer_phone_number').val(json['phone_number']);
+				if(json['birthday'] != null) {
+					$('#customer_birthday').val(json['birthday'].substring(0, 10));
+				} else {
+					$('#customer_birthday').val("");
+				}
+			}
+        }
+    });
+}
+
+function calculate_subtotal_with_discount(object, subtotal, type) {
+	total = 0
+	if(type == "percentage") {
+		total = subtotal * (1-object.value/100)
+	} else {
+		total = subtotal - object.value
+	}
+	$('#total').html('$ '+Math.ceil(total));
+}
+
+
+
+

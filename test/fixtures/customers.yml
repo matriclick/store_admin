@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  rut: MyString
+  birthday: 2014-05-12 22:46:19
+  phone_number: MyString
+  supplier_account_id: 1
+
+two:
+  name: MyString
+  rut: MyString
+  birthday: 2014-05-12 22:46:19
+  phone_number: MyString
+  supplier_account_id: 1

@@ -37,4 +37,20 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def check_if_costumer_exists
+    type = params[:type]
+    value = params[:value]
+    if type == 'rut'
+      @customer = Customer.find_by_rut(value)
+    elsif type == 'email'
+      @customer = Customer.find_by_email(value)
+    else
+      @customer = nil
+    end
+    
+    respond_to do |format|
+      format.json  { render :json => @customer }
+    end
+  end
+  
 end

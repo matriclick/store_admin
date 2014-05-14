@@ -4,8 +4,8 @@ class Notifications < ActionMailer::Base
   
   def purchase_details(purchase)
     @purchase = purchase
-    unless purchase.buyer_email.blank? 
-  	  mail to: purchase.buyer_email, subject: "Detalle de tu compra en "+purchase.supplier_account.name
+    unless purchase.customer.blank? or purchase.customer.email.blank? 
+  	  mail to: purchase.customer.email, subject: "Detalle de tu compra en "+purchase.supplier_account.name
 	  end
   end
 

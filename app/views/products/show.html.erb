@@ -33,7 +33,8 @@
 <ul>
 	<% @product.product_stock_sizes.each do |psz| %>
 		<li>
-			<b><%= psz.stock %></b> - <%= psz.size.name %> - <%= psz.color %><br />
+			<b><%= psz.warehouse.blank? ? 'Sin bodega asignada' : psz.warehouse.name %></b>: 
+				<%= psz.stock %> - <%= psz.size.name %> - <%= psz.color %><br />
 			<%= image_tag("/system/barcodes/"+@product.supplier_account.name+'/'+psz.size.name+'_'+psz.color+'_'+@product.id.to_s+"_barcode.png") %><br />
 			<p><%= psz.barcode %> <a href="#<%= psz.barcode %>" role="button" data-toggle="modal">(editar)</a></p>
 			<!-- Modal -->

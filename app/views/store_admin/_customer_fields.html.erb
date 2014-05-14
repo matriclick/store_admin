@@ -1,0 +1,6 @@
+<%= hidden_field_tag 'customer[supplier_account_id]', @supplier_account.id %>
+<%= text_field_tag 'customer[rut]', '', :class => 'text_field', placeholder: 'RUT', :onchange => 'check_if_costumer_exists(this, "rut")' %>
+<%= text_field_tag 'customer[name]', '', :class => 'text_field', placeholder: 'Nombre' %>
+<%= text_field_tag 'customer[email]', '', :class => 'text_field', placeholder: 'Email', :onchange => 'check_if_costumer_exists(this, "email")' %>
+<%= text_field_tag 'customer[phone_number]', '', :class => 'text_field', placeholder: 'Teléfono' %>
+<%= text_field_tag 'customer[birthday]', '', :class => 'text_field datepicker', placeholder: 'Cumpleaños' %>

@@ -1,0 +1,38 @@
+<%= form_for [@supplier_account, @customer], :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.hidden_field :supplier_account_id, :value => @supplier_account.id %>
+  <div class="control-group">
+    <%= f.label :name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :rut, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :rut, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :birthday, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :birthday, :class => 'text_field datepicker' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :email, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :email, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :phone_number, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :phone_number, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                supplier_account_customers_path, :class => 'btn' %>
+  </div>
+<% end %>

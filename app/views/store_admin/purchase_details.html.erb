@@ -43,3 +43,6 @@
 	No se han encontrado compras
 </div>
 <% end %>
+<%= form_tag(store_admin_purchase_details_path(format: "csv"), :method => "get", :html => {class: 'form-horizontal', role: 'form'}) do %>
+	<%= submit_tag("Descargar Reporte",  class: "btn btn-default btn-sm", "data-loading-text" => "Descargando...") %>
+<% end %>

@@ -1,0 +1,23 @@
+<%- model_class = Warehouse -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:supplier_account_id) %>:</strong></dt>
+  <dd><%= @warehouse.supplier_account.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+  <dd><%= @warehouse.name %></dd>
+</dl>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              supplier_account_warehouses_path(supplier_account_id: @supplier_account.id), :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_supplier_account_warehouse_path(supplier_account_id: @supplier_account.id, id: @warehouse.id), :class => 'btn' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              supplier_account_warehouse_path(supplier_account_id: @supplier_account.id, id: @warehouse.id),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>

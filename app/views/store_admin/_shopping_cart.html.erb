@@ -15,23 +15,3 @@
 	</div>
 <% end %>
 </div>
-
-<div class="well" style="margin-top:20px">
-	<b>Total: <%= number_to_currency @shopping_cart.price, precision: 0 %></b>
-</div>
-
-<div class="well" style="margin-top:20px">
-	<%= form_tag(store_admin_generate_purchase_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), method: :put) %>
-		<%= text_field_tag(:email_buyer, '', placeholder: 'Correo comprador (opcional)', class: "form-control", style: 'font-weight:lighter; width:100%') %>
-		<div>
-			<% PaymentMethod.all.each do |pm| %>
-				<label class="radio-inline">
-				  <input type="radio" name="medio_pago" style="margin-top:0px" value="<%= pm.id %>"> <%= pm.name.capitalize %>
-				</label>
-			<% end %>
-		</div>
-		<div style="margin-top:20px">
-			<%= submit_tag "Pagar", class: "btn btn-default", style: 'width:100%' %> 
-		</div>
-	</form>
-</div>

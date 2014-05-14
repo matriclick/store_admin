@@ -1,0 +1,29 @@
+<%- model_class = Customer -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+  <dd><%= @customer.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:rut) %>:</strong></dt>
+  <dd><%= @customer.rut %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:birthday) %>:</strong></dt>
+  <dd><%= @customer.birthday.strftime("%Y-%m-%d") %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:phone_number) %>:</strong></dt>
+  <dd><%= @customer.phone_number %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:email) %>:</strong></dt>
+  <dd><%= @customer.email %></dd>
+</dl>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              supplier_account_customers_path(supplier_account_id: @supplier_account.id), :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_supplier_account_customer_path(supplier_account_id: @supplier_account.id, id: @customer.id), :class => 'btn' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              supplier_account_customer_path(supplier_account_id: @supplier_account.id, id: @customer.id),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>

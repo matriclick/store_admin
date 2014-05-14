@@ -5,6 +5,9 @@
 </script>
 
 <%- model_class = Product -%>
+<div class="pull-right">
+	<%= link_to t('.new', :default => t("helpers.links.new"))+' '+t('product'), new_supplier_account_product_path, :class => 'btn btn-primary' %>
+</div>
 <div class="page-header">
   <h1>Productos</h1>
 </div>
@@ -34,7 +37,7 @@
         <td><%= number_to_currency product.price, precision: 0 %></td>
         <td><%= number_to_currency product.cost, precision: 0 %></td>
         <td><%= product.supplier_account.name %></td>
-		<td><%= raw product.product_stock_sizes.map{ |psz| '<b>'+psz.stock.to_s+'</b> - '+psz.size.name+' - '+psz.color }.join('<br />') %></td>
+		<td><%= raw product.product_stock_sizes.map{ |psz| (psz.warehouse.blank? ? 'Sin bodega' : psz.warehouse.name)+': '+psz.stock.to_s+' - '+psz.size.name+' - '+psz.color }.join('<br />') %></td>
         <td><%=l product.created_at.in_time_zone(@time_zone) %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
@@ -54,7 +57,6 @@
 	No se han encontrado productos para esta búsqueda.
 </div>
 <% end %>
-
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_supplier_account_product_path,
-            :class => 'btn btn-primary' %>
+<%= form_tag(supplier_account_products_path(format: "csv"), :method => "get", :html => {class: 'form-horizontal', role: 'form'}) do %>
+	<%= submit_tag('Descargar Reporte', class: "btn btn-default btn-sm", "data-loading-text" => "Descargando...") %>
+<% end %>

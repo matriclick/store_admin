@@ -1,0 +1,38 @@
+<%- model_class = Warehouse -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= t('quantity_of_products') %></th>
+      <th><%= t('inventory_valuation') %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @warehouses.each do |warehouse| %>
+      <tr>
+        <td><%= link_to warehouse.name, supplier_account_warehouse_path(supplier_account_id: @supplier_account.id, id: warehouse.id) %></td>
+        <td><%= warehouse.products.size %></td>
+        <td><%= number_to_currency warehouse.products.sum(:cost), precision: 0 %></td>
+        <td><%=l warehouse.created_at %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_supplier_account_warehouse_path(supplier_account_id: @supplier_account.id, id: warehouse.id), :class => 'btn btn-mini' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      supplier_account_warehouse_path(supplier_account_id: @supplier_account.id, id: warehouse.id),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-mini btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_supplier_account_warehouse_path(supplier_account_id: @supplier_account.id),
+            :class => 'btn btn-primary' %>

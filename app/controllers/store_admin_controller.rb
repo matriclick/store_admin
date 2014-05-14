@@ -11,6 +11,7 @@ class StoreAdminController < ApplicationController
 
   def reports
   end
+  
   def users
   end
 
@@ -44,16 +45,16 @@ class StoreAdminController < ApplicationController
       product_stock_size = ProductStockSize.find_by_barcode barcode
       unless product_stock_size.blank?
         if product_stock_size.stock == 0
-          redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), notice: 'Error: Producto Agotado en el Sistema'
+          redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), alert: 'Error: Producto Agotado en el Sistema'
         else
           @shopping_cart.shopping_cart_items << ShoppingCartItem.create(shopping_cart_id: @shopping_cart.id, product_stock_size_id: product_stock_size.id, quantity: 1)
           redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), notice: 'Producto Agregado'
         end
       else
-        redirect_to root_path
+        redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), alert: 'Error: Producto no existe'
       end
     rescue Exception => exc
-      redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), notice: 'Error: Producto no existe'
+      redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), alert: 'Error: Producto no existe'
     end
   end
   
@@ -66,8 +67,11 @@ class StoreAdminController < ApplicationController
       @shopping_cart.shopping_cart_items.each do |sci|
         sci.product_stock_size.update_attribute :stock, sci.product_stock_size.stock - 1
       end
-      purchase = Purchase.create(payment_method_id: params[:medio_pago], buyer_email: params[:email_buyer], shopping_cart_id: @shopping_cart.id, supplier_account_id: @supplier_account.id, paid_amount: @shopping_cart.price)
-      unless purchase.buyer_email.blank?
+      
+      customer = create_customer
+      purchase = create_purchase(customer)
+      
+      unless purchase.customer.blank? or purchase.customer.email.blank?
         Notifications.purchase_details(purchase).deliver
       end
       redirect_to point_of_sale_path(id: @supplier_account.id), notice: 'Venta generada exitosamente'
@@ -98,4 +102,46 @@ class StoreAdminController < ApplicationController
         @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_day
       end
     end
+    
+    def create_purchase(customer)
+      if !params[:percentage_discount].blank?
+        discount_type = 'percentage'
+        discount = params[:percentage_discount]
+        total = @shopping_cart.price * (1-discount.to_f/100)
+      elsif !params[:absolute_discount].blank?
+        discount_type = 'absolute'
+        discount = params[:absolute_discount]
+        total = @shopping_cart.price - discount.to_i
+      else
+        discount_type = 'none'
+        discount = 0
+        total = @shopping_cart.price
+      end
+      
+      if customer.blank?
+        return Purchase.create(payment_method_id: params[:medio_pago], shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], 
+              supplier_account_id: @supplier_account.id, paid_amount: total, discount: discount, discount_type: discount_type, user_id: current_user.id)
+      else
+        return Purchase.create(payment_method_id: params[:medio_pago], shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], 
+              supplier_account_id: @supplier_account.id, paid_amount: total, discount: discount, discount_type: discount_type, customer_id: customer.id, user_id: current_user.id)
+      end
+    end
+    
+    def create_customer
+      if !params[:customer][:rut].blank? or !params[:customer][:email].blank?
+        if Customer.exists?(rut: params[:customer][:rut])
+          customer = Customer.find_by_rut(params[:customer][:rut])
+        elsif Customer.exists?(email: params[:customer][:email])
+          customer = Customer.find_by_rut(params[:customer][:email])
+        else
+          customer = Customer.new
+        end
+        customer.update_attributes(supplier_account_id: params[:customer][:supplier_account_id],
+                name: params[:customer][:name], birthday: params[:customer][:birthday], rut: params[:customer][:rut], 
+                email: params[:customer][:email], phone_number: params[:customer][:phone_number])
+        return customer
+      end
+      
+    end
+
 end
