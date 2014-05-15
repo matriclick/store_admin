@@ -10,6 +10,7 @@ class SupplierAccount < ActiveRecord::Base
   has_many :sizes, :dependent => :destroy
   has_many :product_categories, :dependent => :destroy
   has_many :purchases, :dependent => :destroy
+  has_many :daily_store_datum, :dependent => :destroy
   
   def find_products(q)
     if q.blank?

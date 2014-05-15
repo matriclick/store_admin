@@ -51,7 +51,6 @@ namespace :deploy do
       within release_path do
         execute :rake, 'db:migrate'
         execute :rake, 'db:seed'
-        execute :rake, 'cache:clear'
       end
     end
   end

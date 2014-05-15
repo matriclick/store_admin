@@ -46,6 +46,9 @@ gem 'nested_form'
 gem "chartkick"
 gem 'groupdate'
 
+#PDF
+gem "prawnto_2", :require => "prawnto"
+
 #Barcode
 gem 'barby'
 gem 'chunky_png'

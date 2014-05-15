@@ -1,0 +1,62 @@
+<%= form_for [@supplier_account, @purchase], :html => { :class => 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :payment_method_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :payment_method_id, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :shopping_cart_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :shopping_cart_id, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :supplier_account_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :supplier_account_id, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :paid_amount, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :paid_amount, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :customer_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :customer_id, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :discount, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :discount, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :discount_type, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :discount_type, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :user_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :user_id, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :invoice_number, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :invoice_number, :class => 'text_field' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                supplier_account_purchases_path(supplier_account_id: @supplier_account.id), :class => 'btn' %>
+  </div>
+<% end %>

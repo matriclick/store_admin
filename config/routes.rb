@@ -32,6 +32,8 @@ StoreAdmin::Application.routes.draw do
     resources :customers
     resources :daily_store_data
     resources :warehouses
+    get 'purchase/:id/change_ticket' => 'purchases#change_ticket', as: 'purchase_change_ticket'
+    resources :purchases
   end
 
   devise_for :users
