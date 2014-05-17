@@ -3,7 +3,7 @@
 		$("#barcode").focus();
 	});
 </script>
-
+	
 <div class="pull-right">
 	<div class="input-group form-inline">
 	<%= collection_select :warehouse, :id, @supplier_account.warehouses, :id, :name, { selected: @warehouse.id }, { onchange: 'update_warehouse()' } %>
@@ -55,7 +55,8 @@
 			<div class="control-group">
 		    <%= label_tag :invoice_number, 'Número de boleta', :class => 'control-label' %>
 		    <div class="controls">
-		      <%= text_field_tag(:invoice_number, Purchase.all.last.invoice_number.to_i + 1, placeholder: 'Número de boleta', class: "form-control") %>
+		      <%= text_field_tag(:invoice_number, (Purchase.all.size > 0 ? Purchase.all.last.invoice_number.to_i + 1 : ''), 
+									placeholder: 'Número de boleta', class: "form-control") %>
 		    </div>
 		  </div>
 		</div>
