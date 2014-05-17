@@ -7,6 +7,9 @@
 	<% end %>
 	</ul>
 	<p><%= @supplier_account.purchase_details_mail_text %></p>
+	<% unless @supplier_account.store_web.blank? %>
+		<p>Conoce más de <% unless @supplier_account.name %> en <a href="<%= @supplier_account.store_web %>"><%= @supplier_account.store_web %></a></p>
+	<% end %>
 <% end %>
 
 <%= render "layouts/email" %>

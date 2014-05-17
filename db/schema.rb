@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140517194514) do
+ActiveRecord::Schema.define(version: 20140517195208) do
 
   create_table "customers", force: true do |t|
     t.string   "name"
@@ -154,6 +154,7 @@ ActiveRecord::Schema.define(version: 20140517194514) do
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
     t.text     "purchase_details_mail_text"
+    t.string   "store_web"
   end
 
   create_table "supplier_accounts_users", id: false, force: true do |t|
