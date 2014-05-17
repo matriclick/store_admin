@@ -4,10 +4,10 @@ class StoreAdminController < ApplicationController
   
   def point_of_sale
     @shopping_cart = params[:shopping_cart_id].blank? ? ShoppingCart.create(user_id: current_user.id) : ShoppingCart.find(params[:shopping_cart_id])
-    if session[:warehouse_id].blank?
-      session[:warehouse_id] = current_user.supplier_accounts.first.warehouses.first.id
+    if cookies[:warehouse_id].blank?
+      cookies[:warehouse_id] = current_user.supplier_accounts.first.warehouses.first.id
     end
-    @warehouse = Warehouse.find(session[:warehouse_id])
+    @warehouse = Warehouse.find(cookies[:warehouse_id])
   end
 
   def products
@@ -39,8 +39,8 @@ class StoreAdminController < ApplicationController
   def stores
     if current_user.supplier_accounts.size == 1
       unless current_user.supplier_accounts.first.warehouses == 0
-        if session[:warehouse_id].blank?
-          session[:warehouse_id] = current_user.supplier_accounts.first.warehouses.first.id
+        if cookies[:warehouse_id].blank?
+          cookies[:warehouse_id] = current_user.supplier_accounts.first.warehouses.first.id
         end
         redirect_to point_of_sale_path(id: current_user.supplier_accounts.first.id)
       else
@@ -71,7 +71,7 @@ class StoreAdminController < ApplicationController
   
   def generate_purchase
     begin
-      @warehouse = Warehouse.find(session[:warehouse_id])
+      @warehouse = Warehouse.find(cookies[:warehouse_id])
       @shopping_cart = ShoppingCart.find params[:shopping_cart_id]
       #Disable Cart
       @shopping_cart.update_attribute :status, 'comprado'

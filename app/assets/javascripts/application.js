@@ -112,6 +112,9 @@ function calculate_subtotal_with_discount(object, subtotal, type) {
 	$('#total').html('$ '+Math.ceil(total));
 }
 
-
+function update_warehouse() {
+	$.cookie("warehouse_id", $('#warehouse_id').val())
+	location.reload();
+}
 
 

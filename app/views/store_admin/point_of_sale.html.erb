@@ -5,8 +5,10 @@
 </script>
 
 <div class="pull-right">
-	Agregar Select Cambiar Warehouse 
+	<div class="input-group form-inline">
+	<%= collection_select :warehouse, :id, @supplier_account.warehouses, :id, :name, { selected: @warehouse.id }, { onchange: 'update_warehouse()' } %>
 	<%= link_to 'Ingresar Datos del Día', new_supplier_account_daily_store_datum_path(supplier_account_id: @supplier_account.id), class: 'btn btn-default' %>
+	</div>
 </div>
 <h2>Punto de venta de <%= @warehouse.name %></h2>
 <%= form_tag(store_admin_add_product_to_cart_from_barcode_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), method: :post, html: {class: 'form-group'}) %>

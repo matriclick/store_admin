@@ -22,7 +22,7 @@ StoreAdmin::Application.routes.draw do
   post 'set_time_zone' => 'application#set_time_zone', as: 'set_time_zone'
   post 'check_if_costumer_exists' => 'application#check_if_costumer_exists', as: 'check_if_costumer_exists'
   post 'search_products_ajax' => 'application#search_products_ajax', as: 'search_products_ajax'
-  
+    
   resources :supplier_accounts do
     put 'product/:id/update_barcode/:product_stock_size_id' => 'products#update_barcode', as: 'update_barcode'
     get 'product/:id/distribute_stock' => 'products#distribute_stock', as: 'product_distribute_stock'

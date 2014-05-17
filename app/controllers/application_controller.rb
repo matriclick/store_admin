@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
       @time_zone = 'Santiago'
     end
   end
-  
+    
   def set_time_zone
     @time_zone = params[:time_zone_name]
     if @time_zone
