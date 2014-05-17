@@ -3,10 +3,18 @@ require 'barby/barcode/ean_13'
 
 class ProductStockSize < ActiveRecord::Base
   after_save :generate_barcode
+  
   belongs_to :product
   belongs_to :size
   belongs_to :warehouse
-  has_one :shopping_cart_item
+  has_many :shopping_cart_items
+  has_many :shopping_carts, through: :shopping_cart_items
+  has_many :supply_purchase_product_size
+  has_many :warehouse_product_size_stock
+  
+  def string_for_select
+    return self.product.name+' '+self.size.name+' '+self.color
+  end
   
   def generate_barcode(force = false)
     if self.barcode.blank? or force

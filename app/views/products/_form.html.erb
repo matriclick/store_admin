@@ -27,12 +27,11 @@
 	</div>
 <h2>Categorías</h2>
 	<%= render 'product_categories', :f => f %>
-<h2>Stock</h2>
-<p style="margin-top:-20px">Importante: cada vez que se agrega una talla/color, se genera un código de barra. <b>Nunca elimines una talla/color</b> si ya ocupaste el código de barra.</p>
+<h2>Modelos</h2>
+<p style="margin-top:-20px">Importante: cada vez que se agrega una talla/color, se genera un código de barra. <b>Nunca elimines una talla/color</b></p>
 	<%= render 'product_stock_size_fields', :f => f %>
 <h2>Imágenes</h2>
-	<%= render 'product_image_fields', :f => f %>
-	
+	<%= render 'product_image_fields', :f => f %>	
 	<div class="form-actions">
 	  <%= f.submit nil, :class => 'btn btn-primary' %>
 	  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

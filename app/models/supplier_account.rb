@@ -11,6 +11,12 @@ class SupplierAccount < ActiveRecord::Base
   has_many :product_categories, :dependent => :destroy
   has_many :purchases, :dependent => :destroy
   has_many :daily_store_datum, :dependent => :destroy
+  has_many :providers, :dependent => :destroy
+  has_many :supply_purchases, through: :providers
+  
+  has_attached_file :logo, :styles => { :medium => "300x", :thumb => "100x" }, :use_timestamp => false
+	validates_attachment_content_type :logo, :content_type => ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/x-png', 'image/pjpeg']
+	validates_attachment_size :logo, :less_than => 2.megabytes
   
   def find_products(q)
     if q.blank?
@@ -32,11 +38,30 @@ class SupplierAccount < ActiveRecord::Base
     end
   end
   
-  def get_purchases(from, to, q)
+  def find_product_stock_sizes(q)
+    if q.blank?
+      return ProductStockSize.joins(:product).where('products.supplier_account_id = ?', self.id)
+    else
+      q.gsub('.', '').gsub('$', '').gsub!(',', '')
+      if is_number?(q)
+        begin
+          return ProductStockSize.where('barcode = ?', q)
+        rescue Exception => exc
+          #Si tira error se está buscando por precio
+          return  ProductStockSize.joins(:product).where('product.price = ? and products.supplier_account_id = ?', q, self.id)
+        end
+      else #If it's not a number, lookup in description, name and color
+        return ProductStockSize.joins(:product).
+              where('products.supplier_account_id = ? and (products.name like "%'+q+'%" or products.description like "%'+q+'%" or product_stock_sizes.color like "%'+q+'%")', self.id)
+      end
+    end
+  end
+  
+  def find_purchases(from, to, q)
     if q.blank?
       return self.purchases.where('purchases.created_at >= ? and purchases.created_at <= ?', from, to).order 'purchases.created_at DESC'
     else
-      return self.purchases.where('id = ? or buyer_email like "%'+q+'%"', q).order 'purchases.created_at DESC'
+      return self.purchases.joins(:customer).where('change_ticket_barcode = ? or invoice_number = ? or customers.name like "%'+q+'%"', q, q).order 'purchases.created_at DESC'
     end
   end
   

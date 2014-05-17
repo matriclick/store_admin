@@ -1,4 +1,4 @@
-#logopath = 'logo.png'
+logopath = "#{Rails.root}/public"+@supplier_account.logo.url(:medium)
 initial_y = pdf.cursor
 initialmove_y = 5
 address_x = 35
@@ -13,7 +13,7 @@ pdf.font "Helvetica"
 pdf.font_size font_size
 
 #start with EON Media Group
-pdf.text_box "Your Business Name", :at => [address_x,  pdf.cursor]
+pdf.text_box @supplier_account.name, :at => [address_x,  pdf.cursor]
 pdf.move_down lineheight_y
 pdf.text_box "1234 Some Street Suite 1703", :at => [address_x,  pdf.cursor]
 pdf.move_down lineheight_y
@@ -23,7 +23,7 @@ pdf.move_down lineheight_y
 last_measured_y = pdf.cursor
 pdf.move_cursor_to pdf.bounds.height
 
-#pdf.image logopath, :width => 215, :position => :right
+pdf.image logopath, :width => 215, :position => :right
 
 pdf.move_cursor_to last_measured_y
 
@@ -31,20 +31,12 @@ pdf.move_cursor_to last_measured_y
 pdf.move_down 65
 last_measured_y = pdf.cursor
 
-pdf.text_box "Client Business Name", :at => [address_x,  pdf.cursor]
-pdf.move_down lineheight_y
-pdf.text_box "Client Contact Name", :at => [address_x,  pdf.cursor]
-pdf.move_down lineheight_y
-pdf.text_box "4321 Some Street Suite 1000", :at => [address_x,  pdf.cursor]
-pdf.move_down lineheight_y
-pdf.text_box "Some City, ST 12345", :at => [address_x,  pdf.cursor]
-
 pdf.move_cursor_to last_measured_y
 
 invoice_header_data = [ 
-  ["Invoice #", "001"],
-  ["Invoice Date", "December 1, 2011"],
-  ["Amount Due", "$3,200.00 USD"]
+  ["Boleta #", @purchase.invoice_number],
+  ["Fecha", @purchase.created_at.to_s],
+  ["Total", number_to_currency(@purchase.paid_amount.to_s, precision: 0)]
 ]
 
 pdf.table(invoice_header_data, :position => invoice_header_x, :width => 215) do
@@ -58,10 +50,13 @@ end
 pdf.move_down 45
 
 invoice_services_data = [ 
-  ["Item", "Description", "Unit Cost", "Quantity", "Line Total"],
-  ["Service Name", "Service Description", "320.00", "10", "$3,200.00"],
-  [" ", " ", " ", " ", " "]
+  ["Producto", "Talla", "Color", "Cantidad", "Total"],
 ]
+
+@purchase.shopping_cart.shopping_cart_items.each_with_index do |sci, i|
+	invoice_services_data[i+1] = [sci.product_stock_size.product.name, sci.product_stock_size.size.name, 
+									sci.product_stock_size.color, sci.quantity, number_to_currency(sci.product_stock_size.product.price, precision: 0)]
+end
 
 pdf.table(invoice_services_data, :width => pdf.bounds.width) do
   style(row(1..-1).columns(0..-1), :padding => [4, 5, 4, 5], :borders => [:bottom], :border_color => 'dddddd')
@@ -78,10 +73,18 @@ end
 pdf.move_down 1
 
 invoice_services_totals_data = [ 
-  ["Total", "$3,200.00"],
-  ["Amount Paid", "-0.00"],
-  ["Amount Due", "$3,200.00 USD"]
+  ["Sub-Total", number_to_currency(@purchase.shopping_cart.price, precision: 0)]
 ]
+
+unless @purchase.discount.blank?
+  if @purchase.discount_type == 'absolute'
+	invoice_services_totals_data[1] = ["Descuento", number_to_currency(@purchase.discount.to_s, precision: 0)]
+  elsif @purchase.discount_type == 'percentage'
+	invoice_services_totals_data[1] = ["Descuento", @purchase.discount.to_s+'%']
+  end
+end
+
+invoice_services_totals_data[2] = ["Total", number_to_currency(@purchase.paid_amount.to_s, precision: 0)]
 
 pdf.table(invoice_services_totals_data, :position => invoice_header_x, :width => 215) do
   style(row(0..1).columns(0..1), :padding => [1, 5, 1, 5], :borders => [])
@@ -94,21 +97,15 @@ end
 
 pdf.move_down 25
 
-invoice_terms_data = [ 
-  ["Terms"],
-  ["Payable upon receipt"]
-]
+pdf.text_box "Ticket de Cambio", :at => [400,  pdf.cursor]
+pdf.move_down 10
+pdf.image "#{Rails.root}/public/system/change_tickets/"+@purchase.supplier_account.name+'/'+@purchase.id.to_s+"_barcode.png", :width => 100, :at => [400,  pdf.cursor]
 
-pdf.table(invoice_terms_data, :width => 275) do
-  style(row(0..-1).columns(0..-1), :padding => [1, 0, 1, 0], :borders => [])
-  style(row(0).columns(0), :font_style => :bold)
-end
-
-pdf.move_down 15
+pdf.move_down 25
 
 invoice_notes_data = [ 
-  ["Notes"],
-  ["Thank you for doing business with Your Business Name"]
+  ["Gracias por tu compra"],
+  ["Esperamos que vuelvas pronto!"]
 ]
 
 pdf.table(invoice_notes_data, :width => 275) do

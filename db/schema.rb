@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140513062422) do
+ActiveRecord::Schema.define(version: 20140517194514) do
 
   create_table "customers", force: true do |t|
     t.string   "name"
@@ -68,7 +68,6 @@ ActiveRecord::Schema.define(version: 20140513062422) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "barcode"
-    t.integer  "warehouse_id"
   end
 
   create_table "products", force: true do |t|
@@ -81,18 +80,29 @@ ActiveRecord::Schema.define(version: 20140513062422) do
     t.datetime "updated_at"
   end
 
+  create_table "providers", force: true do |t|
+    t.string   "name"
+    t.text     "address"
+    t.string   "country"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "supplier_account_id"
+  end
+
   create_table "purchases", force: true do |t|
     t.integer  "payment_method_id"
     t.integer  "shopping_cart_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "supplier_account_id"
-    t.decimal  "paid_amount",         precision: 10, scale: 0
+    t.decimal  "paid_amount",           precision: 10, scale: 0
     t.integer  "customer_id"
-    t.decimal  "discount",            precision: 10, scale: 0
+    t.decimal  "discount",              precision: 10, scale: 0
     t.string   "discount_type"
     t.integer  "user_id"
     t.string   "invoice_number"
+    t.string   "change_ticket_barcode"
+    t.string   "status"
   end
 
   create_table "roles", force: true do |t|
@@ -107,6 +117,7 @@ ActiveRecord::Schema.define(version: 20140513062422) do
     t.integer  "quantity"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "status"
   end
 
   create_table "shopping_carts", force: true do |t|
@@ -138,11 +149,35 @@ ActiveRecord::Schema.define(version: 20140513062422) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "logo_file_name"
+    t.string   "logo_content_type"
+    t.integer  "logo_file_size"
+    t.datetime "logo_updated_at"
+    t.text     "purchase_details_mail_text"
   end
 
   create_table "supplier_accounts_users", id: false, force: true do |t|
     t.integer "user_id"
     t.integer "supplier_account_id"
+  end
+
+  create_table "supply_purchase_product_sizes", force: true do |t|
+    t.integer  "product_stock_size_id"
+    t.integer  "quantity"
+    t.decimal  "unit_cost",             precision: 10, scale: 0
+    t.integer  "currency_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "supply_purchase_id"
+  end
+
+  create_table "supply_purchases", force: true do |t|
+    t.integer  "provider_id"
+    t.decimal  "total_paid",  precision: 10, scale: 0
+    t.integer  "currency_id"
+    t.text     "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", force: true do |t|
@@ -163,6 +198,14 @@ ActiveRecord::Schema.define(version: 20140513062422) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+
+  create_table "warehouse_product_size_stocks", force: true do |t|
+    t.integer  "product_stock_size_id"
+    t.integer  "warehouse_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "stock"
+  end
 
   create_table "warehouses", force: true do |t|
     t.integer  "supplier_account_id"

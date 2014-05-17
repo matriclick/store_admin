@@ -21,6 +21,7 @@
 //= require jquery_nested_form
 //= require_tree .
 
+
 $(document).ready(function() {
 	if($.cookie("time_zone") == null) {
     	$.ajax({
@@ -37,6 +38,15 @@ $(document).ready(function() {
 	$('.datepicker').datepicker({
 		format: "yyyy-mm-dd"
 	});
+		
+	$('#myModal').on('shown.bs.modal', function() {
+	    $("#q_in_modal").keypress(function(e) {
+		    if (e.keyCode == $.ui.keyCode.ENTER) {
+				return false;
+		    }
+		});
+		
+	})
 })
 
 function check_if_costumer_exists(object, type) {
@@ -62,6 +72,33 @@ function check_if_costumer_exists(object, type) {
 				}
 			}
         }
+    });
+}
+
+function search_products_ajax(supplier_account_id) {
+	$.ajax({
+        url: "/search_products_ajax",
+        type: "POST",
+        dataType: "html",
+		headers: {
+		   'X-Transaction': 'POST SearchProduct',
+		   'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+        data: { 'q' : $('#q_in_modal').val(), 'supplier_account_id' : supplier_account_id }, 
+		success: function(data) {
+			if(data != "null") {
+				$( "#records_table tbody tr" ).remove();
+				var response = JSON.parse(data)
+				$.each(response, function(i, item) {
+			        var $tr = $('<tr>').append(
+   						$('<td>').html('<img src="'+item.image_url+'" />'),
+			            $('<td>').text(item.name),
+			            $('<td>').text(item.size),
+						$('<td>').text(item.color),
+						$('<td>').text(item.barcode),
+			            $('<td>').text(item.id)).appendTo('#records_table');
+			    });
+        	}
+		}
     });
 }
 

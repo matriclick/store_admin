@@ -1,0 +1,39 @@
+<div class="page-header">
+  <h1><%= @product.name %></h1>
+</div>
+<h2>Stock por Talla/Color</h2>
+<ul>
+<% @product.product_stock_sizes.each do |psz| %>
+	<li><%= psz.stock %> <%= psz.size.name %> <%= psz.color %></li>
+<% end %>
+</ul>
+<h2>Distribución actual de stock</h2>
+<%= form_tag(supplier_account_product_update_distribution_path(supplier_account_id: @supplier_account.id, id: @product.id)) do %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%=t 'stock' %></th>
+      <th><%=t 'warehouse' %></th>
+      <th><%=t 'size' %></th>
+      <th><%=t 'color' %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @warehouse_product_size_stocks.each do |wpss| %>
+      <tr>
+		<td><%= text_field_tag 'stock['+wpss.id.to_s+']', wpss.stock %></td>
+		<td><%= wpss.warehouse.name %></td>
+		<td><%= wpss.product_stock_size.size.name %></td>
+		<td><%= wpss.product_stock_size.color %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= submit_tag('Actualizar Stock en Bodegas', class: "btn btn-default btn-sm", "data-loading-text" => "Descargando...") %>
+<% end %>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              supplier_account_product_path(supplier_account_id: @supplier_account.id, id: @product.id), :class => 'btn btn-primary'  %>
+</div>
+

@@ -1,0 +1,27 @@
+<%= form_for [@supplier_account, @provider], :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.hidden_field :supplier_account_id, value: @supplier_account.id %>
+  <div class="control-group">
+    <%= f.label :name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :address, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :address, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :country, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :country, :class => 'text_field' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                supplier_account_providers_path(supplier_account_id: @supplier_account.id), :class => 'btn' %>
+  </div>
+<% end %>

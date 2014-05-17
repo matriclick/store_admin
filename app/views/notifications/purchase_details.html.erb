@@ -6,9 +6,7 @@
 		<li><%= sci.quantity %> <%= sci.product_stock_size.product.name %> <%= sci.product_stock_size.size.name %> <%= sci.product_stock_size.color %></li>
 	<% end %>
 	</ul>
-	<p>Código de tu compra: <%= @purchase.id %></p>
-	<p>Medio de pago: <%= @purchase.payment_method.name %></p>
-	<p>Total de tu compra: <%= number_to_currency @purchase.paid_amount, precision: 0 %></p>
+	<p><%= @supplier_account.purchase_details_mail_text %></p>
 <% end %>
 
 <%= render "layouts/email" %>

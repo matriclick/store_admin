@@ -53,4 +53,12 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def search_products_ajax
+    sup_acc = SupplierAccount.find params[:supplier_account_id]
+    pszs = sup_acc.find_product_stock_sizes(params[:q])
+    respond_to do |format|
+      format.json  { render :json => pszs.map{|psz| {:image_url =>  psz.product.product_images.first.photo.url(:side), :name => psz.product.name, :size =>  psz.size.name, :color =>  psz.color, :barcode =>  psz.barcode, :id =>  psz.id} } }
+    end
+  end
+  
 end

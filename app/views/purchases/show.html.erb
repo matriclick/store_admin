@@ -10,23 +10,61 @@
   <dd><%= @purchase.supplier_account.name unless @purchase.supplier_account.nil? %></dd>
   <% unless @purchase.discount.blank? %>
 	  <dt><strong><%= t 'subtotal' %>:</strong></dt>
-	  <dd><%= @purchase.shopping_cart_id %></dd>
+	  <dd><%= number_to_currency(@purchase.shopping_cart.price, precision: 0) %></dd>
 	  <dt><strong><%= model_class.human_attribute_name(:discount) %>:</strong></dt>
 	  <% if @purchase.discount_type == 'absolute' %>
 	 	<dd><%= number_to_currency @purchase.discount, precision: 0 %></dd>
 	  <% elsif @purchase.discount_type == 'percentage' %>
 	 	<dd><%= @purchase.discount %>%</dd>
+      <% else %>
+	 	<dd>n/a</dd>
 	  <% end %>
   <% end %>
   <dt><strong><%= model_class.human_attribute_name(:paid_amount) %>:</strong></dt>
   <dd><%= number_to_currency @purchase.paid_amount, precision: 0 %></dd>
+<% unless @purchase.customer.nil? %>
   <dt><strong><%= model_class.human_attribute_name(:customer_id) %>:</strong></dt>
   <dd><%= @purchase.customer.name unless @purchase.customer.nil? %></dd>
+<% end %>
   <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
   <dd><%= @purchase.user.email unless @purchase.user.nil? %></dd>
   <dt><strong><%= model_class.human_attribute_name(:invoice_number) %>:</strong></dt>
   <dd><%= @purchase.invoice_number %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:change_ticket_barcode) %>:</strong></dt>
+  <dd><%= @purchase.change_ticket_barcode %><br />
+	  <%= image_tag("/system/change_tickets/"+@purchase.supplier_account.name+'/'+@purchase.id.to_s+"_barcode.png") %><br />
+  </dd>
 </dl>
+<h2><%=t 'products' %></h2>
+<table class="table">
+	<thead>
+    <tr>
+      <th><%=t 'product' %></th>
+      <th><%=t 'size' %></th>
+      <th><%=t 'color' %></th>
+      <th><%=t 'quantity' %></th>
+      <th><%=t 'price' %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+	<% @purchase.shopping_cart.shopping_cart_items.each do |sci| %>
+    <tr>
+		<td><%= sci.product_stock_size.product.name %></td>
+		<td><%= sci.product_stock_size.size.name %></td>
+		<td><%= sci.product_stock_size.color %></td>
+		<td><%= sci.quantity %></td>
+		<td><%= number_to_currency(sci.product_stock_size.product.price, precision: 0) %></td>
+		<td>
+			<%= link_to t('return_product'), supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: @purchase.id, :format => 'pdf'), 
+						:class => 'btn btn-success' %>
+		  
+		</td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
 
 <div class="form-actions">
   <%= link_to t('print_detail'), supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: @purchase.id, :format => 'pdf'), 

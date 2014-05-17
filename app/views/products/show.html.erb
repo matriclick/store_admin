@@ -1,4 +1,5 @@
 <%- model_class = Product -%>
+<%- model_class2 = Purchase -%>
 
 <div class="page-header">
   <h1><%= @product.name %></h1>
@@ -27,14 +28,12 @@
 		Este producto no tiene categorías asociadas
 	<% end %>
 </div>
-<h2>Stock</h2>
+<h2>Tallas y Modelos</h2>
 <div class="well">
 <% if @product.product_stock_sizes.size > 0 %>
 <ul>
 	<% @product.product_stock_sizes.each do |psz| %>
-		<li>
-			<b><%= psz.warehouse.blank? ? 'Sin bodega asignada' : psz.warehouse.name %></b>: 
-				<%= psz.stock %> - <%= psz.size.name %> - <%= psz.color %><br />
+		<li><%= psz.stock %> - <%= psz.size.name %> - <%= psz.color %><br />
 			<%= image_tag("/system/barcodes/"+@product.supplier_account.name+'/'+psz.size.name+'_'+psz.color+'_'+@product.id.to_s+"_barcode.png") %><br />
 			<p><%= psz.barcode %> <a href="#<%= psz.barcode %>" role="button" data-toggle="modal">(editar)</a></p>
 			<!-- Modal -->
@@ -62,8 +61,33 @@
 	<% end %>
 </ul>
 <% else %>
-	Sin stock
+	Sin tallas y modelos creados
 <% end %>
+</div>
+<h2>Stock en Bodegas</h2>
+<div class="well">
+	<%= link_to 'Distribuir Stock', supplier_account_product_distribute_stock_path(supplier_account_id: @supplier_account.id, id: @product.id), 
+		:class => 'btn btn-default' %>
+	<table class="table table-striped">
+	  <thead>
+	    <tr>
+	      <th><%=t 'stock' %></th>
+	      <th><%=t 'warehouse' %></th>
+	      <th><%=t 'size' %></th>
+	      <th><%=t 'color' %></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <% @warehouse_product_size_stocks.each do |wpss| %>
+	      <tr>
+			<td><%= wpss.stock %></td>
+			<td><%= wpss.warehouse.name %></td>
+			<td><%= wpss.product_stock_size.size.name %></td>
+			<td><%= wpss.product_stock_size.color %></td>
+	      </tr>
+	    <% end %>
+	  </tbody>
+	</table>
 </div>
 <h2>Imágenes</h2>
 <div class="well">
@@ -75,6 +99,55 @@
 	No se han agregado imágenes para este producto
 <% end %>
 </div>
+<h2>Compras asociadas</h2>
+<% @product.product_stock_sizes.each do |psz| %>
+<div class="well">
+	<h3><%= psz.size.name %> - <%= psz.color %></h3>
+	<% unless psz.shopping_carts.joins(:purchase).size == 0 %>
+	<table class="table table-striped">
+	  <thead>
+	    <tr>
+	      <th><%= model_class2.human_attribute_name(:created_at) %></th>
+	      <th><%= model_class2.human_attribute_name(:payment_method_id) %></th>
+	      <th><%= model_class2.human_attribute_name(:paid_amount) %></th>
+	      <th><%= model_class2.human_attribute_name(:customer_id) %></th>
+	      <th><%= model_class2.human_attribute_name(:discount) %></th>
+	      <th><%= model_class2.human_attribute_name(:user_id) %></th>
+	      <th><%= model_class2.human_attribute_name(:invoice_number) %></th>
+	      <th><%= model_class2.human_attribute_name(:status) %></th>
+	      <th></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+		<% psz.shopping_carts.each do |shopping_cart| %>
+			<% unless shopping_cart.purchase.nil? %>
+			<tr>
+		        <td><%= shopping_cart.purchase.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
+		        <td><%= shopping_cart.purchase.payment_method.name unless shopping_cart.purchase.payment_method.nil?  %></td>
+		        <td><%= number_to_currency shopping_cart.purchase.paid_amount, precision: 0 %></td>
+		        <td><%= shopping_cart.purchase.customer.name unless shopping_cart.purchase.customer.nil? %></td>
+				<% if shopping_cart.purchase.discount_type == 'absolute' %>
+		        	<td><%= number_to_currency shopping_cart.purchase.discount, precision: 0 %></td>
+				<% elsif shopping_cart.purchase.discount_type == 'percentage' %>
+		        	<td><%= shopping_cart.purchase.discount %>%</td>
+				<% else %>
+		        	<td></td>
+				<% end %>
+		        <td><%= shopping_cart.purchase.user.email unless shopping_cart.purchase.user.nil? %></td>
+		        <td><%= shopping_cart.purchase.invoice_number %></td>
+		        <td><%= shopping_cart.purchase.status %></td>
+				<td><%= link_to t('view'), supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: shopping_cart.purchase.id), 
+						:class => 'btn btn-mini btn-primary' %></td>
+			</tr>
+			<% end %>
+		<% end %>
+  	   </tbody>
+	</table>
+	<% else %>
+		No hay compras asociadas
+	<% end %>
+</div>
+<% end %>
 
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),

@@ -4,9 +4,9 @@ require 'barby/barcode/ean_13'
 require 'barby/outputter/png_outputter'
 
 class ProductsController < ApplicationController
-  before_action :set_product, only: [:show, :edit, :update, :destroy, :update_barcode]
+  before_action :set_product, only: [:show, :edit, :update, :destroy, :update_barcode, :distribute_stock, :update_distribution]
   before_action :set_supplier_account, :check_if_user_has_related_supplier_account
-  
+    
   # GET /products
   # GET /products.json
   def index
@@ -17,6 +17,7 @@ class ProductsController < ApplicationController
   # GET /products/1
   # GET /products/1.json
   def show
+    @warehouse_product_size_stocks = WarehouseProductSizeStock.joins(:product_stock_size).where("product_stock_sizes.product_id = ?", @product.id)
   end
 
   # GET /products/new
@@ -82,6 +83,28 @@ class ProductsController < ApplicationController
     end
   end
 
+  def import
+    Product.import(params[:file])
+    redirect_to supplier_account_products_path, notice: "Productos Importados"
+  end
+  
+  def distribute_stock
+    Product.all.each do |p|
+      p.save
+    end
+    @warehouse_product_size_stocks = WarehouseProductSizeStock.joins(:product_stock_size).where("product_stock_sizes.product_id = ?", @product.id)
+  end
+  
+  def update_distribution
+    warehouse_product_size_stock_ids = params[:stock]
+    warehouse_product_size_stock_ids.each do |id|
+      wpss = WarehouseProductSizeStock.find(id[0])
+      wpss.update_attribute :stock, id[1]
+    end
+    
+    redirect_to supplier_account_product_path(supplier_account_id: @supplier_account.id, id: @product.id), notice: 'Sotck distribuido OK.'
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_product

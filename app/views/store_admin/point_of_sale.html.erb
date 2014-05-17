@@ -5,9 +5,10 @@
 </script>
 
 <div class="pull-right">
+	Agregar Select Cambiar Warehouse 
 	<%= link_to 'Ingresar Datos del Día', new_supplier_account_daily_store_datum_path(supplier_account_id: @supplier_account.id), class: 'btn btn-default' %>
 </div>
-<h2>Punto de venta</h2>
+<h2>Punto de venta de <%= @warehouse.name %></h2>
 <%= form_tag(store_admin_add_product_to_cart_from_barcode_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), method: :post, html: {class: 'form-group'}) %>
 	<div class="input-group">
 		<%= text_field_tag(:barcode, '', placeholder: 'Código del producto', class: "form-control", style: 'font-weight:lighter; width:100%') %>
@@ -19,7 +20,7 @@
 <hr>
 <% unless @shopping_cart.nil? or @shopping_cart.price == 0 %>
 	<%= render 'shopping_cart' %>
-	<%= form_tag(store_admin_generate_purchase_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), method: :put, class: 'form-horizontal') %>
+	<%= form_tag(store_admin_generate_purchase_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id, warehouse_id: @warehouse.id), method: :put, class: 'form-horizontal') %>
 		<div class="well" style="margin-top:20px">
 			<b>Sub-Total: <%= number_to_currency @shopping_cart.price, precision: 0 %></b>
 		</div>
@@ -52,7 +53,7 @@
 			<div class="control-group">
 		    <%= label_tag :invoice_number, 'Número de boleta', :class => 'control-label' %>
 		    <div class="controls">
-		      <%= text_field_tag(:invoice_number, '', placeholder: 'Número de boleta', class: "form-control") %>
+		      <%= text_field_tag(:invoice_number, Purchase.all.last.invoice_number.to_i + 1, placeholder: 'Número de boleta', class: "form-control") %>
 		    </div>
 		  </div>
 		</div>

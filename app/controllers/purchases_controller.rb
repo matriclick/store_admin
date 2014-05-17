@@ -1,10 +1,13 @@
 class PurchasesController < ApplicationController
-  before_action :set_purchase, only: [:show, :edit, :update, :destroy]
+  before_action :set_purchase, only: [:show, :edit, :update, :change_ticket, :destroy]
   before_action :set_supplier_account
+  before_action :set_date_range, only: [:index]
+  
   # GET /purchases
   # GET /purchases.json
   def index
-    @purchases = @supplier_account.purchases
+    @q = params[:q]
+    @purchases = @supplier_account.find_purchases(@from, @to, params[:q])
   end
 
   # GET /purchases/1
@@ -76,6 +79,16 @@ class PurchasesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def purchase_params
-      params.require(:purchase).permit(:payment_method_id, :shopping_cart_id, :supplier_account_id, :paid_amount, :customer_id, :discount, :discount_type, :user_id, :invoice_number)
+      params.require(:purchase).permit(:payment_method_id, :shopping_cart_id, :supplier_account_id, :paid_amount, :customer_id, :discount, :discount_type, :user_id, :invoice_number, :change_ticket_barcode)
+    end
+
+    def set_date_range
+      if params[:from].nil? or params[:to].nil?
+        @from = DateTime.now.in_time_zone(@time_zone).beginning_of_month
+        @to = DateTime.now.in_time_zone(@time_zone).end_of_month
+      else
+        @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_day
+        @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_day
+      end
     end
 end

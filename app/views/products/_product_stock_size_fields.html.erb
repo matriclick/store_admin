@@ -4,7 +4,6 @@
 		<%= pdz.text_field :stock, placeholder: 'Stock' %>
 		<%= pdz.collection_select :size_id, @supplier_account.sizes, :id, :name, {:prompt => 'Talla', :allow_blank => false} %>
 		<%= pdz.text_field :color, placeholder: 'Color' %>
-		<%= pdz.collection_select :warehouse_id, @supplier_account.warehouses, :id, :name, {:prompt => 'Bodega', :allow_blank => false} %>
 		<%= pdz.link_to_remove 'Eliminar', :class => 'btn btn-default btn-mini' %>
 	</div>
 </div>

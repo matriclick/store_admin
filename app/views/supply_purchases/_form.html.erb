@@ -1,0 +1,54 @@
+<%= nested_form_for [@supplier_account, @provider, @supply_purchase], :html => { :class => 'form-horizontal' } do |f| %>
+    <%= f.hidden_field :provider_id, :value => @provider.id %>  <div class="control-group">
+  <div class="control-group">
+    <%= f.label :total_paid, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :total_paid, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :currency_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :currency_id, :class => 'text_field' %>
+    </div>
+  </div>
+  <h2>Productos Comprados</h2>
+  <%= render 'supply_purchase_product_size_fields', :f => f %>
+  
+<h2>Comentarios de la compra</h2>
+  <div class="control-group">
+    <div class="controls">
+      <%= f.text_area :comments, :size => '30x5', :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="form-actions">
+	<p>Ojo: cuando guardes esta compra de insumos se actualizarán automáticamente el stock de los productos.</p>
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                supplier_account_provider_supply_purchases_path(supplier_account_id: @supplier_account.id, provider_id: @provider.id), :class => 'btn' %>
+  </div>
+<% end %>
+
+<!-- Modal -->
+<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <a type="button" class="close" data-dismiss="modal" aria-hidden="true">×</a>
+    <h3 id="myModalLabel">Buscar Producto</h3>
+  </div>
+  <div class="modal-body">
+		<%= text_field_tag(:q_in_modal, @q, class: "input-medium search-query", 
+			placeholder: "Ingresa el código de barra, Nombre, Descripción, Color o Precio", style: "width:80%") %>
+		<%= link_to t('search'), '#', type: 'button', class: "btn btn-primary", onclick: 'search_products_ajax('+@supplier_account.id.to_s+')' %>
+		<table id="records_table" class="table table-striped">
+			<thead>
+				<tr><th>Imagen</th><th>Producto</th><th>Talla</th><th>Color</th><th>Código de Barra</th><th>Código Interno del Producto</th></tr>
+			</thead>
+			<tbody>
+				
+	  		<tbody>		  
+		</table>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+  </div>
+</div>

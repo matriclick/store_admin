@@ -1,5 +1,4 @@
 StoreAdmin::Application.routes.draw do
-
   get "store_admin/stores", as: :user_root    
   get "store_admin/:id/point_of_sale" => 'store_admin#point_of_sale', as: 'point_of_sale'
   get "store_admin/:id/products" => 'store_admin#products', as: 'store_admin_products'
@@ -20,13 +19,18 @@ StoreAdmin::Application.routes.draw do
   post "supplier_accounts/:id/update_user/:user_id" => 'supplier_accounts#update_user', as: 'supplier_account_update_user'
   get 'supplier_accounts/autocomplete_user_email' => 'supplier_accounts#autocomplete_user_email'
   
-  post 'set_time_zone' => 'application#set_time_zone', as: 'set_time_zone_path'
-  post 'check_if_costumer_exists' => 'application#check_if_costumer_exists', as: 'check_if_costumer_exists_path'
+  post 'set_time_zone' => 'application#set_time_zone', as: 'set_time_zone'
+  post 'check_if_costumer_exists' => 'application#check_if_costumer_exists', as: 'check_if_costumer_exists'
+  post 'search_products_ajax' => 'application#search_products_ajax', as: 'search_products_ajax'
   
   resources :supplier_accounts do
     put 'product/:id/update_barcode/:product_stock_size_id' => 'products#update_barcode', as: 'update_barcode'
+    get 'product/:id/distribute_stock' => 'products#distribute_stock', as: 'product_distribute_stock'
+    post 'product/:id/update_distribution' => 'products#update_distribution', as: 'product_update_distribution'
     get :autocomplete_user_email, :on => :collection
-    resources :products
+    resources :products do
+      collection { post :import }
+    end
     resources :sizes
     resources :product_categories
     resources :customers
@@ -34,6 +38,11 @@ StoreAdmin::Application.routes.draw do
     resources :warehouses
     get 'purchase/:id/change_ticket' => 'purchases#change_ticket', as: 'purchase_change_ticket'
     resources :purchases
+    resources :providers do
+        resources :supply_purchases do
+          collection { post :search_product }
+        end
+    end
   end
 
   devise_for :users
