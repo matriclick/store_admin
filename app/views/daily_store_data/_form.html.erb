@@ -7,6 +7,12 @@
     </div>
   </div>
   <div class="control-group">
+    <%= f.label :warehouse_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.collection_select :warehouse_id, @supplier_account.warehouses, :id, :name, {:prompt => true, :allow_blank => false} %>
+    </div>
+  </div>
+  <div class="control-group">
     <%= f.label :came_in_clients, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :came_in_clients, :class => 'text_field' %>
