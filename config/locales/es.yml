@@ -213,6 +213,8 @@ es:
       product: Producto
       size: Talla
       product_category: Categoría
+      customer: Cliente
+      purchase: Ventas
     attributes:
       size:
         name: "Nombre"
@@ -229,6 +231,22 @@ es:
         description: 'Descripción'
         price: 'Previo Venta'
         cost: 'Costo'
+      customer:
+        name: "Nombre"
+        rut: "RUT"
+        birthday: "Cumpleaños"
+        phone_number: "Teléfono"
+        created_at: "Fecha de Creación"      
+      purchase:
+        created_at: "Fecha de Creación"
+        payment_method_id: "Medio de Pago"
+        paid_amount: "Monto Pagado"
+        customer_id: "Cliente"
+        discount: "Descuento"
+        user_id: "Vendedor"
+        invoice_number: "Número Boleta"
+        change_ticket_barcode: "Código Ticket de Cambio"
+        status: "Estado"
   name: "Nombre"
   search: 'Buscar'
   price: "Precio Venta"
