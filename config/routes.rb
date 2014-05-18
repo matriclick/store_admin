@@ -7,6 +7,7 @@ StoreAdmin::Application.routes.draw do
   get "store_admin/:id/purchase_details" => 'store_admin#purchase_details', as: 'store_admin_purchase_details'
   get "store_admin/:id/sales_summary" => 'store_admin#sales_summary', as: 'store_admin_sales_summary'
   get "store_admin/:id/inventory" => 'store_admin#inventory', as: 'store_admin_inventory'
+  get "store_admin/:id/menu" => 'store_admin#menu', as: 'store_admin_menu'
 
   post 'store_admin/:id/add_product_to_cart_from_barcode/' => 'store_admin#add_product_to_cart_from_barcode', as: 'store_admin_add_product_to_cart_from_barcode'
 

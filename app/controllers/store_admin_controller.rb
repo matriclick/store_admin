@@ -10,6 +10,11 @@ class StoreAdminController < ApplicationController
     @warehouse = Warehouse.find(cookies[:warehouse_id])
   end
 
+  def menu
+    
+  end
+
+
   def products
   end
 
@@ -70,27 +75,31 @@ class StoreAdminController < ApplicationController
   end
   
   def generate_purchase
+    error_message = 'Error desconocido al generar la compra'
     begin
+      error_message = 'No se puede generar la compra porque la bodega no ha sido seleccionada'
       @warehouse = Warehouse.find(cookies[:warehouse_id])
+      error_message = 'No se puede generar la compra porque el carrito de compras no se ha encontrado'
       @shopping_cart = ShoppingCart.find params[:shopping_cart_id]
       #Disable Cart
       @shopping_cart.update_attribute :status, 'comprado'
       #Reduce Stock
       @shopping_cart.shopping_cart_items.each do |sci|
         sci.product_stock_size.update_attribute :stock, sci.product_stock_size.stock - 1
-        wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", sci.id, @warehouse.id).first
-        wpss.stock.update_attribute :stock, wpss.stock - 1
+        error_message = 'El producto no se encuentra disponible en la bodega '+@warehouse.name
+        wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", sci.product_stock_size.id, @warehouse.id).first
+        wpss.update_attribute :stock, wpss.stock - 1
       end
-      
+      error_message = 'Error creando al comprador'
       customer = create_customer
+      error_message = 'Error generando la compra'
       purchase = create_purchase(customer)
-      
       unless purchase.customer.blank? or purchase.customer.email.blank?
         Notifications.purchase_details(purchase).deliver
       end
       redirect_to point_of_sale_path(id: @supplier_account.id), notice: 'Venta generada exitosamente'
     rescue Exception => exc    
-      redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), notice: 'Error desconocido al generar la compra'
+      redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), alert: error_message
     end
   end
   

@@ -1,7 +1,7 @@
 <div class="page-header">
   <h1><%= @product.name %></h1>
 </div>
-<h2>Stock por Talla/Color</h2>
+<h2>Stock Total por Talla/Color</h2>
 <ul>
 <% @product.product_stock_sizes.each do |psz| %>
 	<li><%= psz.stock %> <%= psz.size.name %> <%= psz.color %></li>

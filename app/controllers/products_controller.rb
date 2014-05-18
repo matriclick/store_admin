@@ -93,8 +93,12 @@ class ProductsController < ApplicationController
   end
   
   def distribute_stock
-    Product.all.each do |p|
-      p.save
+    @product.product_stock_sizes.each do |psz|
+      @product.supplier_account.warehouses.each do |warehouse|
+        if WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", psz.id, warehouse.id).size == 0
+          WarehouseProductSizeStock.create(:product_stock_size_id => psz.id, :warehouse_id => warehouse.id)
+        end
+      end
     end
     @warehouse_product_size_stocks = WarehouseProductSizeStock.joins(:product_stock_size).where("product_stock_sizes.product_id = ?", @product.id)
   end

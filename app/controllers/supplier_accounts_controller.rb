@@ -88,7 +88,7 @@ class SupplierAccountsController < ApplicationController
   def update
     respond_to do |format|
       if @supplier_account.update(supplier_account_params)
-        format.html { redirect_to @supplier_account, notice: 'Supplier account was successfully updated.' }
+        format.html { redirect_to store_admin_menu_path(id: @supplier_account.id), notice: 'Información Actualizada!' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -115,6 +115,6 @@ class SupplierAccountsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def supplier_account_params
-      params.require(:supplier_account).permit(:name, :logo, :purchase_details_mail_text)
+      params.require(:supplier_account).permit(:name, :logo, :purchase_details_mail_text, :store_web)
     end
 end

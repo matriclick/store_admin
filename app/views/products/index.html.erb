@@ -37,7 +37,7 @@
         <td><%= number_to_currency product.price, precision: 0 %></td>
         <td><%= number_to_currency product.cost, precision: 0 %></td>
         <td><%= product.supplier_account.name %></td>
-		<td><%= raw product.product_stock_sizes.map{ |psz| (psz.warehouse.blank? ? 'Sin bodega' : psz.warehouse.name)+': '+psz.stock.to_s+' - '+psz.size.name+' - '+psz.color }.join('<br />') %></td>
+		<td><%= raw product.product_stock_sizes.map{ |psz| psz.stock.to_s+' - '+psz.size.name+' - '+psz.color }.join('<br />') %></td>
         <td><%=l product.created_at.in_time_zone(@time_zone) %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
