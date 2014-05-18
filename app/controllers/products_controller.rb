@@ -84,8 +84,12 @@ class ProductsController < ApplicationController
   end
 
   def import
-    Product.import(params[:file])
-    redirect_to supplier_account_products_path, notice: "Productos Importados"
+    col_sep = ','
+    if Product.import(params[:file], col_sep)
+      redirect_to supplier_account_products_path, notice: "Productos Importados"
+    else
+      redirect_to supplier_account_products_path, alert: "Error en el formato del archivo; revísalo. Si necesitas ayuda envía un correo a ups@inventariolibre.com"
+    end
   end
   
   def distribute_stock

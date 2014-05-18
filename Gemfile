@@ -53,6 +53,9 @@ gem "prawnto_2", :require => "prawnto"
 gem 'barby'
 gem 'chunky_png'
 
+#Excel Manipulation
+gem 'roo'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
