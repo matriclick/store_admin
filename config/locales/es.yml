@@ -215,6 +215,9 @@ es:
       product_category: Categoría
       customer: Cliente
       purchase: Ventas
+      supplier_account: Tienda
+      provider: Proveedor
+      warehouse: Bodega
     attributes:
       size:
         name: "Nombre"
@@ -247,6 +250,20 @@ es:
         invoice_number: "Número Boleta"
         change_ticket_barcode: "Código Ticket de Cambio"
         status: "Estado"
+      supplier_account:
+        name: "Nombre"
+        created_at: "Fecha de Creación"
+      provider:
+        name: "Nombre"
+        address: "Dirección"
+        country: "País"
+        created_at: "Fecha de Creación"
+      warehouse:
+        name: "Nombre"
+        quantity_of_products: "Cantidad de Productos"
+        inventory_valuation: "Costo total del Inventario"
+        country: "País"
+        created_at: "Fecha de Creación"          
   name: "Nombre"
   search: 'Buscar'
   price: "Precio Venta"

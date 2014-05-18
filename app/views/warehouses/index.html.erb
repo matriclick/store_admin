@@ -6,8 +6,8 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= t('quantity_of_products') %></th>
-      <th><%= t('inventory_valuation') %></th>
+      <th><%= model_class.human_attribute_name(:quantity_of_products) %></th>
+      <th><%= model_class.human_attribute_name(:inventory_valuation) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
