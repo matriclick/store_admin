@@ -263,7 +263,15 @@ es:
         quantity_of_products: "Cantidad de Productos"
         inventory_valuation: "Costo total del Inventario"
         country: "País"
-        created_at: "Fecha de Creación"          
+        created_at: "Fecha de Creación"
+      gift_card:
+        customer_id: "Cliente Asociado"         
+        barcode: "Código de Barra"
+        amount: "Valor"
+        valid_until: "Válida Hasta"
+        status: "Estado"
+        user_id: "Creada por"
+        created_at: "Fecha de Creación"
   name: "Nombre"
   search: 'Buscar'
   price: "Precio Venta"

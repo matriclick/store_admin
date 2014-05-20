@@ -102,6 +102,29 @@ function search_products_ajax(supplier_account_id) {
     });
 }
 
+function get_gift_card_value() {
+	barcode = $("#gifcard_barcode").val();
+	total = $('#total').html().replace(/\D/g,'');
+	$.ajax({
+        url: "/get_gift_card_value",
+        type: "POST",
+        dataType: "html",
+		headers: {
+		   'X-Transaction': 'POST Timezone',
+		   'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+        data: { 'barcode': barcode }, 
+		success: function(data) {
+			if(data != "null") {
+				var json = JSON.parse(data);
+				$('#gift_card_message').html('Valor de la GiftCard: $ '+json['amount']);
+				new_total = total - json['amount']
+				$('#total').html('$ '+new_total);
+			}
+        }
+    });
+	
+}
+
 function calculate_subtotal_with_discount(object, subtotal, type) {
 	total = 0
 	if(type == "percentage") {

@@ -39,6 +39,12 @@
 			</b><br />
 			<i>Completar solo una alternativa (porcentaje o un valor absoluto). Si no hay descuento dejar en blanco.</i>
 		</div>
+		<div class="well" style="margin-top:20px;">
+			<b>GiftCard
+				<%= text_field_tag(:gifcard_barcode, '', placeholder: 'Código de Barra de la GiftCard', class: "form-control", 
+									onchange: 'get_gift_card_value()') %>
+									<span id="gift_card_message"></span>
+		</div>
 		<div class="well" style="margin-top:20px">
 			<b>Total a pagar: <span id="total"><%= number_to_currency @shopping_cart.price, precision: 0 %></span></b>
 		</div>

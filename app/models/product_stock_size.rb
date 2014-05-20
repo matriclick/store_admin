@@ -1,5 +1,6 @@
 require 'barby'
 require 'barby/barcode/ean_13'
+require 'barby/outputter/png_outputter'
 
 class ProductStockSize < ActiveRecord::Base
   after_save :generate_barcode

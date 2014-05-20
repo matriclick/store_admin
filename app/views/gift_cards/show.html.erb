@@ -1,0 +1,31 @@
+<%- model_class = GiftCard -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:customer_id) %>:</strong></dt>
+  <dd><%= @gift_card.customer_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:barcode) %>:</strong></dt>
+  <dd><%= @gift_card.barcode %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:amount) %>:</strong></dt>
+  <dd><%= @gift_card.amount %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:valid_until) %>:</strong></dt>
+  <dd><%= @gift_card.valid_until %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
+  <dd><%= @gift_card.status %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+  <dd><%= @gift_card.user_id %></dd>
+</dl>
+
+<div class="form-actions">
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+              supplier_account_gift_cards_path(supplier_account_id: @supplier_account.id), :class => 'btn'  %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_supplier_account_gift_card_path(supplier_account_id: @supplier_account.id, id: @gift_card.id), :class => 'btn' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              supplier_account_gift_card_path(supplier_account_id: @supplier_account.id, id: @gift_card.id),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+</div>

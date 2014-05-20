@@ -1,5 +1,5 @@
 class PurchasesController < ApplicationController
-  before_action :set_purchase, only: [:show, :edit, :update, :change_ticket, :destroy]
+  before_action :set_purchase, only: [:show, :edit, :update, :change_ticket, :return_product, :destroy]
   before_action :set_supplier_account
   before_action :set_date_range, only: [:index]
   
@@ -25,6 +25,16 @@ class PurchasesController < ApplicationController
   end
   
   def change_ticket
+  end
+  
+  def return_product
+    @shopping_cart_item = ShoppingCartItem.find params[:shopping_cart_item_id]
+    @shopping_cart_item.update_attribute :status, 'refunded'
+    @shopping_cart_item.product_stock_size.update_attribute :stock, @shopping_cart_item.product_stock_size.stock + 1
+    @purchase.update_attribute :status, 'partial refund'
+    GiftCard.create(customer_id: @purchase.customer_id, amount: @purchase.reduce_applicable_discount(@shopping_cart_item.product_stock_size.product.price), 
+                  valid_until: DateTime.now.in_time_zone(@time_zone).end_of_year, status: 'valid', user_id: current_user.id, supplier_account_id: @supplier_account.id)
+    
   end
 
   # POST /purchases

@@ -26,6 +26,14 @@ class ApplicationController < ActionController::Base
       @time_zone = 'Santiago'
     end
   end
+  
+  def get_gift_card_value
+    gift_card = GiftCard.find_by_barcode params[:barcode]
+    respond_to do |format|
+      format.json  { render :json => gift_card }
+    end
+
+  end
     
   def set_time_zone
     @time_zone = params[:time_zone_name]

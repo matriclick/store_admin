@@ -10,7 +10,6 @@ StoreAdmin::Application.routes.draw do
   get "store_admin/:id/menu" => 'store_admin#menu', as: 'store_admin_menu'
 
   post 'store_admin/:id/add_product_to_cart_from_barcode/' => 'store_admin#add_product_to_cart_from_barcode', as: 'store_admin_add_product_to_cart_from_barcode'
-
   put 'store_admin/:id/generate_purchase/:shopping_cart_id' => 'store_admin#generate_purchase', as: 'store_admin_generate_purchase'
   put 'store_admin/:id/remove_product_from_cart_path/:shopping_cart_id/:shopping_cart_id' => 'store_admin#remove_product_from_cart', as: 'store_admin_remove_product_from_cart'
     
@@ -23,7 +22,7 @@ StoreAdmin::Application.routes.draw do
   post 'set_time_zone' => 'application#set_time_zone', as: 'set_time_zone'
   post 'check_if_costumer_exists' => 'application#check_if_costumer_exists', as: 'check_if_costumer_exists'
   post 'search_products_ajax' => 'application#search_products_ajax', as: 'search_products_ajax'
-    
+  post 'get_gift_card_value' => 'application#get_gift_card_value', as: 'get_gift_card_value'
   resources :supplier_accounts do
     put 'product/:id/update_barcode/:product_stock_size_id' => 'products#update_barcode', as: 'update_barcode'
     get 'product/:id/distribute_stock' => 'products#distribute_stock', as: 'product_distribute_stock'
@@ -32,11 +31,13 @@ StoreAdmin::Application.routes.draw do
     resources :products do
       collection { post :import }
     end
+    resources :gift_cards
     resources :sizes
     resources :product_categories
     resources :customers
     resources :daily_store_data
     resources :warehouses
+    post 'purchase/:id/return_product' => 'purchases#return_product', as: 'purchase_return_product'
     get 'purchase/:id/change_ticket' => 'purchases#change_ticket', as: 'purchase_change_ticket'
     resources :purchases
     resources :providers do

@@ -1,6 +1,6 @@
 require 'barby'
 require 'barby/barcode/ean_13'
-require 'chunky_png'
+require 'barby/outputter/png_outputter'
 
 class Purchase < ActiveRecord::Base
   after_save :generate_barcode
@@ -23,6 +23,20 @@ class Purchase < ActiveRecord::Base
       barcode_object = Barby::EAN13.new(barcode) #Automatically adds the checksum digit at the end completing the 13th digit
       self.update_attribute :change_ticket_barcode, barcode_object.to_s
       save_barcode_image(barcode_object)
+    end
+  end
+  
+  def reduce_applicable_discount(amount)
+    if self.discount.blank? 
+      return amount
+    else
+  	   if self.discount_type == 'absolute' 
+  	     return amount - amount*self.discount.to_f/self.shopping_cart.price
+  	   elsif self.discount_type == 'percentage' 
+  	     return amount*(1-self.discount.to_f/100)
+       else
+         return amount
+       end
     end
   end
   

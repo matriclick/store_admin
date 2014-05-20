@@ -1,3 +1,4 @@
+# encoding: UTF-8
 class StoreAdminController < ApplicationController
   before_action :set_supplier_account, :check_if_user_has_related_supplier_account, except: [:stores]
   before_action :set_date_range, only: [:purchase_details, :sales_summary]
@@ -75,32 +76,32 @@ class StoreAdminController < ApplicationController
   end
   
   def generate_purchase
-    error_message = 'Error desconocido al generar la compra'
-    begin
-      error_message = 'No se puede generar la compra porque la bodega no ha sido seleccionada'
+    @error_message = 'Error desconocido al generar la compra'
+#    begin
+      @error_message = 'No se puede generar la compra porque la bodega no ha sido seleccionada'
       @warehouse = Warehouse.find(cookies[:warehouse_id])
-      error_message = 'No se puede generar la compra porque el carrito de compras no se ha encontrado'
+      @error_message = 'No se puede generar la compra porque el carrito de compras no se ha encontrado'
       @shopping_cart = ShoppingCart.find params[:shopping_cart_id]
       #Disable Cart
       @shopping_cart.update_attribute :status, 'comprado'
       #Reduce Stock
       @shopping_cart.shopping_cart_items.each do |sci|
         sci.product_stock_size.update_attribute :stock, sci.product_stock_size.stock - 1
-        error_message = 'El producto no se encuentra disponible en la bodega '+@warehouse.name
+        @error_message = 'El producto no se encuentra disponible en la bodega '+@warehouse.name
         wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", sci.product_stock_size.id, @warehouse.id).first
         wpss.update_attribute :stock, wpss.stock - 1
       end
-      error_message = 'Error creando al comprador'
+      @error_message = 'Error creando al comprador'
       customer = create_customer
-      error_message = 'Error generando la compra'
+      @error_message = 'Error generando la compra'
       purchase = create_purchase(customer)
       unless purchase.customer.blank? or purchase.customer.email.blank?
         Notifications.purchase_details(purchase).deliver
       end
       redirect_to point_of_sale_path(id: @supplier_account.id), notice: 'Venta generada exitosamente'
-    rescue Exception => exc    
-      redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), alert: error_message
-    end
+#    rescue Exception => exc    
+#      redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), alert: @error_message
+#    end
   end
   
   def remove_product_from_cart
@@ -141,12 +142,26 @@ class StoreAdminController < ApplicationController
         total = @shopping_cart.price
       end
       
+      gift_card_id = nil
+      unless params[:gifcard_barcode].blank?
+        @error_message = 'GiftCard no encontrada'
+        gift_card = GiftCard.find_by_barcode params[:gifcard_barcode]
+        gift_card_id = gift_card.id
+        if gift_card.status == 'valid'
+          gift_card.update_attribute :status, 'used'
+          total = total - gift_card.amount
+        else
+          @error_message = 'GiftCard no válida'
+          raise 'GiftCard no válida'
+        end
+      end
+      @error_message = 'Error al guardar la compra. Consulta con el administrador.'
       if customer.blank?
         return Purchase.create(payment_method_id: params[:medio_pago], shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], 
-              supplier_account_id: @supplier_account.id, paid_amount: total, discount: discount, discount_type: discount_type, user_id: current_user.id)
+              supplier_account_id: @supplier_account.id, paid_amount: total, discount: discount, discount_type: discount_type, user_id: current_user.id, gift_card_id: gift_card_id)
       else
         return Purchase.create(payment_method_id: params[:medio_pago], shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], 
-              supplier_account_id: @supplier_account.id, paid_amount: total, discount: discount, discount_type: discount_type, customer_id: customer.id, user_id: current_user.id)
+              supplier_account_id: @supplier_account.id, paid_amount: total, discount: discount, discount_type: discount_type, customer_id: customer.id, user_id: current_user.id, gift_card_id: gift_card_id)
       end
     end
     

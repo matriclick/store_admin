@@ -44,6 +44,7 @@
       <th><%=t 'color' %></th>
       <th><%=t 'quantity' %></th>
       <th><%=t 'price' %></th>
+      <th><%=t 'paid_amount' %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -55,9 +56,10 @@
 		<td><%= sci.product_stock_size.color %></td>
 		<td><%= sci.quantity %></td>
 		<td><%= number_to_currency(sci.product_stock_size.product.price, precision: 0) %></td>
+		<td><%= number_to_currency(@purchase.reduce_applicable_discount(sci.product_stock_size.product.price), precision: 0) %></td>
 		<td>
-			<%= link_to t('return_product'), supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: @purchase.id, :format => 'pdf'), 
-						:class => 'btn btn-success' %>
+			<%= link_to(t('return_product'), supplier_account_purchase_return_product_path(supplier_account_id: @supplier_account.id, id: @purchase.id, 
+						shopping_cart_item_id: sci.id), method: 'post', :class => 'btn btn-success') unless sci.status == 'refunded' %>
 		  
 		</td>
     </tr>
