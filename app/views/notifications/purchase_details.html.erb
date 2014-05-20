@@ -6,9 +6,9 @@
 		<li><%= sci.quantity %> <%= sci.product_stock_size.product.name %> <%= sci.product_stock_size.size.name %> <%= sci.product_stock_size.color %></li>
 	<% end %>
 	</ul>
-	<p><%= @supplier_account.purchase_details_mail_text %></p>
-	<% unless @supplier_account.store_web.blank? %>
-		<p>Conoce más de <% unless @supplier_account.name %> en <a href="<%= @supplier_account.store_web %>"><%= @supplier_account.store_web %></a></p>
+	<p><%= @purchase.supplier_account.purchase_details_mail_text %></p>
+	<% unless @purchase.supplier_account.store_web.blank? %>
+		<p>Conoce más de <%= @purchase.supplier_account.name %> en <a href="<%= @purchase.supplier_account.store_web %>"><%= @purchase.supplier_account.store_web %></a></p>
 	<% end %>
 <% end %>
 
