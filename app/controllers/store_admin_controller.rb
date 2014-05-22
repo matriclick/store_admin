@@ -86,10 +86,10 @@ class StoreAdminController < ApplicationController
       @shopping_cart.update_attribute :status, 'comprado'
       #Reduce Stock
       @shopping_cart.shopping_cart_items.each do |sci|
-        sci.product_stock_size.update_attribute :stock, sci.product_stock_size.stock - 1
         @error_message = 'El producto no se encuentra disponible en la bodega '+@warehouse.name
         wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", sci.product_stock_size.id, @warehouse.id).first
         wpss.update_attribute :stock, wpss.stock - 1
+        sci.product_stock_size.update_attribute :stock, sci.product_stock_size.stock - 1
       end
       @error_message = 'Error creando al comprador'
       customer = create_customer
