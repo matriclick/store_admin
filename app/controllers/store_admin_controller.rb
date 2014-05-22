@@ -82,19 +82,12 @@ class StoreAdminController < ApplicationController
       @warehouse = Warehouse.find(cookies[:warehouse_id])
       @error_message = 'No se puede generar la compra porque el carrito de compras no se ha encontrado'
       @shopping_cart = ShoppingCart.find params[:shopping_cart_id]
-      #Disable Cart
-      @shopping_cart.update_attribute :status, 'comprado'
-      #Reduce Stock
-      @shopping_cart.shopping_cart_items.each do |sci|
-        @error_message = 'El producto no se encuentra disponible en la bodega '+@warehouse.name
-        wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", sci.product_stock_size.id, @warehouse.id).first
-        wpss.update_attribute :stock, wpss.stock - 1
-        sci.product_stock_size.update_attribute :stock, sci.product_stock_size.stock - 1
-      end
       @error_message = 'Error creando al comprador'
       customer = create_customer
       @error_message = 'Error generando la compra'
       purchase = create_purchase(customer)
+      #Disable Cart
+      @shopping_cart.update_attribute :status, 'comprado'
       unless purchase.customer.blank? or purchase.customer.email.blank?
         Notifications.purchase_details(purchase).deliver
       end
@@ -150,10 +143,14 @@ class StoreAdminController < ApplicationController
         if gift_card.status == 'valid'
           gift_card.update_attribute :status, 'used'
           total = total - gift_card.amount
-        else
-          @error_message = 'GiftCard no válida'
-          raise 'GiftCard no válida'
         end
+      end
+      #Reduce Stock
+      @shopping_cart.shopping_cart_items.each do |sci|
+        @error_message = 'El producto no se encuentra disponible en la bodega '+@warehouse.name
+        wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", sci.product_stock_size.id, @warehouse.id).first  
+        wpss.update_attribute :stock, wpss.stock - 1
+        sci.product_stock_size.update_attribute :stock, sci.product_stock_size.stock - 1
       end
       @error_message = 'Error al guardar la compra. Consulta con el administrador.'
       if customer.blank?
