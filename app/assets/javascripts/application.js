@@ -116,9 +116,13 @@ function get_gift_card_value() {
 		success: function(data) {
 			if(data != "null") {
 				var json = JSON.parse(data);
-				$('#gift_card_message').html('Valor de la GiftCard: $ '+json['amount']);
-				new_total = total - json['amount']
-				$('#total').html('$ '+new_total);
+				if(json['status'] == 'valid') {
+					$('#gift_card_message').html('Valor de la GiftCard: $ '+json['amount']);
+					new_total = total - json['amount']
+					$('#total').html('$ '+new_total);
+				} else {
+					$('#gift_card_message').html('GiftCard ya utilizada');
+				}
 			}
         }
     });

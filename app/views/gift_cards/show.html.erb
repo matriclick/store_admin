@@ -5,9 +5,11 @@
 
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:customer_id) %>:</strong></dt>
-  <dd><%= @gift_card.customer_id %></dd>
+  <dd><%= @gift_card.customer.nil? ? 'No hay cliente asociado' : @gift_card.customer.name  %></dd>
   <dt><strong><%= model_class.human_attribute_name(:barcode) %>:</strong></dt>
-  <dd><%= @gift_card.barcode %></dd>
+  <dd><%= @gift_card.barcode %><br />
+	  <%= image_tag("/system/gift_cards/"+@gift_card.supplier_account.name+'/'+@gift_card.id.to_s+"_barcode.png") %><br />
+  </dd>
   <dt><strong><%= model_class.human_attribute_name(:amount) %>:</strong></dt>
   <dd><%= @gift_card.amount %></dd>
   <dt><strong><%= model_class.human_attribute_name(:valid_until) %>:</strong></dt>
