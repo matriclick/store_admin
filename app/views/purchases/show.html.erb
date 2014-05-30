@@ -35,6 +35,8 @@
 	  <%= image_tag("/system/change_tickets/"+@purchase.supplier_account.name+'/'+@purchase.id.to_s+"_barcode.png") %><br />
   </dd>
 </dl>
+
+<%= form_tag(supplier_account_purchase_return_product_path(supplier_account_id: @supplier_account.id, id: @purchase.id), :method => "post", :html => {class: 'form-inline'}) do %>
 <h2><%=t 'products' %></h2>
 <table class="table">
 	<thead>
@@ -46,7 +48,7 @@
       <th><%=t 'price' %></th>
       <th><%=t 'paid_amount' %></th>
       <th><%=t 'status' %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -61,17 +63,19 @@
       	<td><%= sci.status.blank? ? 'OK' : t(sci.status) %></td>
 		<td>
 			<% if sci.status == 'refunded' %>
-				<%= link_to t('view_gift_card'), supplier_account_gift_card_path(supplier_account_id: @supplier_account.id, id: sci.gift_card.id), :class => 'btn btn-success' %>
+				<%= link_to t('view_gift_card'), supplier_account_gift_card_path(supplier_account_id: @supplier_account.id, id: sci.gift_card.id), :class => 'btn btn-warning' %>
 			<% else %>
-				<%= link_to(t('return_product'), supplier_account_purchase_return_product_path(supplier_account_id: @supplier_account.id, id: @purchase.id, 
-							shopping_cart_item_id: sci.id), method: 'post', :class => 'btn btn-success') %>
+				<%= check_box_tag("gift_card[shopping_cart_item_ids][]", sci.id) %>
 			<% end %>
 		</td>
     </tr>
   <% end %>
   </tbody>
 </table>
-
+<div style="text-align:right">
+	<%= submit_tag('Devolver Productos', class: "btn btn-success", style: 'vertical-align:top') %>
+</div>
+<% end %>
 
 <div class="form-actions">
   <%= link_to t('print_detail'), supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: @purchase.id, :format => 'pdf'), 

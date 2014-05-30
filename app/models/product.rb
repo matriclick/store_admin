@@ -16,19 +16,16 @@ class Product < ActiveRecord::Base
     end
   end
   
-  def self.import(file, col_sep)
+  def self.import(file, col_sep, supplier_account)
     spreadsheet = open_spreadsheet(file)
     header = spreadsheet.row(1)
     
     (2..spreadsheet.last_row).each do |i|
       row = Hash[[header, spreadsheet.row(i)].transpose]    
-      puts '***************'
-      puts row["Tienda"]
-      supplier_account = SupplierAccount.find_by_name row["Tienda"]
       if supplier_account.nil?
         return false
       end
-      provider = Provider.where('name = ? and supplier_account_id = ?', row["Proveedor"], supplier_account.id).first || Provider.create(:name => row["Proveedor"], :address => row["Direccion Proveedor"], supplier_account_id: supplier_account.id)
+      provider = Provider.where('name = ? and supplier_account_id = ?', row["Proveedor"], supplier_account.id).first || Provider.create(:name => row["Proveedor"], :address => row["Dirección Proveedor"], supplier_account_id: supplier_account.id)
       puts provider.name
       product = Product.find_by_name(row["Nombre Producto"]) || Product.create(:name => row["Nombre Producto"], :internal_code => row["Código Producto"], price: row["Precio"], supplier_account_id: supplier_account.id)
       puts product.name

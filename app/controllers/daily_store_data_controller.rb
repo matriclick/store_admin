@@ -72,6 +72,6 @@ class DailyStoreDataController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def daily_store_datum_params
-      params.require(:daily_store_datum).permit(:date, :came_in_clients, :supplier_account_id)
+      params.require(:daily_store_datum).permit(:date, :came_in_clients, :supplier_account_id, :comments)
     end
 end

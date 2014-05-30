@@ -65,8 +65,7 @@
 </div>
 <div class="well">
 	<h3>Carga masiva de productos</h3>
-	<p>Columnas que debe tener el archivo: Tienda | Stock | Fecha Ingreso | Código Producto | Nombre Producto | Unidades Compradas | Costo por Unidad | Precio | Proveedor | Dirección Proveedor | Talla | Color</p>
-	<p>Las columnas deben estar escritas de la misma forma que aparecen arriba.</p>
+	<p>El archivo que subas debe tener el mismo formato que <a href="/import_example.xls">este archivo ejemplo</a></p>
 	<%= form_tag import_supplier_account_products_path, multipart: true do %>
 	  <%= file_field_tag :file %>
 	  <%= submit_tag('Importar', class: "btn btn-default btn-sm", "data-loading-text" => "Descargando...") %>

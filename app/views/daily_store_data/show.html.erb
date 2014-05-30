@@ -5,11 +5,14 @@
 
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:date) %>:</strong></dt>
-  <dd><%= @daily_store_datum.date %></dd>
+  <dd><%= @daily_store_datum.date.strftime("%Y-%m-%d") %></dd>
   <dt><strong><%= model_class.human_attribute_name(:came_in_clients) %>:</strong></dt>
   <dd><%= @daily_store_datum.came_in_clients %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:supplier_account_id) %>:</strong></dt>
-  <dd><%= @daily_store_datum.supplier_account.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:warehouse) %>:</strong></dt>
+  <dd><%= @daily_store_datum.warehouse.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:comments) %>:</strong></dt>
+  <dd><%= @daily_store_datum.comments %></dd>
+
 </dl>
 
 <div class="form-actions">

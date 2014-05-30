@@ -6,7 +6,7 @@ require 'barby/outputter/png_outputter'
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy, :update_barcode, :distribute_stock, :update_distribution]
   before_action :set_supplier_account, :check_if_user_has_related_supplier_account
-    
+  
   # GET /products
   # GET /products.json
   def index
@@ -36,6 +36,7 @@ class ProductsController < ApplicationController
 
     respond_to do |format|
       if @product.save
+        #send_product_data_via_post_to_ecommerce(@product)
         format.html { redirect_to supplier_account_product_path(supplier_account_id: @supplier_account.id, id: @product.id), notice: 'Product was successfully created.' }
         format.json { render action: 'show', status: :created, location: @product }
       else
@@ -85,7 +86,7 @@ class ProductsController < ApplicationController
 
   def import
     col_sep = ','
-    if Product.import(params[:file], col_sep)
+    if Product.import(params[:file], col_sep, @supplier_account)
       redirect_to supplier_account_products_path, notice: "Productos Importados"
     else
       redirect_to supplier_account_products_path, alert: "Error en el formato del archivo; revísalo. Si necesitas ayuda envía un correo a ups@inventariolibre.com"
@@ -111,6 +112,24 @@ class ProductsController < ApplicationController
     end
     
     redirect_to supplier_account_product_path(supplier_account_id: @supplier_account.id, id: @product.id), notice: 'Sotck distribuido OK.'
+  end
+  
+  def send_product_data_via_post_to_ecommerce(product)
+    require "net/http"
+    require "uri"
+    
+    uri = URI.parse("http://localhost:3000/users/sign_up/")
+    args = {apikey: 'zKDvkvmusejH4tn1XBoh5w', token: session[:junta], object_id: @product.id, name: @product.name  }
+    uri.query = URI.encode_www_form(args)
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Get.new(uri.request_uri)
+    response = http.request(request)
+    
+    if response.code == '200'
+      # Everything OK
+    else
+      # Oops...
+    end
   end
   
   private

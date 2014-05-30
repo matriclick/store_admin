@@ -28,13 +28,22 @@ class PurchasesController < ApplicationController
   end
   
   def return_product
-    @shopping_cart_item = ShoppingCartItem.find params[:shopping_cart_item_id]
-    @shopping_cart_item.update_attribute :status, 'refunded'
-    @shopping_cart_item.product_stock_size.update_attribute :stock, @shopping_cart_item.product_stock_size.stock + 1
-    @purchase.update_attribute :status, 'partial refund'
-    GiftCard.create(customer_id: @purchase.customer_id, amount: @purchase.reduce_applicable_discount(@shopping_cart_item.product_stock_size.product.price), 
-                  valid_until: DateTime.now.in_time_zone(@time_zone).end_of_year, status: 'valid', user_id: current_user.id, supplier_account_id: @supplier_account.id, 
-                  shopping_cart_item_id: @shopping_cart_item.id)              
+    gift_card = GiftCard.new(customer_id: @purchase.customer_id, valid_until: DateTime.now.in_time_zone(@time_zone).end_of_month + 3.months, 
+                              status: 'valid', user_id: current_user.id, supplier_account_id: @supplier_account.id)
+
+    shopping_cart_item_ids = params[:gift_card][:shopping_cart_item_ids]
+    
+    refund_amount = 0
+    shopping_cart_item_ids.each do |sci_id|
+      shopping_cart_item = ShoppingCartItem.find sci_id
+      shopping_cart_item.update_attribute :status, 'refunded'
+      shopping_cart_item.product_stock_size.update_attribute :stock, shopping_cart_item.product_stock_size.stock + 1
+      refund_amount = refund_amount + @purchase.reduce_applicable_discount(shopping_cart_item.product_stock_size.product.price)
+      gift_card.shopping_cart_items << shopping_cart_item
+    end
+    @purchase.update_attribute :status, 'refund'
+    gift_card.amount = refund_amount
+    gift_card.save
     redirect_to [@supplier_account, @purchase], notice: 'Producto devuelto exitosamente y GifCard generada.'
   end
 

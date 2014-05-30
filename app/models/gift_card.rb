@@ -8,7 +8,7 @@ class GiftCard < ActiveRecord::Base
   belongs_to :user
   belongs_to :supplier_account
   belongs_to :customer
-  belongs_to :shopping_cart_item
+  has_and_belongs_to_many :shopping_cart_items
   
   def generate_barcode(force = false)
     if self.barcode.blank? or force

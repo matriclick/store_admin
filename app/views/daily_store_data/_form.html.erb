@@ -18,6 +18,12 @@
       <%= f.text_field :came_in_clients, :class => 'text_field' %>
     </div>
   </div>
+  <div class="control-group">
+    <%= f.label :comments, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :comments, rows: 4, :class => 'text_field' %>
+    </div>
+  </div>
 
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>

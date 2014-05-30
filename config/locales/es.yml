@@ -218,6 +218,7 @@ es:
       supplier_account: Tienda
       provider: Proveedor
       warehouse: Bodega
+      daily_store_datum: Información
     attributes:
       size:
         name: "Nombre"
@@ -272,6 +273,12 @@ es:
         status: "Estado"
         user_id: "Creada por"
         created_at: "Fecha de Creación"
+      daily_store_datum:
+        date: Fecha Observación
+        warehouse: Bodega
+        came_in_clients: Número de Clientes
+        comments: Comentarios
+        created_at: Fecha de Creación
   name: "Nombre"
   search: 'Buscar'
   price: "Precio Venta"
