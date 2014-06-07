@@ -86,6 +86,6 @@ class SupplyPurchasesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def supply_purchase_params
-      params.require(:supply_purchase).permit(:provider_id, :total_paid, :currency_id, :comments, supply_purchase_product_sizes_attributes: [:id, :quantity, :barcode, :product_stock_size_id, :unit_cost, :currency_id, :_destroy])
+      params.require(:supply_purchase).permit(:provider_id, :comments, supply_purchase_product_sizes_attributes: [:id, :quantity, :barcode, :product_stock_size_id, :unit_cost, :currency_id, :_destroy])
     end
 end

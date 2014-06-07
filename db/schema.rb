@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140530035826) do
+ActiveRecord::Schema.define(version: 20140607161400) do
 
   create_table "customers", force: true do |t|
     t.string   "name"
@@ -94,7 +94,6 @@ ActiveRecord::Schema.define(version: 20140530035826) do
     t.string   "name"
     t.text     "description"
     t.decimal  "price",               precision: 10, scale: 0
-    t.decimal  "cost",                precision: 10, scale: 0
     t.integer  "supplier_account_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -196,8 +195,6 @@ ActiveRecord::Schema.define(version: 20140530035826) do
 
   create_table "supply_purchases", force: true do |t|
     t.integer  "provider_id"
-    t.decimal  "total_paid",  precision: 10, scale: 0
-    t.integer  "currency_id"
     t.text     "comments"
     t.datetime "created_at"
     t.datetime "updated_at"

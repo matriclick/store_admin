@@ -1,6 +1,6 @@
 <%- model_class = Provider -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  <h1><%=t '.title', :default => model_class.model_name.human(:count => 2).titleize %></h1>
 </div>
 <table class="table table-striped">
   <thead>
@@ -21,7 +21,7 @@
         <td><%=l provider.created_at %></td>
         <td>
 	      <%= link_to t('view_supply_purchases'), supplier_account_provider_supply_purchases_path(supplier_account_id: @supplier_account.id, provider_id: provider.id), 
-				:class => 'btn btn-mini' %>
+				:class => 'btn btn-mini btn-success' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_supplier_account_provider_path(supplier_account_id: @supplier_account.id, id: provider.id), :class => 'btn btn-mini' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),

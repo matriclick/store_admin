@@ -10,8 +10,8 @@ class ProductStockSize < ActiveRecord::Base
   belongs_to :warehouse
   has_many :shopping_cart_items
   has_many :shopping_carts, through: :shopping_cart_items
-  has_many :supply_purchase_product_size
-  has_many :warehouse_product_size_stock
+  has_many :supply_purchase_product_sizes
+  has_many :warehouse_product_size_stocks
   
   def string_for_select
     return self.product.name+' '+self.size.name+' '+self.color

@@ -105,13 +105,23 @@ class ProductsController < ApplicationController
   end
   
   def update_distribution
+    distributed_ok = true
+    #Distribute Stock
     warehouse_product_size_stock_ids = params[:stock]
     warehouse_product_size_stock_ids.each do |id|
       wpss = WarehouseProductSizeStock.find(id[0])
       wpss.update_attribute :stock, id[1]
     end
+    #Check if distribution is OK
+    @product.product_stock_sizes.each do |psz|
+      distributed_ok = false if WarehouseProductSizeStock.where('product_stock_size_id = ?', psz.id).sum(:stock) != psz.stock
+    end
     
-    redirect_to supplier_account_product_path(supplier_account_id: @supplier_account.id, id: @product.id), notice: 'Sotck distribuido OK.'
+    if distributed_ok
+      redirect_to supplier_account_product_path(supplier_account_id: @supplier_account.id, id: @product.id), notice: 'Stock distribuido OK.'
+    else
+      redirect_to supplier_account_product_distribute_stock_path(supplier_account_id: @supplier_account.id, id: @product.id), alert: '¡La distribución entre bodegas debe sumar el stock total para todas las tallas!'
+    end
   end
   
   def send_product_data_via_post_to_ecommerce(product)

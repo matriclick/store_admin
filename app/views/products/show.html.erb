@@ -10,11 +10,27 @@
   <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
   <dd><%= @product.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:price) %>:</strong></dt>
-  <dd><%= number_to_currency @product.price, precision: 0 %></dd>
+  <dd><b><%= number_to_currency @product.price, precision: 0 %></b></dd>
   <dt><strong><%= model_class.human_attribute_name(:cost) %>:</strong></dt>
-  <dd><%= number_to_currency @product.cost, precision: 0 %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:supplier_account_id) %>:</strong></dt>
-  <dd><%= @product.supplier_account.name %></dd>
+  <dd>
+	<ul>
+		<% @product.product_stock_sizes.each do |psz| %>
+			<% if psz.supply_purchase_product_sizes.size > 0 %>
+				<% psz.supply_purchase_product_sizes.each do |spps| %>
+					<li><b><%= psz.size.name %> - <%= psz.color %></b>
+						comprado a <b><%= number_to_currency spps.unit_cost, precision: 0 %></b> 
+						al proveedor <%= spps.supply_purchase.provider.name %>
+						el <%= spps.created_at.in_time_zone(@time_zone).strftime('%Y-%m-%d') %> 
+						<%= link_to '(ver detalle de la compra)', supplier_account_provider_supply_purchase_path(supplier_account_id: @supplier_account.id, provider_id: spps.supply_purchase.provider.id, id: spps.supply_purchase.id), target: '_blank' %>
+					</li>
+				<% end %>
+			<% else %>
+				<li><%= psz.stock %> - <%= psz.size.name %> - <%= psz.color %> <b class="text-error">sin costo definido (no tiene compras asociadas)</b>
+				</li>
+			<% end %>
+		<% end %>
+	</ul>
+  </dd>
   <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
   <dd><%= @product.description %></dd>
 </dl>

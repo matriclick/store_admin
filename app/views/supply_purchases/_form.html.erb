@@ -1,17 +1,5 @@
 <%= nested_form_for [@supplier_account, @provider, @supply_purchase], :html => { :class => 'form-horizontal' } do |f| %>
-    <%= f.hidden_field :provider_id, :value => @provider.id %>  <div class="control-group">
-  <div class="control-group">
-    <%= f.label :total_paid, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :total_paid, :class => 'text_field' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :currency_id, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :currency_id, :class => 'text_field' %>
-    </div>
-  </div>
+  <%= f.hidden_field :provider_id, :value => @provider.id %> 
   <h2>Productos Comprados</h2>
   <%= render 'supply_purchase_product_size_fields', :f => f %>
   
@@ -22,7 +10,7 @@
     </div>
   </div>
   <div class="form-actions">
-	<p>Ojo: cuando guardes esta compra de insumos se actualizarán automáticamente el stock de los productos.</p>
+	<p>Ojo: cuando guardes esta compra de insumos se actualizarán automáticamente el stock de los productos. Pero tu tendrás que distribuir el stock en las bodegas que corresponda.</p>
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
                 supplier_account_provider_supply_purchases_path(supplier_account_id: @supplier_account.id, provider_id: @provider.id), :class => 'btn' %>

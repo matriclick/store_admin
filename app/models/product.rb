@@ -48,9 +48,9 @@ class Product < ActiveRecord::Base
         product_stock_size = ProductStockSize.create(size_id: size.id, color: row['Color'], product_id: product.id, stock: row['Stock'])
       end
       puts product_stock_size.color
-      supply_purchase = SupplyPurchase.create(total_paid: row['Costo por Unidad']*row['Unidades Compradas'], currency_id: 1, provider_id: provider.id, comments: 'Generada automáticamente por una carga desde archivo .csv')
+      supply_purchase = SupplyPurchase.create(provider_id: provider.id, comments: 'Generada automáticamente por una carga desde archivo .csv')
       supply_purchase_product_size = SupplyPurchaseProductSize.create(unit_cost: row['Costo por Unidad'], currency_id: 1, supply_purchase_id: supply_purchase.id, product_stock_size_id: product_stock_size.id)
-      supply_purchase_product_size.update_column :quantity, row['Unidades Compradas']
+      supply_purchase_product_size.update_column :quantity, row['Unidades Compradas'] #Esto lo hago después para que ejecute los filtros del modelo
     end
   end
 

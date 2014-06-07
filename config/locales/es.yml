@@ -202,12 +202,14 @@ es:
       new: "Nuevo"
       edit: "Editar"
       update: "Actualizar"
+      view: "Ver"
     titles:
       edit: "Editar %{model}"
       save: "Guardar %{model}"
       new: "Nuevo %{model}"
       delete: "Eliminar %{model}"
       update: "Actualizar %{model}"
+      view: "Ver %{model}"
   activerecord:
     models:
       product: Producto
@@ -216,9 +218,12 @@ es:
       customer: Cliente
       purchase: Ventas
       supplier_account: Tienda
-      provider: Proveedor
+      provider:
+        one: Proveedor
+        other: Proveedores
       warehouse: Bodega
       daily_store_datum: Información
+      supply_purchase: Compra de Productos
     attributes:
       size:
         name: "Nombre"
@@ -279,6 +284,18 @@ es:
         came_in_clients: Número de Clientes
         comments: Comentarios
         created_at: Fecha de Creación
+      supply_purchase:
+        provider_id: Proveedor
+        total_paid: Total Pagado
+        currency_id: Moneda
+        comments: Comentarios
+        created_at: Fecha de Creación
+  view_all_purchases_from_this_provider: Ver todas las compras a este proveedor
+  distributed_in_warehouses: Distribuido en Bodegas
+  average_cost: Costo Promedio
+  view_supply_purchases: Ver compras
+  add_purchase: Agregar Compra
+  products_bought: 'Productos Comprados'
   name: "Nombre"
   search: 'Buscar'
   price: "Precio Venta"
@@ -301,3 +318,4 @@ es:
   mark_as_payment_received: 'Marcar Pago Recibido'
   ask_for_payment_of_this_debt: 'Pedir Pago de Deuda'
   history_of_transactions: 'Historial de préstamos y deudas'
+  view: Ver

@@ -1,6 +1,6 @@
 <%- model_class = SupplyPurchase -%>
 <div class="page-header">
-  <h1><%= @provider.name %> - <%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  <h1><b><%= @provider.name %></b> - <%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
 <table class="table table-striped">
   <thead>
@@ -18,8 +18,8 @@
     <% @supply_purchases.each do |supply_purchase| %>
       <tr>
         <td><%= supply_purchase.provider.name %></td>
-        <td><%= number_to_currency supply_purchase.total_paid, precision: 0 %></td>
-        <td><%= supply_purchase.currency_id %></td>
+        <td><%= number_to_currency supply_purchase.supply_purchase_product_sizes.sum('unit_cost*quantity'), precision: 0 %></td>
+        <td><%= supply_purchase.supply_purchase_product_sizes.first.currency_id if supply_purchase.supply_purchase_product_sizes.size > 0 %></td>
 		<td><%= supply_purchase.supply_purchase_product_sizes.sum(:quantity) %></td>
         <td><%= supply_purchase.comments %></td>
         <td><%=l supply_purchase.created_at %></td>
@@ -39,6 +39,8 @@
   </tbody>
 </table>
 
-<%= link_to t('.new', :default => t("helpers.links.new")),
+<%= link_to 'Volver a Proveedores', supplier_account_providers_path(supplier_account_id: @supplier_account.id), :class => 'btn btn-success' %>
+	
+<%= link_to t('add_purchase'),
             new_supplier_account_provider_supply_purchase_path(supplier_account_id: @supplier_account.id, provider_id: @provider.id),
             :class => 'btn btn-primary' %>

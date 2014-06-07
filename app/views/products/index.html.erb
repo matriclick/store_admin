@@ -23,9 +23,9 @@
     <tr>
       <th><%=t 'name' %></th>
       <th><%=t 'price' %></th>
-      <th><%=t 'cost' %></th>
-      <th><%=t 'supplier_account' %></th>
+      <th><%=t 'average_cost' %></th>
       <th><%=t 'stock' %></th>
+      <th><%=t 'distributed_in_warehouses' %></th>
       <th><%=t 'created_at' %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -35,11 +35,23 @@
       <tr>
         <td><%= link_to product.name, supplier_account_product_path(supplier_account_id: @supplier_account.id, id: product.id) %></td>
         <td><%= number_to_currency product.price, precision: 0 %></td>
-        <td><%= number_to_currency product.cost, precision: 0 %></td>
-        <td><%= product.supplier_account.name %></td>
+        <td><%= number_to_currency product.product_stock_sizes.joins(:supply_purchase_product_sizes).average(:unit_cost) , precision: 0 %></td>
 		<td><%= raw product.product_stock_sizes.map{ |psz| psz.stock.to_s+' - '+psz.size.name+' - '+psz.color }.join('<br />') %></td>
-        <td><%=l product.created_at.in_time_zone(@time_zone) %></td>
+		<td>
+			<% aux =  WarehouseProductSizeStock.joins(:product_stock_size).where("product_stock_sizes.product_id = ?", product.id) %>
+ 			<ul>
+			<% if aux.size > 0 %>
+				<% aux.each do |wpss| %>
+					<li><%= wpss.stock %> en <%= wpss.warehouse.name %> de <%= wpss.product_stock_size.size.name %> <%= wpss.product_stock_size.color %></li>
+			    <% end %>
+			<% else %>
+				<li class="text-error">No distribuído</li>
+			<% end %>
+	    	</ul>
+		</td>
+        <td><%= product.created_at.in_time_zone(@time_zone).strftime('%Y-%m-%d') %></td>
         <td>
+          <%= link_to t('.view'), supplier_account_product_path(supplier_account_id: @supplier_account.id, id: product.id), :class => 'btn btn-mini btn-primary' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_supplier_account_product_path(supplier_account_id: @supplier_account.id, id: product.id), :class => 'btn btn-mini' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
