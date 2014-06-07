@@ -5,7 +5,11 @@
 			<%= link_to raw('&times;'), store_admin_remove_product_from_cart_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id, shopping_cart_item_id: sci.id),
 				 	method: 'put', class: "close" %>
 			<b><%= sci.product_stock_size.product.name.capitalize %></b>
-			<div style="margin-top:10px"><%= image_tag(sci.product_stock_size.product.product_images.first.photo.url(:index_dress)) %></div>
+			<% if sci.product_stock_size.product.product_images.size > 0 %>
+				<div style="margin-top:10px"><%= image_tag(sci.product_stock_size.product.product_images.first.photo.url(:index_dress)) %></div>
+			<% else %>
+				<div style="margin-top:10px; background-color:white; padding:20px;"> << Producto sin imagen >> </div>
+			<% end %>
 			<div style="margin-top:10px">
 		  	<strong>Precio:</strong> <%= number_to_currency sci.product_stock_size.product.price %> | 
 			<strong>Talla:</strong> <%= sci.product_stock_size.size.name unless sci.product_stock_size.size.nil? %> | 
