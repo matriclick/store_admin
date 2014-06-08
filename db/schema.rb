@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140607161400) do
+ActiveRecord::Schema.define(version: 20140608021023) do
+
+  create_table "currencies", force: true do |t|
+    t.string   "symbol"
+    t.string   "name"
+    t.integer  "supplier_account_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "customers", force: true do |t|
     t.string   "name"
@@ -32,6 +40,27 @@ ActiveRecord::Schema.define(version: 20140607161400) do
     t.datetime "updated_at"
     t.integer  "warehouse_id"
     t.text     "comments"
+  end
+
+  create_table "expense_types", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "supplier_account_id"
+  end
+
+  create_table "expenses", force: true do |t|
+    t.decimal  "amount",              precision: 10, scale: 0
+    t.integer  "currency_id"
+    t.integer  "expense_type_id"
+    t.string   "paid_by"
+    t.datetime "pay_date"
+    t.boolean  "paid"
+    t.text     "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "supplier_account_id"
   end
 
   create_table "gift_cards", force: true do |t|

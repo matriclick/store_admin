@@ -224,6 +224,8 @@ es:
       warehouse: Bodega
       daily_store_datum: Información
       supply_purchase: Compra de Productos
+      expense: Gasto
+      expense_type: Tipo de Gasto
     attributes:
       size:
         name: "Nombre"
@@ -289,6 +291,16 @@ es:
         total_paid: Total Pagado
         currency_id: Moneda
         comments: Comentarios
+        created_at: Fecha de Creación
+      expense:
+        amount: Monto Pagado
+        currency_id: Moneda
+        paid_by: Pagado por
+        pay_date: Fecha de pago
+        paid: ¿Pagado?
+        comments: Comentarios
+        created_at: Fecha de Creación
+      expense_type:
         created_at: Fecha de Creación
   view_all_purchases_from_this_provider: Ver todas las compras a este proveedor
   distributed_in_warehouses: Distribuido en Bodegas

@@ -12,7 +12,9 @@
 	<% if current_user.store_admin_privileges.include? StoreAdminPrivilege.find_by_name("Administrar Categorias") %>
 		<li><%= link_to 'Administrar Categorías de Productos', supplier_account_product_categories_path(supplier_account_id: @supplier_account.id) %></li>
 	<% end %>
-	<li><%= link_to 'Editar/Agregar Usuarios y Permisos de '+@supplier_account.name, supplier_account_path(@supplier_account) %></li>
+	<li><%= link_to 'Administrar Categorías de Gastos', supplier_account_expense_types_path(supplier_account_id: @supplier_account.id) %></li>
+	<li><%= link_to 'Administrar Monedas', supplier_account_currencies_path(supplier_account_id: @supplier_account.id) %></li>
+	<li><%= link_to 'Administrar Usuarios y Permisos de '+@supplier_account.name, supplier_account_path(@supplier_account) %></li>
 	<li><%= link_to 'Editar Datos Generales de '+@supplier_account.name, edit_supplier_account_path(@supplier_account) %></li>
 </ul>
 <h1>Datos Generales</h1>

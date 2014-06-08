@@ -1,0 +1,52 @@
+<%= form_for [@supplier_account, @expense], :html => { :class => 'form-horizontal' } do |f| %>
+<%= f.hidden_field :supplier_account_id, :value => @supplier_account.id %>
+  <div class="control-group">
+    <%= f.label :amount, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :amount, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :currency_id, :class => 'control-label' %>
+    <div class="controls">
+	  <%= f.collection_select :currency_id, @supplier_account.currencies, :id, :symbol, {:prompt => 'Moneda', :allow_blank => false} %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :expense_type_id, :class => 'control-label' %>
+    <div class="controls">
+	  <%= f.collection_select :expense_type_id, @supplier_account.expense_types, :id, :name, {:prompt => 'Tipo de Gasto', :allow_blank => false} %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :paid, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.check_box :paid, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :pay_date, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :pay_date, :class => 'text_field datepicker' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :paid_by, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :paid_by, :class => 'text_field' %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :comments, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :comments, rows: 6, :class => 'text_field' %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                supplier_account_expenses_path, :class => 'btn' %>
+  </div>
+<% end %>

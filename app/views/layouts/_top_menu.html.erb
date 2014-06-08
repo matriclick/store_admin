@@ -21,6 +21,7 @@
 					<!-- TODO: Agregar filtros de privilegios -->
 					<li><%= link_to 'Clientes', supplier_account_customers_path(supplier_account_id: @supplier_account.id) %></li>
 					<li><%= link_to 'Ventas', supplier_account_purchases_path(supplier_account_id: @supplier_account.id) %></li>
+					<li><%= link_to 'Gastos', supplier_account_expenses_path(supplier_account_id: @supplier_account.id) %></li>
 				</ul>
 			<% end %>
 			<ul class="nav navbar-nav navbar-right pull-right">

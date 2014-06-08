@@ -31,6 +31,9 @@ StoreAdmin::Application.routes.draw do
     resources :products do
       collection { post :import }
     end
+    resources :currencies
+    resources :expenses
+    resources :expense_types
     resources :gift_cards
     resources :sizes
     resources :product_categories
