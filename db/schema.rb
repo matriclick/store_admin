@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140608021023) do
+ActiveRecord::Schema.define(version: 20140614165305) do
 
   create_table "currencies", force: true do |t|
     t.string   "symbol"
@@ -85,6 +85,23 @@ ActiveRecord::Schema.define(version: 20140608021023) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "supplier_account_id"
+  end
+
+  create_table "payments", force: true do |t|
+    t.integer  "purchase_id"
+    t.integer  "payment_method_id"
+    t.decimal  "amount",            precision: 10, scale: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "petty_cashes", force: true do |t|
+    t.decimal  "close_amount",        precision: 10, scale: 0
+    t.integer  "supplier_account_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "product_categories", force: true do |t|
@@ -139,12 +156,10 @@ ActiveRecord::Schema.define(version: 20140608021023) do
   end
 
   create_table "purchases", force: true do |t|
-    t.integer  "payment_method_id"
     t.integer  "shopping_cart_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "supplier_account_id"
-    t.decimal  "paid_amount",           precision: 10, scale: 0
     t.integer  "customer_id"
     t.decimal  "discount",              precision: 10, scale: 0
     t.string   "discount_type"

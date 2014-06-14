@@ -1,0 +1,19 @@
+<p>Fecha de cierre de caja: <%= DateTime.now.strftime("%Y-%m-%d %H:%M:%S") %></p>
+<p>Calculo todo el cash que ha entrado desde la última creación de una caja</p>
+
+<%= form_for [@supplier_account, @petty_cash], :html => { :class => 'form-horizontal' } do |f| %>
+  <%= f.hidden_field :supplier_account_id, :value => @supplier_account.id %>
+  <%= f.hidden_field :user_id, :value => current_user.id %>
+
+  <div class="control-group">
+    <%= f.label :close_amount, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :close_amount, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="form-actions">
+    <%= f.submit nil, :class => 'btn btn-primary' %>
+    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+                supplier_account_petty_cashes_path, :class => 'btn' %>
+  </div>
+<% end %>

@@ -16,7 +16,8 @@ class SupplierAccount < ActiveRecord::Base
   has_many :expenses, :dependent => :destroy
   has_many :currencies, :dependent => :destroy
   has_many :supply_purchases, through: :providers
-  
+  has_many :petty_cashes, :dependent => :destroy
+  has_many :payment_methods, :dependent => :destroy
   
   has_attached_file :logo, :styles => { :medium => "300x", :thumb => "100x" }, :use_timestamp => false
 	validates_attachment_content_type :logo, :content_type => ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/x-png', 'image/pjpeg']

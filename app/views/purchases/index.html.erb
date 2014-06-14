@@ -22,8 +22,8 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
-      <th><%= model_class.human_attribute_name(:payment_method_id) %></th>
-      <th><%= model_class.human_attribute_name(:paid_amount) %></th>
+      <th><%= t '.payment_method' %></th>
+      <th><%= t '.paid_amount' %></th>
       <th><%= model_class.human_attribute_name(:customer_id) %></th>
       <th><%= model_class.human_attribute_name(:discount) %></th>
       <th><%= model_class.human_attribute_name(:user_id) %></th>
@@ -36,7 +36,7 @@
     <% @purchases.each do |purchase| %>
       <tr>
         <td><%= purchase.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
-        <td><%= purchase.payment_method.name unless purchase.payment_method.nil?  %></td>
+        <td><%= purchase.payments.each.map { |p| p.payment_method.name }.join ', '  %></td>
         <td><%= number_to_currency purchase.paid_amount, precision: 0 %></td>
         <td><%= purchase.customer.name unless purchase.customer.nil? %></td>
 		<% if purchase.discount_type == 'absolute' %>

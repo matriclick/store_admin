@@ -5,11 +5,21 @@ require 'barby/outputter/png_outputter'
 class Purchase < ActiveRecord::Base
   after_save :generate_barcode
   
-  belongs_to :payment_method
   belongs_to :shopping_cart
   belongs_to :supplier_account
   belongs_to :customer
   belongs_to :user
+  has_many :payments
+  
+  accepts_nested_attributes_for :payments, :allow_destroy => true
+    
+  def paid_amount
+    self.payments.sum(:amount)
+  end
+  
+  def payment_method
+    self.payments.each.map { |p| p.payment_method.name }.join ', '
+  end
   
   def generate_barcode(force = false)
     if self.change_ticket_barcode.blank? or force

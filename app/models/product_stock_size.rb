@@ -13,6 +13,8 @@ class ProductStockSize < ActiveRecord::Base
   has_many :supply_purchase_product_sizes
   has_many :warehouse_product_size_stocks
   
+  validates_uniqueness_of :barcode
+  
   def string_for_select
     return self.product.name+' '+self.size.name+' '+self.color
   end

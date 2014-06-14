@@ -11,13 +11,13 @@
 	  <%= image_tag("/system/gift_cards/"+@gift_card.supplier_account.name+'/'+@gift_card.id.to_s+"_barcode.png") %><br />
   </dd>
   <dt><strong><%= model_class.human_attribute_name(:amount) %>:</strong></dt>
-  <dd><%= @gift_card.amount %></dd>
+  <dd><%= number_to_currency @gift_card.amount, precision: 0 %></dd>
   <dt><strong><%= model_class.human_attribute_name(:valid_until) %>:</strong></dt>
   <dd><%= @gift_card.valid_until %></dd>
   <dt><strong><%= model_class.human_attribute_name(:status) %>:</strong></dt>
   <dd><%= @gift_card.status %></dd>
   <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
-  <dd><%= @gift_card.user_id %></dd>
+  <dd><%= @gift_card.user.email %></dd>
 </dl>
 
 <div class="form-actions">

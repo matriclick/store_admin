@@ -9,6 +9,8 @@ class StoreAdminController < ApplicationController
       cookies[:warehouse_id] = current_user.supplier_accounts.first.warehouses.first.id
     end
     @warehouse = Warehouse.find(cookies[:warehouse_id])
+    @purchase_aux = Purchase.new
+    @purchase_aux.payments.build
   end
 
   def menu
@@ -26,11 +28,6 @@ class StoreAdminController < ApplicationController
   end
 
   def reports
-  end
-  
-  def purchase_details
-    @q = params[:q]
-    @purchases = @supplier_account.get_purchases(@from, @to, @q)
   end
   
   def sales_summary
@@ -77,7 +74,7 @@ class StoreAdminController < ApplicationController
   
   def generate_purchase
     @error_message = 'Error desconocido al generar la compra'
-    begin
+   # begin
       @error_message = 'No se puede generar la compra porque la bodega no ha sido seleccionada'
       @warehouse = Warehouse.find(cookies[:warehouse_id])
       @error_message = 'No se puede generar la compra porque el carrito de compras no se ha encontrado'
@@ -92,9 +89,9 @@ class StoreAdminController < ApplicationController
         Notifications.purchase_details(purchase).deliver
       end
       redirect_to point_of_sale_path(id: @supplier_account.id), notice: 'Venta generada exitosamente'
-    rescue Exception => exc    
-      redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), alert: @error_message
-    end
+ #   rescue Exception => exc    
+  #    redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), alert: @error_message
+   # end
   end
   
   def remove_product_from_cart
@@ -145,6 +142,7 @@ class StoreAdminController < ApplicationController
           total = total - gift_card.amount
         end
       end
+      
       #Reduce Stock
       @shopping_cart.shopping_cart_items.each do |sci|
         @error_message = 'El producto no se encuentra disponible en la bodega '+@warehouse.name
@@ -154,12 +152,22 @@ class StoreAdminController < ApplicationController
       end
       @error_message = 'Error al guardar la compra. Consulta con el administrador.'
       if customer.blank?
-        return Purchase.create(payment_method_id: params[:medio_pago], shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], 
-              supplier_account_id: @supplier_account.id, paid_amount: total, discount: discount, discount_type: discount_type, user_id: current_user.id, gift_card_id: gift_card_id)
+        purchase = Purchase.create(shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], 
+              supplier_account_id: @supplier_account.id, discount: discount, discount_type: discount_type, user_id: current_user.id, gift_card_id: gift_card_id)
       else
-        return Purchase.create(payment_method_id: params[:medio_pago], shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], 
-              supplier_account_id: @supplier_account.id, paid_amount: total, discount: discount, discount_type: discount_type, customer_id: customer.id, user_id: current_user.id, gift_card_id: gift_card_id)
+        purchase = Purchase.create(shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], 
+              supplier_account_id: @supplier_account.id, discount: discount, discount_type: discount_type, customer_id: customer.id, user_id: current_user.id, gift_card_id: gift_card_id)
       end
+      @error_message = 'Error al guardar generar los pagos. Consulta con el administrador.'
+      unless params[:purchase][:payments_attributes].blank?
+        params[:purchase][:payments_attributes].each do |payment_params|
+          unless payment_params[1][:amount].blank? or payment_params[1][:payment_method_id].blank?
+            Payment.create(amount: payment_params[1][:amount], payment_method_id: payment_params[1][:payment_method_id], purchase_id: purchase.id)
+          end
+        end
+      end
+      
+      return purchase
     end
     
     def create_customer

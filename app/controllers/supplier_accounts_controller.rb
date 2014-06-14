@@ -12,7 +12,7 @@ class SupplierAccountsController < ApplicationController
       user.save
       redirect_to @supplier_account, notice: 'Usuario agregado exitosamente'
     else
-      redirect_to @supplier_account, notice: 'Correo no registrado en Tramanta.com'
+      redirect_to @supplier_account, notice: 'Correo no registrado en el sistema'
     end
   end
   
@@ -43,7 +43,7 @@ class SupplierAccountsController < ApplicationController
       user.save
       redirect_to @supplier_account, notice: 'Usuario eliminado exitosamente'
     else
-      redirect_to @supplier_account, notice: 'Correo no registrado en Tramanta.com'
+      redirect_to @supplier_account, notice: 'Correo no registrado en el sistema'
     end
   end
 

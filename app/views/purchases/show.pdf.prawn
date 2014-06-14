@@ -72,19 +72,21 @@ end
 
 pdf.move_down 1
 
-invoice_services_totals_data = [ 
-  ["Sub-Total", number_to_currency(@purchase.shopping_cart.price, precision: 0)]
-]
+invoice_services_totals_data = Array.new
 
-unless @purchase.discount.blank?
+unless @purchase.discount.blank? or @purchase.discount == 0 or @purchase.discount_type.blank?
+  invoice_services_totals_data[0] = ["Sub-Total", number_to_currency(@purchase.shopping_cart.price, precision: 0)]
   if @purchase.discount_type == 'absolute'
 	invoice_services_totals_data[1] = ["Descuento", number_to_currency(@purchase.discount.to_s, precision: 0)]
   elsif @purchase.discount_type == 'percentage'
 	invoice_services_totals_data[1] = ["Descuento", @purchase.discount.to_s+'%']
   end
+  invoice_services_totals_data[2] = ["Total", number_to_currency(@purchase.paid_amount.to_s, precision: 0)]
+else
+  invoice_services_totals_data[0] = ["", ""] 
+  invoice_services_totals_data[1] = ["", ""]
+  invoice_services_totals_data[2] = ["Total", number_to_currency(@purchase.paid_amount.to_s, precision: 0)]
 end
-
-invoice_services_totals_data[2] = ["Total", number_to_currency(@purchase.paid_amount.to_s, precision: 0)]
 
 pdf.table(invoice_services_totals_data, :position => invoice_header_x, :width => 215) do
   style(row(0..1).columns(0..1), :padding => [1, 5, 1, 5], :borders => [])
@@ -105,7 +107,8 @@ pdf.move_down 25
 
 invoice_notes_data = [ 
   ["Gracias por tu compra"],
-  ["Esperamos que vuelvas pronto!"]
+  ["Esperamos que vuelvas pronto!"],
+  ["Un abrazo!"]
 ]
 
 pdf.table(invoice_notes_data, :width => 275) do

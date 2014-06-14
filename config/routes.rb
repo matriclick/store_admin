@@ -4,7 +4,6 @@ StoreAdmin::Application.routes.draw do
   get "store_admin/:id/products" => 'store_admin#products', as: 'store_admin_products'
   get "store_admin/:id/users" => 'store_admin#users', as: 'store_admin_users'
   get "store_admin/:id/reports" => 'store_admin#reports', as: 'store_admin_reports'
-  get "store_admin/:id/purchase_details" => 'store_admin#purchase_details', as: 'store_admin_purchase_details'
   get "store_admin/:id/sales_summary" => 'store_admin#sales_summary', as: 'store_admin_sales_summary'
   get "store_admin/:id/inventory" => 'store_admin#inventory', as: 'store_admin_inventory'
   get "store_admin/:id/menu" => 'store_admin#menu', as: 'store_admin_menu'
@@ -31,6 +30,8 @@ StoreAdmin::Application.routes.draw do
     resources :products do
       collection { post :import }
     end
+    resources :payment_methods
+    resources :petty_cashes
     resources :currencies
     resources :expenses
     resources :expense_types
