@@ -1,6 +1,35 @@
-<p>Fecha de cierre de caja: <%= DateTime.now.strftime("%Y-%m-%d %H:%M:%S") %></p>
-<p>Calculo todo el cash que ha entrado desde la última creación de una caja</p>
-
+<div class="well">
+	<table class="table table-striped" style="width:30%">
+		<thead>
+			<tr><th></th><th>Monto</th><th>Fecha/Hora</th></tr>
+		</thead>
+		<tbody>
+		<% unless @last_petty_cash.blank? %>
+		<tr>
+			<td>Valor último cierre</td>
+			<td><%= number_to_currency @last_petty_cash.close_amount, precision: 0 %></td>
+			<td><%= @last_petty_cash.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
+		</tr>
+		<% end %>
+		<% unless @payments_before_last.blank? %>
+			<% @payments_before_last.each do |payment| %>
+			<tr>
+				<td><%= link_to 'Compra ID '+payment.purchase.id.to_s, [@supplier_account, payment.purchase] %></td>
+				<td><%= number_to_currency payment.amount, precision: 0 %></td>
+				<td><%= payment.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
+			</tr>
+			<% end %>
+		<% end %>
+		<% unless @cash_in_petty_cash.blank? %>
+		<tr>
+			<th>Valor final en caja</th><th><%= number_to_currency @cash_in_petty_cash, precision: 0 %></th>
+			<th><%= DateTime.now.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></th>
+		</tr>
+		<% end %>
+		</tbody>
+	</table>
+</div>
+<div class="well">
 <%= form_for [@supplier_account, @petty_cash], :html => { :class => 'form-horizontal' } do |f| %>
   <%= f.hidden_field :supplier_account_id, :value => @supplier_account.id %>
   <%= f.hidden_field :user_id, :value => current_user.id %>
@@ -9,11 +38,12 @@
     <%= f.label :close_amount, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :close_amount, :class => 'text_field' %>
+	  <span class="help-block">El monto de dinero que quedará en la caja luego de que la cierres.</span>
     </div>
   </div>
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
-    <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                supplier_account_petty_cashes_path, :class => 'btn' %>
+    <%= link_to 'Ver historial de cierres', supplier_account_petty_cashes_path, :class => 'btn' %>
   </div>
 <% end %>
+</div>

@@ -226,6 +226,7 @@ es:
       supply_purchase: Compra de Productos
       expense: Gasto
       expense_type: Tipo de Gasto
+      petty_cash: Caja Chica
     attributes:
       size:
         name: "Nombre"
@@ -302,6 +303,10 @@ es:
         created_at: Fecha de Creación
       expense_type:
         created_at: Fecha de Creación
+      petty_cash:
+        created_at: Fecha de Creación
+        user_id: Usuario que cerró la caja
+        close_amount: Monto en la caja
   view_all_purchases_from_this_provider: Ver todas las compras a este proveedor
   distributed_in_warehouses: Distribuido en Bodegas
   average_cost: Costo Promedio

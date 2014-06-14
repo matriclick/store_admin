@@ -4,7 +4,7 @@ class PettyCashesController < ApplicationController
   # GET /petty_cashes
   # GET /petty_cashes.json
   def index
-    @petty_cashes = @supplier_account.petty_cashes
+    @petty_cashes = @supplier_account.petty_cashes.order 'created_at DESC'
   end
 
   # GET /petty_cashes/1
@@ -15,6 +15,15 @@ class PettyCashesController < ApplicationController
   # GET /petty_cashes/new
   def new
     @petty_cash = PettyCash.new
+    @last_petty_cash = PettyCash.all.last
+    efectivo = PaymentMethod.where('name like "%efectivo%"').first
+    unless @last_petty_cash.blank?
+      @payments_before_last = Payment.where('created_at > ? and payment_method_id = ?', @last_petty_cash.created_at, efectivo.id)
+      @cash_in_petty_cash = @last_petty_cash.close_amount + @payments_before_last.where('payment_method_id = ?', efectivo.id).sum(:amount)
+    else
+      @payments_before_last = Payment.where('payment_method_id = ?', efectivo.id)
+      @cash_in_petty_cash = @payments_before_last.sum(:amount)
+    end
   end
 
   # GET /petty_cashes/1/edit
@@ -28,7 +37,7 @@ class PettyCashesController < ApplicationController
 
     respond_to do |format|
       if @petty_cash.save
-        format.html { redirect_to [@supplier_account, @petty_cash], notice: 'Petty cash was successfully created.' }
+        format.html { redirect_to supplier_account_petty_cashes_url, notice: 'Petty cash was successfully created.' }
         format.json { render action: 'show', status: :created, location: [@supplier_account, @petty_cash] }
       else
         format.html { render action: 'new' }

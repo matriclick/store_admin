@@ -5,9 +5,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:close_amount) %></th>
-      <th><%= model_class.human_attribute_name(:supplier_account_id) %></th>
       <th><%= model_class.human_attribute_name(:user_id) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
@@ -16,12 +14,11 @@
   <tbody>
     <% @petty_cashes.each do |petty_cash| %>
       <tr>
-        <td><%= link_to petty_cash.id, supplier_account_petty_cash_path(supplier_account_id: @supplier_account.id, id: petty_cash.id) %></td>
-        <td><%= petty_cash.close_amount %></td>
-        <td><%= petty_cash.supplier_account_id %></td>
-        <td><%= petty_cash.user_id %></td>
+        <td><%= number_to_currency petty_cash.close_amount, precision: 0 %></td>
+        <td><%= petty_cash.user.email %></td>
         <td><%=l petty_cash.created_at %></td>
         <td>
+		  <%= link_to 'Ver Detalle', supplier_account_petty_cash_path(supplier_account_id: @supplier_account.id, id: petty_cash.id), :class => 'btn btn-primary btn-mini' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_supplier_account_petty_cash_path(supplier_account_id: @supplier_account.id, id: petty_cash.id), :class => 'btn btn-mini' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
@@ -35,6 +32,4 @@
   </tbody>
 </table>
 
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_supplier_account_petty_cash_path(supplier_account_id: @supplier_account.id),
-            :class => 'btn btn-primary' %>
+<%= link_to 'Volver al Punto de Venta', user_root_path, :class => 'btn btn-primary' %>
