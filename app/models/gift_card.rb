@@ -10,6 +10,8 @@ class GiftCard < ActiveRecord::Base
   belongs_to :customer
   has_and_belongs_to_many :shopping_cart_items
   
+  validates :amount, :valid_until, presence: true
+    
   def generate_barcode(force = false)
     if self.barcode.blank? or force
       barcode = self.id.to_s

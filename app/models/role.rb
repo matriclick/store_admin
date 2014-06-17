@@ -1,3 +1,4 @@
 class Role < ActiveRecord::Base
   has_many :users
+  validates :name, presence: true, :uniqueness => {:scope => :supplier_account_id}
 end

@@ -10,6 +10,9 @@ class Product < ActiveRecord::Base
   accepts_nested_attributes_for :product_images, :allow_destroy => true
 	accepts_nested_attributes_for :product_stock_sizes, :allow_destroy => true
 	
+  validates :name, presence: true, :uniqueness => {:scope => :supplier_account_id}
+  validates :price, presence: true
+	
 	def self.import(file)
     CSV.foreach(file.path, headers: true) do |row|
       Product.create! row.to_hash

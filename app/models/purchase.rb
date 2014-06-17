@@ -12,7 +12,9 @@ class Purchase < ActiveRecord::Base
   has_many :payments
   
   accepts_nested_attributes_for :payments, :allow_destroy => true
-    
+  
+  validates :shopping_cart_id, :invoice_number, presence: true
+  
   def paid_amount
     self.payments.sum(:amount)
   end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140617023517) do
+ActiveRecord::Schema.define(version: 20140617050316) do
 
   create_table "currencies", force: true do |t|
     t.string   "symbol"
@@ -66,14 +66,13 @@ ActiveRecord::Schema.define(version: 20140617023517) do
   create_table "gift_cards", force: true do |t|
     t.integer  "customer_id"
     t.string   "barcode"
-    t.decimal  "amount",                precision: 10, scale: 0
+    t.decimal  "amount",              precision: 10, scale: 0
     t.datetime "valid_until"
     t.string   "status"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "supplier_account_id"
-    t.integer  "shopping_cart_item_id"
   end
 
   create_table "gift_cards_shopping_cart_items", id: false, force: true do |t|

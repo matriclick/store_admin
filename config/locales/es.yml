@@ -295,6 +295,7 @@ es:
         comments: Comentarios
         created_at: Fecha de Creación
       expense:
+        expense_type_id: Tipo de Gasto
         amount: Monto Pagado
         currency_id: Moneda
         paid_by: Pagado por

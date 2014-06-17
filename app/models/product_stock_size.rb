@@ -15,8 +15,8 @@ class ProductStockSize < ActiveRecord::Base
   has_many :product_reconciliations
   has_many :inventory_reconciliations, through: :product_reconciliations
   
-  validates_uniqueness_of :barcode
-  
+  validates :size_id, :color, presence: true
+    
   def distribute_stock_in_default_warehouse
     warehouse = Warehouse.where(:default => true).first
     unless warehouse.blank?

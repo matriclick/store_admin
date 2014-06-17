@@ -5,6 +5,8 @@ class SupplyPurchaseProductSize < ActiveRecord::Base
   belongs_to :supply_purchase
   belongs_to :product_stock_size
   
+  validates :product_stock_size_id, :quantity, :unit_cost, :currency_id, presence: true
+  
   def update_stock
     unless self.quantity.blank?
       if self.quantity_changed?

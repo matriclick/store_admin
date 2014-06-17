@@ -1,4 +1,5 @@
 <%= nested_form_for [@supplier_account, @provider, @supply_purchase], :html => { :class => 'form-horizontal' } do |f| %>
+<%= render 'layouts/form_errors', object: @supply_purchase %>
   <%= f.hidden_field :provider_id, :value => @provider.id %> 
   <h2>Productos Comprados</h2>
   <%= render 'supply_purchase_product_size_fields', :f => f %>

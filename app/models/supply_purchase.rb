@@ -4,4 +4,5 @@ class SupplyPurchase < ActiveRecord::Base
   has_many :product_stock_sizes, through: :supply_purchase_product_sizes
   
   accepts_nested_attributes_for :supply_purchase_product_sizes, :allow_destroy => true
+  
 end

@@ -1,4 +1,5 @@
 <%= form_for [@supplier_account, @currency], :html => { :class => 'form-horizontal' } do |f| %>
+<%= render 'layouts/form_errors', object: @currency %>
 <%= f.hidden_field :supplier_account_id, :value => @supplier_account.id %>
   <div class="control-group">
     <%= f.label :symbol, :class => 'control-label' %>

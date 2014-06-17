@@ -1,4 +1,5 @@
 <%= form_for [@supplier_account, @purchase], :html => { :class => 'form-horizontal' } do |f| %>
+<%= render 'layouts/form_errors', object: @purchase %>
   <div class="control-group">
     <%= f.label :payment_method_id, :class => 'control-label' %>
     <div class="controls">
