@@ -23,7 +23,7 @@
         <td><%= expense.currency.symbol %> <%= number_to_currency expense.amount, precision: 0 %></td>
         <td><%= expense.expense_type.name %></td>
         <td><%= expense.paid_by %></td>
-        <td><%= expense.pay_date.strftime('%Y-%m-%d') %></td>
+        <td><%= expense.pay_date.strftime('%Y-%m-%d') unless expense.pay_date.blank? %></td>
         <td><%= expense.paid ? '✓' : '☓' %></td>
         <td><%= expense.comments %></td>
         <td><%= expense.created_at.in_time_zone(@time_zone).strftime('%Y-%m-%d') %></td>
