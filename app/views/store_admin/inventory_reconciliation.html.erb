@@ -1,0 +1,56 @@
+<script>
+	$(function() {
+		$("#barcode").focus();
+	});
+</script>
+	
+<div class="pull-right">
+	<div class="input-group form-inline">
+		<%= collection_select :warehouse, :id, @supplier_account.warehouses, :id, :name, { selected: @warehouse.id }, { onchange: 'update_warehouse()' } %>
+	</div>
+</div>
+
+<h2>Consolidar Inventario de <%= @warehouse.name %></h2>
+
+<%= form_tag(store_admin_add_product_to_inventory_reconciliation_from_barcode_path(id: @supplier_account.id, inventory_reconciliation_id: @inventory_reconciliation.id), method: :post, html: {class: 'form-group'}) %>
+	<div class="input-group">
+		<%= text_field_tag(:barcode, '', placeholder: 'Código del producto', class: "form-control", style: 'font-weight:lighter; width:100%') %>
+		<div class="pull-right">
+			<%= link_to 'Historial de Consolidaciones de Inventario', '#' %>
+		</div>
+		<span class="input-group-btn">
+			<%= submit_tag("Ingresar", :name => nil, class: "btn btn-default") %>
+	 	</span>									       
+	</div><!-- /input-group -->
+</form>
+<hr>
+<div class="well">
+	<div class="pull-right">
+		<%= link_to 'Finalizar Consolidación', '#', class: 'btn btn-danger' %>
+	</div>
+	<ul>
+		<li>
+			<% if @inventory_reconciliation.product_reconciliations.size > 0 %>
+				<%= @inventory_reconciliation.product_reconciliations.first.created_at.in_time_zone(@time_zone).strftime('%Y-%m-%d %H:%M:%S') %> 
+				es la fecha de inicio de esta consolidación
+			<% else %>
+				Aún no se ha iniciado la consolidación de inventario (para comenzar agregar el primer producto usando el código de barra)
+			<% end %>
+			</li>
+		<li><b><%= @warehouse.warehouse_product_size_stocks.count %></b> es el total de <b>productos registrados en el sistema</b> en la bodega <%= @warehouse.name %></li>
+		<li><b><%= @inventory_reconciliation.product_reconciliations.count %></b> es el total de <b>productos que has agregado</b> la bodega <%= @warehouse.name %> 
+		<li><b><%= @products_not_reconciled %></b> son los productos que <b>no has agregado y tienen stock en el sistema</b> en la bodega <%= @warehouse.name %> <%= link_to '(ver esos productos)', '#' %></li>
+		<li><b><%= @warehouse.warehouse_product_size_stocks.sum(:stock) %></b> es el total de <b>stock de los productos registrados en el sistema</b> en la bodega <%= @warehouse.name %></li>
+		<li><b><%= @inventory_reconciliation.product_reconciliations.sum(:count) %></b> es el total de <b>stock de los productos que has agregado</b> la bodega <%= @warehouse.name %> 
+			<%= link_to '(ver esos productos)', '#' %></li>
+		<li><b><%= @products_to_reconcile %></b> son los productos que <b>has agregado y hay que ajustar el stock</b> en la bodega <%= @warehouse.name %> <%= link_to '(ver esos productos)', '#' %></li>
+
+	</ul>
+	<div class="pull-right">
+		<i>*Un producto es cada combinación item/talla/color única </i>
+	</div>
+</div>
+
+<% if @inventory_reconciliation.product_reconciliations.size > 0 %>
+	<%= render 'product_detail_reconciliation' %>
+<% end %>

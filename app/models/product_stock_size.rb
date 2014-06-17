@@ -3,7 +3,7 @@ require 'barby/barcode/ean_13'
 require 'barby/outputter/png_outputter'
 
 class ProductStockSize < ActiveRecord::Base
-  after_save :generate_barcode
+  after_save :generate_barcode, :distribute_stock_in_default_warehouse
   
   belongs_to :product
   belongs_to :size
@@ -12,8 +12,24 @@ class ProductStockSize < ActiveRecord::Base
   has_many :shopping_carts, through: :shopping_cart_items
   has_many :supply_purchase_product_sizes
   has_many :warehouse_product_size_stocks
+  has_many :product_reconciliations
+  has_many :inventory_reconciliations, through: :product_reconciliations
   
   validates_uniqueness_of :barcode
+  
+  def distribute_stock_in_default_warehouse
+    warehouse = Warehouse.where(:default => true).first
+    unless warehouse.blank?
+      distributed_stock = WarehouseProductSizeStock.where("product_stock_size_id = ?", self.id).sum(:stock)
+      not_distributed_stock = self.stock - distributed_stock
+      wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", self.id, warehouse.id).first
+      if wpss.blank?
+        WarehouseProductSizeStock.create(product_stock_size_id: self.id, warehouse_id: warehouse.id, stock: not_distributed_stock)
+      else
+        wpss.update_attribute :stock, (wpss.stock + not_distributed_stock)
+      end
+    end
+  end
   
   def string_for_select
     return self.product.name+' '+self.size.name+' '+self.color

@@ -54,11 +54,6 @@
           <%= link_to t('.view'), supplier_account_product_path(supplier_account_id: @supplier_account.id, id: product.id), :class => 'btn btn-mini btn-primary' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_supplier_account_product_path(supplier_account_id: @supplier_account.id, id: product.id), :class => 'btn btn-mini' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      supplier_account_product_path(supplier_account_id: @supplier_account.id, id: product.id),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' %>
         </td>
       </tr>
     <% end %>

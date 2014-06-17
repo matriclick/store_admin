@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140614165305) do
+ActiveRecord::Schema.define(version: 20140617023517) do
 
   create_table "currencies", force: true do |t|
     t.string   "symbol"
@@ -81,6 +81,15 @@ ActiveRecord::Schema.define(version: 20140614165305) do
     t.integer "gift_card_id"
   end
 
+  create_table "inventory_reconciliations", force: true do |t|
+    t.integer  "supplier_account_id"
+    t.integer  "user_id"
+    t.text     "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "status"
+  end
+
   create_table "payment_methods", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
@@ -124,6 +133,14 @@ ActiveRecord::Schema.define(version: 20140614165305) do
     t.integer  "photo_file_size"
     t.datetime "photo_updated_at"
     t.integer  "product_id"
+  end
+
+  create_table "product_reconciliations", force: true do |t|
+    t.integer  "inventory_reconciliation_id"
+    t.integer  "product_stock_size_id"
+    t.integer  "count"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "product_stock_sizes", force: true do |t|
@@ -276,6 +293,7 @@ ActiveRecord::Schema.define(version: 20140614165305) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "default"
   end
 
 end

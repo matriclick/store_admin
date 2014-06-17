@@ -17,7 +17,70 @@ class StoreAdminController < ApplicationController
     
   end
 
+  def inventory_reconciliation
+    @inventory_reconciliation = InventoryReconciliation.where(:status => 'active').last
+    if @inventory_reconciliation.blank?
+      @inventory_reconciliation = InventoryReconciliation.create(status: 'active', user_id: current_user.id, supplier_account_id: @supplier_account.id)
+    end
+    
+    if cookies[:warehouse_id].blank?
+      cookies[:warehouse_id] = current_user.supplier_accounts.first.warehouses.first.id
+    end
+    @warehouse = Warehouse.find(cookies[:warehouse_id])
+    @products_to_reconcile = 0
+    @inventory_reconciliation.product_reconciliations.each do |pr|
+      wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", pr.product_stock_size.id, @warehouse.id).first
+      unless wpss.blank?
+        if wpss.stock != pr.count
+          @products_to_reconcile = @products_to_reconcile + 1
+        end
+      end
+    end
+    
+    @products_not_reconciled = WarehouseProductSizeStock.count(:all, :conditions => ['warehouse_id = ? and product_stock_size_id not in (?)', @warehouse.id, @inventory_reconciliation.product_reconciliations.map(&:product_stock_size_id)])
+  end
+  
+  def add_product_to_inventory_reconciliation_from_barcode
+    begin
+      @inventory_reconciliation = InventoryReconciliation.find params[:inventory_reconciliation_id] if !params[:inventory_reconciliation_id].nil? 
+      barcode = params[:barcode] 
+      product_stock_size = ProductStockSize.find_by_barcode barcode
+      unless product_stock_size.blank?
+        pr = ProductReconciliation.where('inventory_reconciliation_id = ? and product_stock_size_id = ?', @inventory_reconciliation.id, product_stock_size.id).first
+        if pr.blank?
+          ProductReconciliation.create(inventory_reconciliation_id: @inventory_reconciliation.id, product_stock_size_id: product_stock_size.id, count: 1)
+        else
+          pr.update_attribute :count, pr.count + 1 
+        end
+        redirect_to inventory_reconciliation_path(id: @supplier_account.id), notice: 'Producto Registrado'
+      end
+    rescue Exception => exc
+      redirect_to inventory_reconciliation_path(id: @supplier_account.id), alert: 'Error: Producto no existe'
+    end
+  end
 
+  def remove_product_from_inventory_reconciliation
+    @inventory_reconciliation = InventoryReconciliation.find params[:inventory_reconciliation_id] if !params[:inventory_reconciliation_id].nil? 
+    pr = ProductReconciliation.find params[:product_reconciliation_id]
+    pr.update_attribute :count, pr.count - 1
+    redirect_to inventory_reconciliation_path(id: @supplier_account.id)
+  end
+  
+  def adjust_product_stock
+    product_reconciliation = ProductReconciliation.find params[:product_reconciliation_id]
+    unless product_reconciliation.blank?
+      @warehouse = Warehouse.find(cookies[:warehouse_id])
+      wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", product_reconciliation.product_stock_size.id, @warehouse.id).first
+      change_in_stock = product_reconciliation.count - wpss.stock
+      product_reconciliation.product_stock_size.update_attribute :stock, product_reconciliation.product_stock_size.stock + change_in_stock
+      wpss.update_attribute :stock, product_reconciliation.count
+
+      redirect_to inventory_reconciliation_path(id: @supplier_account.id), notice: 'Yahuuu... ¡Stock Actualizado!'
+    else
+      redirect_to inventory_reconciliation_path(id: @supplier_account.id), alert: 'ERROR: Consulta con el Administrador'
+    end
+  end
+  
   def products
   end
 

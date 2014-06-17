@@ -139,7 +139,7 @@
 			<% unless shopping_cart.purchase.nil? %>
 			<tr>
 		        <td><%= shopping_cart.purchase.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
-		        <td><%= shopping_cart.purchase.payment_method.name unless shopping_cart.purchase.payment_method.nil?  %></td>
+		        <td><%= shopping_cart.purchase.payment_method unless shopping_cart.purchase.payment_method.nil?  %></td>
 		        <td><%= number_to_currency shopping_cart.purchase.paid_amount, precision: 0 %></td>
 		        <td><%= shopping_cart.purchase.customer.name unless shopping_cart.purchase.customer.nil? %></td>
 				<% if shopping_cart.purchase.discount_type == 'absolute' %>
@@ -170,9 +170,4 @@
               supplier_account_products_path, :class => 'btn'  %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_supplier_account_product_path(supplier_account_id: @supplier_account.id, id: @product.id), :class => 'btn' %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              supplier_account_product_path(supplier_account_id: @supplier_account.id, id: @product.id),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
 </div>

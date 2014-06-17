@@ -1,0 +1,26 @@
+<table class="table">
+	<thead>
+		<tr><th>Producto</th><th>Cantidad Encontrada</th><th>Stock bodega <%= @warehouse.name %></th><th>Stock Total en Sistema</th><th>Acciones</th></tr>
+	</thead>
+	<tbody>
+		<% @inventory_reconciliation.product_reconciliations.each do |pr| %>
+		<tr>
+			<td><%= link_to pr.product_stock_size.product.name+' '+pr.product_stock_size.size.name+' '+pr.product_stock_size.color, 
+				supplier_account_product_path(supplier_account_id: @supplier_account.id, id: pr.product_stock_size.product.id), target: '_blank' %></td>
+			<td><%= pr.count %> <%= link_to '(-)', store_admin_remove_product_from_inventory_reconciliation_path(inventory_reconciliation_id: @inventory_reconciliation.id, id: @supplier_account.id, product_reconciliation_id: pr.id), method: :put %></td>
+			<% wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", pr.product_stock_size.id, @warehouse.id).first %>
+			<td><%= stock = wpss.nil? ? 0 : WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", pr.product_stock_size.id, @warehouse.id).first.stock %></td>
+			<td>
+				<%= pr.product_stock_size.stock %>
+			</td>
+			<td>
+				<% if stock != pr.count %>
+				<%= link_to 'Ajustar Stock', store_admin_adjust_product_stock_path(id: @supplier_account.id, product_reconciliation_id: pr.id), method: :post,
+					:data => { :confirm => 'El Stock de la bodega '+@warehouse.name+' se actualizará según la cantidad encontrada. ¿Estas seguro que quieres continuar?' }, 
+					class: 'btn btn-mini btn-danger' %>
+				<% end %>
+			</td>
+		</tr>
+		<% end %>
+	</tbody>
+</table>
