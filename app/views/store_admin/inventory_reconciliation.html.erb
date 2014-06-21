@@ -37,7 +37,7 @@
 				Aún no se ha iniciado la consolidación de inventario (para comenzar agregar el primer producto usando el código de barra)
 			<% end %>
 			</li>
-		<li><b><%= @warehouse.warehouse_product_size_stocks.count %></b> es el total de <b>productos registrados en el sistema</b> en la bodega <%= @warehouse.name %></li>
+		<li><b><%= @warehouse.warehouse_product_size_stocks.where('stock > 0').count %></b> es el total de <b>productos registrados en el sistema con stock > 0</b> en la bodega <%= @warehouse.name %></li>
 		<li><b><%= @inventory_reconciliation.product_reconciliations.count %></b> es el total de <b>productos que has agregado</b> la bodega <%= @warehouse.name %> 
 		<li><b><%= @products_not_reconciled %></b> son los productos que <b>no has agregado y tienen stock en el sistema</b> en la bodega <%= @warehouse.name %> 
 			<%= link_to '(ver productos productos no encontrados)', inventory_reconciliation_path(id: @supplier_account.id, view: 'not-added') %></li>
