@@ -7,7 +7,7 @@ class PurchasesController < ApplicationController
   # GET /purchases.json
   def index
     @q = params[:q]
-    @purchases = @supplier_account.find_purchases(@from, @to, params[:q])
+    @purchases = @supplier_account.find_purchases(@from, @to, params[:q]).paginate(:page => params[:page], :per_page => 15)
   end
 
   # GET /purchases/1

@@ -28,16 +28,29 @@ class StoreAdminController < ApplicationController
     end
     @warehouse = Warehouse.find(cookies[:warehouse_id])
     @products_to_reconcile = 0
+    product_stock_size_to_reconcile_ids = Array.new
     @inventory_reconciliation.product_reconciliations.each do |pr|
       wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", pr.product_stock_size.id, @warehouse.id).first
       unless wpss.blank?
         if wpss.stock != pr.count
+          product_stock_size_to_reconcile_ids << pr.id
           @products_to_reconcile = @products_to_reconcile + 1
         end
       end
     end
-    
-    @products_not_reconciled = WarehouseProductSizeStock.count(:all, :conditions => ['warehouse_id = ? and product_stock_size_id not in (?)', @warehouse.id, @inventory_reconciliation.product_reconciliations.map(&:product_stock_size_id)])
+    @not_found_warehouse_product_size_stock = WarehouseProductSizeStock.where('warehouse_id = ? and product_stock_size_id not in (?) and stock > 0',  @warehouse.id, @inventory_reconciliation.product_reconciliations.map(&:product_stock_size_id)).paginate(:page => params[:page], :per_page => 15)
+    @products_not_reconciled = @not_found_warehouse_product_size_stock.size 
+      @show_not_added = false
+    if params[:view] == 'added-not-reconciled'
+      @table_title = 'Productos encontrados que requieren ajuste de stock'
+      @product_reconciliations = @inventory_reconciliation.product_reconciliations.where('product_reconciliations.id in (?)', product_stock_size_to_reconcile_ids).paginate(:page => params[:page], :per_page => 15)
+    elsif params[:view] == 'not-added'
+      @show_not_added = true
+      @table_title = 'Productos no encontrados durante la reconciliación'
+    else
+      @table_title = 'Todos los productos encontrados'
+      @product_reconciliations = @inventory_reconciliation.product_reconciliations.paginate(:page => params[:page], :per_page => 15)
+    end
   end
   
   def add_product_to_inventory_reconciliation_from_barcode
@@ -67,17 +80,26 @@ class StoreAdminController < ApplicationController
   end
   
   def adjust_product_stock
-    product_reconciliation = ProductReconciliation.find params[:product_reconciliation_id]
-    unless product_reconciliation.blank?
-      @warehouse = Warehouse.find(cookies[:warehouse_id])
-      wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", product_reconciliation.product_stock_size.id, @warehouse.id).first
-      change_in_stock = product_reconciliation.count - wpss.stock
-      product_reconciliation.product_stock_size.update_attribute :stock, product_reconciliation.product_stock_size.stock + change_in_stock
-      wpss.update_attribute :stock, product_reconciliation.count
+    if !params[:product_reconciliation_id].blank?
+      product_reconciliation = ProductReconciliation.find params[:product_reconciliation_id]
+      unless product_reconciliation.blank?
+        @warehouse = Warehouse.find(cookies[:warehouse_id])
+        wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", product_reconciliation.product_stock_size.id, @warehouse.id).first
+        change_in_stock = product_reconciliation.count - wpss.stock
+        product_reconciliation.product_stock_size.update_attribute :stock, product_reconciliation.product_stock_size.stock + change_in_stock
+        wpss.update_attribute :stock, product_reconciliation.count
 
-      redirect_to inventory_reconciliation_path(id: @supplier_account.id), notice: 'Yahuuu... ¡Stock Actualizado!'
+        redirect_to inventory_reconciliation_path(id: @supplier_account.id), notice: 'Yahuuu... ¡Stock Actualizado!'
+      else
+        redirect_to inventory_reconciliation_path(id: @supplier_account.id), alert: 'ERROR: Stock encontrado pero no actualizado - Consulta con el Administrador'
+      end      
+    elsif !params[:warehouse_product_size_stock_id].blank?
+      wpss = WarehouseProductSizeStock.find params[:warehouse_product_size_stock_id]
+      wpss.product_stock_size.update_attribute :stock, wpss.product_stock_size.stock - wpss.stock
+      wpss.update_attribute :stock, 0
+      redirect_to inventory_reconciliation_path(id: @supplier_account.id, view: 'not-added'), notice: 'Yahuuu... ¡Stock Actualizado de '+wpss.product_stock_size.product.name+'!'
     else
-      redirect_to inventory_reconciliation_path(id: @supplier_account.id), alert: 'ERROR: Consulta con el Administrador'
+      redirect_to inventory_reconciliation_path(id: @supplier_account.id), alert: 'ERROR DESCONOCIDO: Consulta con el Administrador'
     end
   end
   

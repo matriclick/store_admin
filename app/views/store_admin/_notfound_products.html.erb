@@ -1,0 +1,31 @@
+<table class="table">
+	<thead>
+		<tr><th>Producto</th><th>Cantidad Encontrada</th><th>Stock bodega <%= @warehouse.name %></th><th>Stock Total en Sistema</th><th>Barcode</th><th>Acciones</th></tr>
+	</thead>
+	<tbody>
+		<% @not_found_warehouse_product_size_stock.each do |pr| %>
+		<tr>
+			<td><%= link_to pr.product_stock_size.product.name+' '+pr.product_stock_size.size.name+' '+pr.product_stock_size.color, 
+				supplier_account_product_path(supplier_account_id: @supplier_account.id, id: pr.product_stock_size.product.id), target: '_blank' %></td>
+			<td>0</td>
+			<td><%= pr.stock %></td>
+			<td>
+				<%= pr.product_stock_size.stock %>
+			</td>
+			<td>
+				<%= pr.product_stock_size.barcode %>
+			</td>
+			<td>
+				<%= link_to 'Ajustar Stock', store_admin_adjust_product_stock_path(id: @supplier_account.id, warehouse_product_size_stock_id: pr.id), method: :post,
+					:data => { :confirm => 'El Stock de la bodega '+@warehouse.name+' se actualizará según la cantidad encontrada. ¿Estas seguro que quieres continuar?' }, 
+					class: 'btn btn-mini btn-danger' %>
+			</td>
+		</tr>
+		<% end %>
+	</tbody>
+</table>
+<% if @not_found_warehouse_product_size_stock.total_pages > 1%>
+<div class="well apple_pagination">
+	<%= will_paginate @not_found_warehouse_product_size_stock %>
+</div>
+<% end %>

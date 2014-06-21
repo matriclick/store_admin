@@ -4,7 +4,7 @@ class ExpensesController < ApplicationController
   # GET /expenses
   # GET /expenses.json
   def index
-    @expenses = @supplier_account.expenses.order 'created_at DESC'
+    @expenses = @supplier_account.expenses.paginate(:page => params[:page], :per_page => 15).order 'created_at DESC'
   end
 
   # GET /expenses/1

@@ -64,11 +64,8 @@
 	No se han encontrado productos para esta búsqueda.
 </div>
 <% end %>
-<div class="well">
-	<h3>Descargar reporte</h3>
-	<%= form_tag(supplier_account_products_path(format: "csv"), :method => "get", :html => {class: 'form-horizontal', role: 'form'}) do %>
-		<%= submit_tag('Descargar Reporte', class: "btn btn-default btn-sm", "data-loading-text" => "Descargando...") %>
-	<% end %>
+<div class="well apple_pagination">
+	<%= will_paginate @products %>
 </div>
 <div class="well">
 	<h3>Carga masiva de productos</h3>

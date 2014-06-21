@@ -2,4 +2,6 @@
 <ul>
 	<li style="margin-bottom:10px;"><%= link_to 'Resumen venta en POS', store_admin_sales_summary_path %></li>
 	<li style="margin-bottom:10px;"><%= link_to 'Inventario', store_admin_inventory_path %></li>
+	<li style="margin-bottom:10px;"><%= link_to 'Todos los productos existentes', supplier_account_products_path(supplier_account_id: @supplier_account.id, format: "csv") %></li>
+	<li style="margin-bottom:10px;"><%= link_to 'Reporte de Ventas', supplier_account_purchases_path(supplier_account_id: @supplier_account.id, format: "csv") %></li>
 </ul>

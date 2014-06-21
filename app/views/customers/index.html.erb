@@ -36,6 +36,11 @@
     <% end %>
   </tbody>
 </table>
+<% if @customers.total_pages > 1 %>
+<div class="well apple_pagination">
+	<%= will_paginate @customers %>
+</div>
+<% end %>
 
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_supplier_account_customer_path(supplier_account_id: @supplier_account.id),

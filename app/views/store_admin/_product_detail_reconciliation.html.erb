@@ -3,7 +3,7 @@
 		<tr><th>Producto</th><th>Cantidad Encontrada</th><th>Stock bodega <%= @warehouse.name %></th><th>Stock Total en Sistema</th><th>Acciones</th></tr>
 	</thead>
 	<tbody>
-		<% @inventory_reconciliation.product_reconciliations.each do |pr| %>
+		<% @product_reconciliations.each do |pr| %>
 		<tr>
 			<td><%= link_to pr.product_stock_size.product.name+' '+pr.product_stock_size.size.name+' '+pr.product_stock_size.color, 
 				supplier_account_product_path(supplier_account_id: @supplier_account.id, id: pr.product_stock_size.product.id), target: '_blank' %></td>
@@ -24,3 +24,8 @@
 		<% end %>
 	</tbody>
 </table>
+<% if @product_reconciliations.total_pages > 1 %>
+<div class="well apple_pagination">
+	<%= will_paginate @product_reconciliations %>
+</div>
+<% end %>

@@ -1,10 +1,12 @@
+# encoding: UTF-8
 class GiftCardsController < ApplicationController
   before_action :set_gift_card, only: [:show, :edit, :update, :destroy]
   before_action :set_supplier_account
+  before_action :set_default_breadcrumbs
   # GET /gift_cards
   # GET /gift_cards.json
   def index
-    @gift_cards = GiftCard.all
+    @gift_cards = @supplier_account.gift_cards
   end
 
   # GET /gift_cards/1
@@ -62,6 +64,11 @@ class GiftCardsController < ApplicationController
   end
 
   private
+  
+    def set_default_breadcrumbs
+      add_breadcrumb "Menú de Configuración", store_admin_menu_path(id: @supplier_account.id)
+      add_breadcrumb "GiftCards", supplier_account_gift_cards_path(supplier_account_id: @supplier_account.id)
+    end
     # Use callbacks to share common setup or constraints between actions.
     def set_gift_card
       @gift_card = GiftCard.find(params[:id])

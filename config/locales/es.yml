@@ -192,6 +192,10 @@ es:
       long: ! '%A %d de %B de %Y %H:%M'
       short: ! '%d de %b %H:%M'
     pm: pm
+  will_paginate:
+    previous_label: "&#8592; Anterior"
+    next_label: "Siguiente &#8594;"
+    page_gap: "&hellip;"
   helpers:
     actions: "Acciones"
     links:
@@ -318,6 +322,7 @@ es:
   name: "Nombre"
   search: 'Buscar'
   price: "Precio Venta"
+  create_manual_sale: Crear Venta Manualmente
   cost: "Costo"
   supplier_account: "Tienda"
   rut: "RUT"

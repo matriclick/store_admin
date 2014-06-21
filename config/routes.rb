@@ -12,7 +12,7 @@ StoreAdmin::Application.routes.draw do
   post 'store_admin/:id/add_product_to_cart_from_barcode/' => 'store_admin#add_product_to_cart_from_barcode', as: 'store_admin_add_product_to_cart_from_barcode'
   put 'store_admin/:id/generate_purchase/:shopping_cart_id' => 'store_admin#generate_purchase', as: 'store_admin_generate_purchase'
   put 'store_admin/:id/remove_product_from_cart_path/:shopping_cart_id' => 'store_admin#remove_product_from_cart', as: 'store_admin_remove_product_from_cart'
-  post 'store_admin/:id/adjust_product_stock/:product_reconciliation_id' => 'store_admin#adjust_product_stock', as: 'store_admin_adjust_product_stock'
+  post 'store_admin/:id/adjust_product_stock' => 'store_admin#adjust_product_stock', as: 'store_admin_adjust_product_stock'
   
   post 'store_admin/:id/add_product_to_inventory_reconciliation_from_barcode/' => 'store_admin#add_product_to_inventory_reconciliation_from_barcode', as: 'store_admin_add_product_to_inventory_reconciliation_from_barcode'
   put 'store_admin/:id/remove_product_from_inventory_reconciliation/:inventory_reconciliation_id' => 'store_admin#remove_product_from_inventory_reconciliation', as: 'store_admin_remove_product_from_inventory_reconciliation'

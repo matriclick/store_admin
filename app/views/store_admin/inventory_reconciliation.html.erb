@@ -39,18 +39,23 @@
 			</li>
 		<li><b><%= @warehouse.warehouse_product_size_stocks.count %></b> es el total de <b>productos registrados en el sistema</b> en la bodega <%= @warehouse.name %></li>
 		<li><b><%= @inventory_reconciliation.product_reconciliations.count %></b> es el total de <b>productos que has agregado</b> la bodega <%= @warehouse.name %> 
-		<li><b><%= @products_not_reconciled %></b> son los productos que <b>no has agregado y tienen stock en el sistema</b> en la bodega <%= @warehouse.name %> <%= link_to '(ver esos productos)', '#' %></li>
+		<li><b><%= @products_not_reconciled %></b> son los productos que <b>no has agregado y tienen stock en el sistema</b> en la bodega <%= @warehouse.name %> 
+			<%= link_to '(ver productos productos no encontrados)', inventory_reconciliation_path(id: @supplier_account.id, view: 'not-added') %></li>
 		<li><b><%= @warehouse.warehouse_product_size_stocks.sum(:stock) %></b> es el total de <b>stock de los productos registrados en el sistema</b> en la bodega <%= @warehouse.name %></li>
 		<li><b><%= @inventory_reconciliation.product_reconciliations.sum(:count) %></b> es el total de <b>stock de los productos que has agregado</b> la bodega <%= @warehouse.name %> 
-			<%= link_to '(ver esos productos)', '#' %></li>
-		<li><b><%= @products_to_reconcile %></b> son los productos que <b>has agregado y hay que ajustar el stock</b> en la bodega <%= @warehouse.name %> <%= link_to '(ver esos productos)', '#' %></li>
+			<%= link_to '(ver todos los productos encontratos)', inventory_reconciliation_path(id: @supplier_account.id) %></li>
+		<li><b><%= @products_to_reconcile %></b> son los productos que <b>has agregado y hay que ajustar el stock</b> en la bodega <%= @warehouse.name %> 
+			<%= link_to '(ver productos agregados con ajuste requerido)', inventory_reconciliation_path(id: @supplier_account.id, view: 'added-not-reconciled') %></li>
 
 	</ul>
-	<div class="pull-right">
-		<i>*Un producto es cada combinación item/talla/color única </i>
-	</div>
 </div>
-
-<% if @inventory_reconciliation.product_reconciliations.size > 0 %>
-	<%= render 'product_detail_reconciliation' %>
+<h3><%= @table_title %></h3>
+<% if @show_not_added %>
+	<% if @not_found_warehouse_product_size_stock.size > 0 %>
+		<%= render 'notfound_products' %>
+	<% end %>
+<% else %>
+	<% if @product_reconciliations.size > 0 %>
+		<%= render 'product_detail_reconciliation' %>
+	<% end %>
 <% end %>

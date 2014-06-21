@@ -18,6 +18,7 @@ class SupplierAccount < ActiveRecord::Base
   has_many :supply_purchases, through: :providers
   has_many :petty_cashes, :dependent => :destroy
   has_many :payment_methods, :dependent => :destroy
+  has_many :gift_cards, :dependent => :destroy
   
   validates :name, presence: true, uniqueness: true
   

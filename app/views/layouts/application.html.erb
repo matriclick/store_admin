@@ -42,8 +42,9 @@
     <div class="container">
         <div class="row">
           <div class="span12">
+			<%= render_breadcrumbs %>
             <%= bootstrap_flash %>
-           <%= yield %>
+           	<%= yield %>
           </div>
         </div><!--/row-->
 		<%= render 'layouts/footer' %>

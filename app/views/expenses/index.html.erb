@@ -41,6 +41,13 @@
   </tbody>
 </table>
 
+<% if @expenses.total_pages > 1%>
+<div class="well apple_pagination">
+	<%= will_paginate @expenses %>
+</div>
+<% end %>
+
+
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_supplier_account_expense_path(supplier_account_id: @supplier_account.id),
             :class => 'btn btn-primary' %>
