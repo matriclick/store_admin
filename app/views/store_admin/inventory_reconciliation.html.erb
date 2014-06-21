@@ -15,9 +15,6 @@
 <%= form_tag(store_admin_add_product_to_inventory_reconciliation_from_barcode_path(id: @supplier_account.id, inventory_reconciliation_id: @inventory_reconciliation.id), method: :post, html: {class: 'form-group'}) %>
 	<div class="input-group">
 		<%= text_field_tag(:barcode, '', placeholder: 'Código del producto', class: "form-control", style: 'font-weight:lighter; width:100%') %>
-		<div class="pull-right">
-			<%= link_to 'Historial de Consolidaciones de Inventario', '#' %>
-		</div>
 		<span class="input-group-btn">
 			<%= submit_tag("Ingresar", :name => nil, class: "btn btn-default") %>
 	 	</span>									       
@@ -26,15 +23,15 @@
 <hr>
 <div class="well">
 	<div class="pull-right">
-		<%= link_to 'Finalizar Consolidación', '#', class: 'btn btn-danger' %>
+		<%= link_to 'Finalizar Consolidación', store_admin_end_inventory_reconciliation_path(id: @supplier_account.id, inventory_reconciliation_id: @inventory_reconciliation.id), method: :post, class: 'btn btn-danger' %>
 	</div>
 	<ul>
 		<li>
 			<% if @inventory_reconciliation.product_reconciliations.size > 0 %>
-				<%= @inventory_reconciliation.product_reconciliations.first.created_at.in_time_zone(@time_zone).strftime('%Y-%m-%d %H:%M:%S') %> 
+				<b><%= @inventory_reconciliation.product_reconciliations.first.created_at.in_time_zone(@time_zone).strftime('%Y-%m-%d %H:%M:%S') %></b> 
 				es la fecha de inicio de esta consolidación
 			<% else %>
-				Aún no se ha iniciado la consolidación de inventario (para comenzar agregar el primer producto usando el código de barra)
+				<b>Aún no se ha iniciado la consolidación de inventario</b> (para comenzar agregar el primer producto usando el código de barra)
 			<% end %>
 			</li>
 		<li><b><%= @warehouse.warehouse_product_size_stocks.where('stock > 0').count %></b> es el total de <b>productos registrados en el sistema con stock > 0</b> en la bodega <%= @warehouse.name %></li>
@@ -49,13 +46,14 @@
 
 	</ul>
 </div>
-<h3><%= @table_title %></h3>
 <% if @show_not_added %>
 	<% if @not_found_warehouse_product_size_stock.size > 0 %>
+		<h3><%= @table_title %></h3>
 		<%= render 'notfound_products' %>
 	<% end %>
 <% else %>
 	<% if @product_reconciliations.size > 0 %>
+		<h3><%= @table_title %></h3>
 		<%= render 'product_detail_reconciliation' %>
 	<% end %>
 <% end %>

@@ -103,6 +103,12 @@ class StoreAdminController < ApplicationController
     end
   end
   
+  def end_inventory_reconciliation
+    inventory_reconciliation = InventoryReconciliation.find params[:inventory_reconciliation_id]
+    inventory_reconciliation.update_attribute :status, 'terminated'
+    redirect_to inventory_reconciliation_path(id: @supplier_account.id), notice: 'Consolidación de Inventario Finalizada'
+  end
+  
   def products
   end
 
