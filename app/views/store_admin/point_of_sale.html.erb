@@ -14,7 +14,6 @@
 <h2><% unless @supplier_account.logo.blank? %>
 		<%= image_tag @supplier_account.logo.url(:medium) %>
 	<% end %>
-	Punto de venta de <%= @warehouse.name %>
 </h2>
 <%= form_tag(store_admin_add_product_to_cart_from_barcode_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), method: :post, html: {class: 'form-group'}) %>
 	<div class="input-group">
