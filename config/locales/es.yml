@@ -343,3 +343,9 @@ es:
   ask_for_payment_of_this_debt: 'Pedir Pago de Deuda'
   history_of_transactions: 'Historial de préstamos y deudas'
   view: Ver
+  print_receipt: Imprimir Recibo
+  print_change_ticket: Imprimir Ticket de Cambio
+  view_all_purchases: Ver todas las compras
+  back_to_point_of_sale: Volver al Punto de Venta
+  print: Imprimir
+  back: Volver

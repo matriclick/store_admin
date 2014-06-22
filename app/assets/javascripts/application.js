@@ -144,4 +144,6 @@ function update_warehouse() {
 	location.reload();
 }
 
-
+function printDiv(divName) {
+	$('#'+divName).printThis({ pageTitle: 'Barcodes'})
+}

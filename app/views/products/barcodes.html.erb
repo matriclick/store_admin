@@ -1,0 +1,18 @@
+<div id="barcodes">
+	<% @product.product_stock_sizes.each do |psz| %>
+		<% psz.stock.times do %>
+		<div style="float:left; margin:10px">
+			<%= @product.name %><br/><%= psz.size.name %> - <%= psz.color %><br />
+			<%= image_tag("/system/barcodes/"+@product.supplier_account.name+'/'+psz.size.name+'_'+psz.color+'_'+@product.id.to_s+"_barcode.png") %><br />
+			<p><%= psz.barcode %></p>
+		</div>
+		<% end %>
+	<% end %>
+</div>
+<div class="row">
+	<div class="span12">
+		<input type='button' value='Imprimir' class="btn btn-primary" onclick='printDiv("barcodes");'/>
+		<%= link_to t('back'), supplier_account_product_path(id: @product.id), class: "btn" %>
+	</div>
+	
+</div>

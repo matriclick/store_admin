@@ -4,7 +4,7 @@ require 'barby/barcode/ean_13'
 require 'barby/outputter/png_outputter'
 
 class ProductsController < ApplicationController
-  before_action :set_product, only: [:show, :edit, :update, :destroy, :update_barcode, :distribute_stock, :update_distribution]
+  before_action :set_product, only: [:show, :edit, :update, :destroy, :update_barcode, :distribute_stock, :update_distribution, :barcodes]
   before_action :set_supplier_account, :check_if_user_has_related_supplier_account
   
   # GET /products
@@ -20,6 +20,10 @@ class ProductsController < ApplicationController
     @warehouse_product_size_stocks = WarehouseProductSizeStock.joins(:product_stock_size).where("product_stock_sizes.product_id = ?", @product.id)
   end
 
+  def barcodes
+    
+  end
+  
   # GET /products/new
   def new
     @product = Product.new

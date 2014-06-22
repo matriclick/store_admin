@@ -76,13 +76,15 @@
 		</li>
 	<% end %>
 </ul>
+<%= link_to 'Imprimir Códigos de Barra PDF', barcodes_supplier_account_products_path(id: @product.id, :format => 'pdf'), :class => 'btn btn-default', target: '_blank' %>
+<%= link_to 'Imprimir Códigos de Barra HTML', barcodes_supplier_account_products_path(id: @product.id), :class => 'btn btn-default' %>
 <% else %>
 	Sin tallas y modelos creados
 <% end %>
 </div>
 <h2>Stock en Bodegas</h2>
 <div class="well">
-	<%= link_to 'Distribuir Stock', supplier_account_product_distribute_stock_path(supplier_account_id: @supplier_account.id, id: @product.id), 
+	<%= link_to 'Distribuir Stock', supplier_account_product_distribute_stock_path(id: @product.id, supplier_account_id: @supplier_account.id, id: @product.id), 
 		:class => 'btn btn-default' %>
 	<table class="table table-striped">
 	  <thead>

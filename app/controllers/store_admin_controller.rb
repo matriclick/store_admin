@@ -165,7 +165,7 @@ class StoreAdminController < ApplicationController
   
   def generate_purchase
     @error_message = 'Error desconocido al generar la compra'
-   # begin
+    begin
       @error_message = 'No se puede generar la compra porque la bodega no ha sido seleccionada'
       @warehouse = Warehouse.find(cookies[:warehouse_id])
       @error_message = 'No se puede generar la compra porque el carrito de compras no se ha encontrado'
@@ -179,10 +179,10 @@ class StoreAdminController < ApplicationController
       unless purchase.customer.blank? or purchase.customer.email.blank?
         Notifications.purchase_details(purchase).deliver
       end
-      redirect_to point_of_sale_path(id: @supplier_account.id), notice: 'Venta generada exitosamente'
- #   rescue Exception => exc    
-  #    redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), alert: @error_message
-   # end
+      redirect_to supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: purchase.id), notice: 'Venta generada exitosamente'
+    rescue Exception => exc    
+      redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), alert: @error_message
+    end
   end
   
   def remove_product_from_cart

@@ -6,7 +6,7 @@ class GiftCardsController < ApplicationController
   # GET /gift_cards
   # GET /gift_cards.json
   def index
-    @gift_cards = @supplier_account.gift_cards
+    @gift_cards = @supplier_account.gift_cards.order 'created_at DESC'
   end
 
   # GET /gift_cards/1

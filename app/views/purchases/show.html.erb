@@ -1,4 +1,7 @@
 <%- model_class = Purchase -%>
+<div class="pull-right">
+	<%= link_to t('back_to_point_of_sale'), point_of_sale_path(id: @supplier_account.id), :class => 'btn btn-success' %>
+</div>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
 </div>
@@ -80,12 +83,13 @@
   </tbody>
 </table>
 <div style="text-align:right">
-	<%= submit_tag('Devolver Productos', class: "btn btn-success", style: 'vertical-align:top') %>
+	<%= submit_tag('Devolver Productos', class: "btn btn-warning", style: 'vertical-align:top') %>
 </div>
 <% end %>
 
 <div class="form-actions">
-  <%= link_to t('print_detail'), supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: @purchase.id, :format => 'pdf'), 
+  <%= link_to t('back_to_point_of_sale'), point_of_sale_path(id: @supplier_account.id), :class => 'btn btn-success' %>
+  <%= link_to t('print_receipt'), supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: @purchase.id, :format => 'pdf'), 
 				:class => 'btn btn-primary', target: '_blank' %>
   <%= link_to t('print_change_ticket'), supplier_account_purchase_change_ticket_path(supplier_account_id: @supplier_account.id, :format => 'pdf'), 
 				:class => 'btn btn-primary', target: '_blank'  %>

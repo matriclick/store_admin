@@ -5,12 +5,11 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:customer_id) %></th>
       <th><%= model_class.human_attribute_name(:barcode) %></th>
       <th><%= model_class.human_attribute_name(:amount) %></th>
       <th><%= model_class.human_attribute_name(:valid_until) %></th>
       <th><%= model_class.human_attribute_name(:status) %></th>
+      <th><%= model_class.human_attribute_name(:customer_id) %></th>
       <th><%= model_class.human_attribute_name(:user_id) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
@@ -19,15 +18,15 @@
   <tbody>
     <% @gift_cards.each do |gift_card| %>
       <tr>
-        <td><%= link_to gift_card.id, supplier_account_gift_card_path(supplier_account_id: @supplier_account.id, id: gift_card.id) %></td>
-        <td><%= gift_card.customer_id %></td>
         <td><%= gift_card.barcode %></td>
-        <td><%= gift_card.amount %></td>
-        <td><%= gift_card.valid_until %></td>
+        <td><%= number_to_currency gift_card.amount, precision: 0 %></td>
+        <td><%= gift_card.valid_until.in_time_zone(@time_zone).strftime('%Y-%m-%d %H:%M:%S') %></td>
         <td><%= gift_card.status %></td>
-        <td><%= gift_card.user_id %></td>
-        <td><%=l gift_card.created_at %></td>
+        <td><%= gift_card.customer.name unless gift_card.customer.blank?  %></td>
+        <td><%= gift_card.user.email %></td>
+        <td><%= gift_card.created_at.in_time_zone(@time_zone).strftime('%Y-%m-%d') %></td>
         <td>
+		  <%= link_to t('view'), supplier_account_gift_card_path(supplier_account_id: @supplier_account.id, id: gift_card.id), :class => 'btn btn-primary btn-mini' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_supplier_account_gift_card_path(supplier_account_id: @supplier_account.id, id: gift_card.id), :class => 'btn btn-mini' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),

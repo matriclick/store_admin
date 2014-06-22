@@ -37,6 +37,7 @@ StoreAdmin::Application.routes.draw do
     get :autocomplete_user_email, :on => :collection
     resources :products do
       collection { post :import }
+      collection { get :barcodes }
     end
     resources :payment_methods
     resources :petty_cashes
