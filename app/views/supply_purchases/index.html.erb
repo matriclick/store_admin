@@ -6,10 +6,10 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:provider_id) %></th>
-      <th><%= model_class.human_attribute_name(:total_paid) %></th>
-      <th><%= model_class.human_attribute_name(:currency_id) %></th>
+      <th>Total</th>
+      <th>Pagado</th>
+      <th>Por Pagar</th>
       <th><%= t 'products_bought' %></th>
-      <th><%= model_class.human_attribute_name(:comments) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -18,13 +18,34 @@
     <% @supply_purchases.each do |supply_purchase| %>
       <tr>
         <td><%= supply_purchase.provider.name %></td>
-        <td><%= number_to_currency supply_purchase.supply_purchase_product_sizes.sum('unit_cost*quantity'), precision: 0 %></td>
-        <td><%= supply_purchase.supply_purchase_product_sizes.first.currency_id if supply_purchase.supply_purchase_product_sizes.size > 0 %></td>
-		<td><%= supply_purchase.supply_purchase_product_sizes.sum(:quantity) %></td>
-        <td><%= supply_purchase.comments %></td>
-        <td><%=l supply_purchase.created_at %></td>
         <td>
-          <%= link_to t('.view'), supplier_account_provider_supply_purchase_path(supplier_account_id: @supplier_account.id, provider_id: @provider.id, id: supply_purchase.id), 
+			<% if supply_purchase.supply_purchase_payments.blank? %>
+				No hay pagos asociados
+			<% else %>
+				<%= number_to_currency supply_purchase.supply_purchase_payments.sum('amount'), precision: 0 %> 
+				<%= supply_purchase.supply_purchase_payments.first.currency.symbol %>
+			<% end %>
+		</td>
+        <td>
+			<% if supply_purchase.supply_purchase_payments.blank? %>
+				No hay pagos asociados
+			<% else %>
+				<%= number_to_currency supply_purchase.supply_purchase_payments.sum('amount', :conditions => {:paid => true}), precision: 0 %> 
+				<%= supply_purchase.supply_purchase_payments.first.currency.symbol %>
+			<% end %>
+		</td>
+        <td>
+			<% if supply_purchase.supply_purchase_payments.blank? %>
+				No hay pagos asociados
+			<% else %>
+				<%= number_to_currency supply_purchase.supply_purchase_payments.sum('amount', :conditions => {:paid => false}), precision: 0 %> 
+				<%= supply_purchase.supply_purchase_payments.first.currency.symbol %>
+			<% end %>
+		</td>
+		<td><%= supply_purchase.supply_purchase_product_sizes.sum(:quantity) %></td>
+        <td><%= supply_purchase.created_at.in_time_zone(@time_zone).strftime('%Y-%m-%d') %></td>
+        <td>
+          <%= link_to t('view'), supplier_account_provider_supply_purchase_path(supplier_account_id: @supplier_account.id, provider_id: @provider.id, id: supply_purchase.id), 
  				 :class => 'btn btn-mini btn-primary' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_supplier_account_provider_supply_purchase_path(supplier_account_id: @supplier_account.id, provider_id: @provider.id, id: supply_purchase.id), :class => 'btn btn-mini' %>

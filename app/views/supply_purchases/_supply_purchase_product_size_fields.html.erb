@@ -6,7 +6,7 @@
 		<a href="#myModal" data-toggle="modal"><i class="icon-search"></i></a>
 		<%= sppz.text_field :product_stock_size_id, placeholder: 'Código de Interno del Producto' %>		
 		<%= sppz.text_field :unit_cost, placeholder: 'Costo en moneda local' %>
-		<%= sppz.text_field :currency_id, placeholder: 'ID Currency (cambiar por collection)'  %>
+	  	<%= sppz.collection_select :currency_id, @supplier_account.currencies, :id, :symbol, {:prompt => 'Moneda', :allow_blank => false} %>
 		<%= sppz.link_to_remove 'Eliminar', :class => 'btn btn-default btn-mini' %>
 	</div>
 </div>

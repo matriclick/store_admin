@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140617050316) do
+ActiveRecord::Schema.define(version: 20140622214942) do
 
   create_table "currencies", force: true do |t|
     t.string   "symbol"
@@ -241,6 +241,16 @@ ActiveRecord::Schema.define(version: 20140617050316) do
   create_table "supplier_accounts_users", id: false, force: true do |t|
     t.integer "user_id"
     t.integer "supplier_account_id"
+  end
+
+  create_table "supply_purchase_payments", force: true do |t|
+    t.integer  "supply_purchase_id"
+    t.decimal  "amount",             precision: 10, scale: 0
+    t.integer  "currency_id"
+    t.boolean  "paid"
+    t.datetime "pay_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "supply_purchase_product_sizes", force: true do |t|

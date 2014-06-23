@@ -65,7 +65,7 @@ class ApplicationController < ActionController::Base
     sup_acc = SupplierAccount.find params[:supplier_account_id]
     pszs = sup_acc.find_product_stock_sizes(params[:q])
     respond_to do |format|
-      format.json  { render :json => pszs.map{|psz| {:image_url =>  psz.product.product_images.first.photo.url(:side), :name => psz.product.name, :size =>  psz.size.name, :color =>  psz.color, :barcode =>  psz.barcode, :id =>  psz.id} } }
+      format.json  { render :json => pszs.map{|psz| {:image_url => (psz.product.product_images.first.photo.url(:side) if psz.product.product_images.size > 0), :name => psz.product.name, :size =>  psz.size.name, :color =>  psz.color, :barcode =>  psz.barcode, :id =>  psz.id} } }
     end
   end
   

@@ -1,0 +1,17 @@
+<%= f.fields_for :supply_purchase_payments do |payments| %>
+<div class="control-group">
+	<div class="controls">
+		<%= payments.text_field :amount, placeholder: 'Monto a Pagar' %>
+	  	<%= payments.collection_select :currency_id, @supplier_account.currencies, :id, :symbol, {:prompt => 'Moneda', :allow_blank => false} %>
+      	<%= payments.text_field :pay_date, :class => 'datepicker', placeholder: 'Fecha Pago' %>
+		<label class="checkbox inline">
+  			<%= payments.check_box :paid %> ¿Pagado?
+		</label>
+		<%= payments.link_to_remove 'Eliminar', :class => 'btn btn-default btn-mini' %>
+	</div>
+</div>
+<% end %>
+
+<div>
+	<%= f.link_to_add 'Agregar Pago', :supply_purchase_payments, :class => 'btn btn-primary btn-mini' %>
+</div>
