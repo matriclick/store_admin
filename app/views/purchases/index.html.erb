@@ -1,0 +1,27 @@
+<script>
+	$(function() {
+		$("#q").focus();
+	});
+</script>
+<%- model_class = Purchase -%>
+<div class="pull-right">
+	<%= link_to t('create_manual_sale'), new_supplier_account_purchase_path, :class => 'btn btn-primary' %>
+</div>
+
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<%= form_tag(request.fullpath, :method => "get", :html => {class: 'form-search'}) do %>
+	<%= text_field_tag(:q, @q, class: "input-medium search-query", placeholder: "Ingresa el ticket de cambio, número de boleta o nombre del cliente", style: "width:50%") %>
+	<%= submit_tag t('search'), class: "btn btn-primary" %>
+	<%= link_to 'Ver todos', supplier_account_purchases_path(supplier_account_id: @supplier_account.id), class: "btn" %>
+<% end %>
+<%= render 'layouts/date_range_selector' %>
+
+<%= render 'purchases_table' %>
+
+<% if @purchases.total_pages > 1%>
+<div class="well apple_pagination">
+	<%= will_paginate @purchases %>
+</div>
+<% end %>
