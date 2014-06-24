@@ -3,7 +3,9 @@ StoreAdmin::Application.routes.draw do
   get "store_admin/:id/point_of_sale" => 'store_admin#point_of_sale', as: 'point_of_sale'
   get "store_admin/:id/products" => 'store_admin#products', as: 'store_admin_products'
   get "store_admin/:id/users" => 'store_admin#users', as: 'store_admin_users'
+
   get "store_admin/:id/reports" => 'store_admin#reports', as: 'store_admin_reports'
+    get "store_admin/:id/report_daily" => 'store_admin#report_daily', as: 'store_admin_report_daily'
   get "store_admin/:id/sales_summary" => 'store_admin#sales_summary', as: 'store_admin_sales_summary'
   get "store_admin/:id/inventory" => 'store_admin#inventory', as: 'store_admin_inventory'
   get "store_admin/:id/menu" => 'store_admin#menu', as: 'store_admin_menu'

@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:date) %></th>
+      <th><%= model_class.human_attribute_name(:warehouse_id) %></th>
       <th><%= model_class.human_attribute_name(:came_in_clients) %></th>
       <th><%= model_class.human_attribute_name(:comments) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
@@ -15,6 +16,7 @@
     <% @daily_store_data.each do |daily_store_datum| %>
       <tr>
         <td><%= link_to daily_store_datum.date.strftime("%Y-%m-%d"), supplier_account_daily_store_datum_path(supplier_account_id: @supplier_account.id, id: daily_store_datum.id) %></td>
+        <td><%= daily_store_datum.warehouse.name unless daily_store_datum.warehouse.blank? %></td>
         <td><%= daily_store_datum.came_in_clients %></td>
         <td><%= daily_store_datum.comments %></td>
         <td>

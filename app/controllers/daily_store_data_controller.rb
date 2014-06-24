@@ -4,7 +4,7 @@ class DailyStoreDataController < ApplicationController
   # GET /daily_store_data
   # GET /daily_store_data.json
   def index
-    @daily_store_data = @supplier_account.daily_store_datum
+    @daily_store_data = @supplier_account.daily_store_datum.order 'date DESC'
   end
 
   # GET /daily_store_data/1
@@ -72,6 +72,6 @@ class DailyStoreDataController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def daily_store_datum_params
-      params.require(:daily_store_datum).permit(:date, :came_in_clients, :supplier_account_id, :comments)
+      params.require(:daily_store_datum).permit(:date, :came_in_clients, :supplier_account_id, :comments, :warehouse_id)
     end
 end

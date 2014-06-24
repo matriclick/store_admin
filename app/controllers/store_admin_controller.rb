@@ -1,7 +1,7 @@
 # encoding: UTF-8
 class StoreAdminController < ApplicationController
   before_action :set_supplier_account, :check_if_user_has_related_supplier_account, except: [:stores]
-  before_action :set_date_range, only: [:purchase_details, :sales_summary]
+  before_action :set_date_range, only: [:purchase_details, :sales_summary, :report_daily]
   
   def point_of_sale
     @shopping_cart = params[:shopping_cart_id].blank? ? ShoppingCart.create(user_id: current_user.id) : ShoppingCart.find(params[:shopping_cart_id])
@@ -109,16 +109,11 @@ class StoreAdminController < ApplicationController
     redirect_to inventory_reconciliation_path(id: @supplier_account.id), notice: 'Consolidación de Inventario Finalizada'
   end
   
-  def products
-  end
-
   def reports
   end
   
-  def users
-  end
-
-  def reports
+  def report_daily
+    @warehouse = Warehouse.find(cookies[:warehouse_id])
   end
   
   def sales_summary
@@ -243,10 +238,10 @@ class StoreAdminController < ApplicationController
       end
       @error_message = 'Error al guardar la compra. Consulta con el administrador.'
       if customer.blank?
-        purchase = Purchase.create(shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], 
+        purchase = Purchase.create(shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], warehouse_id: cookies[:warehouse_id],
               supplier_account_id: @supplier_account.id, discount: discount, discount_type: discount_type, user_id: current_user.id, gift_card_id: gift_card_id)
       else
-        purchase = Purchase.create(shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], 
+        purchase = Purchase.create(shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], warehouse_id: cookies[:warehouse_id],
               supplier_account_id: @supplier_account.id, discount: discount, discount_type: discount_type, customer_id: customer.id, user_id: current_user.id, gift_card_id: gift_card_id)
       end
       @error_message = 'Error al guardar generar los pagos. Consulta con el administrador.'

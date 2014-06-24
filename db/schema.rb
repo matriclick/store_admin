@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140622214942) do
+ActiveRecord::Schema.define(version: 20140623132326) do
 
   create_table "currencies", force: true do |t|
     t.string   "symbol"
@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(version: 20140622214942) do
     t.string   "change_ticket_barcode"
     t.string   "status"
     t.integer  "gift_card_id"
+    t.integer  "warehouse_id"
   end
 
   create_table "roles", force: true do |t|

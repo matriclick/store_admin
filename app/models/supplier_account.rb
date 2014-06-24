@@ -3,6 +3,7 @@ require 'barby/barcode/ean_13'
 
 class SupplierAccount < ActiveRecord::Base
   has_and_belongs_to_many :users
+  has_many :daily_store_data, :dependent => :destroy
   has_many :customers, :dependent => :destroy
   has_many :warehouses, :dependent => :destroy
   has_many :daily_store_data, :dependent => :destroy

@@ -1,0 +1,48 @@
+<h1>Reporte de Venta Diaria</h1>
+<div class="pull-right">
+	<div class="input-group form-inline">
+	<%= collection_select :warehouse, :id, @supplier_account.warehouses, :id, :name, { selected: @warehouse.id }, { onchange: 'update_warehouse()' } %>
+	</div>
+</div>
+<%= render 'layouts/date_range_selector' %>
+<hr>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th></th>
+			<% (@from.to_datetime..@to.to_datetime).each do |d| %>
+				<th><%=l d.in_time_zone(@time_zone), format: :short_day %></th>
+			<% end %>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<th>Ingresos</th>
+			<% (@from.to_datetime..@to.to_datetime).each do |d| %>
+				<td><%= number_to_currency @supplier_account.purchases.joins(:payments)
+						.where('payments.created_at > ? and payments.created_at < ? and purchases.warehouse_id = ?', d, d + 24.hours, @warehouse.id).sum('payments.amount'), precision: 0 %></td>
+			<% end %>
+		</tr>
+		<tr>
+			<th># Ventas</th>
+			<% (@from.to_datetime..@to.to_datetime).each do |d| %>
+				<td><%= number_with_delimiter @supplier_account.purchases
+						.where('purchases.created_at > ? and purchases.created_at < ? and purchases.warehouse_id = ?', d, d + 24.hours, @warehouse.id).count, precision: 0 %></td>
+			<% end %>
+		</tr>
+		<tr>
+			<th>Productos Vendidos</th>
+			<% (@from.to_datetime..@to.to_datetime).each do |d| %>
+				<td><%= number_with_delimiter @supplier_account.purchases.joins(shopping_cart: :shopping_cart_items)
+						.where('purchases.created_at > ? and purchases.created_at < ? and purchases.warehouse_id = ?', d, d + 24.hours, @warehouse.id).sum('shopping_cart_items.quantity'), precision: 0 %></td>
+			<% end %>
+		</tr>
+		<tr>
+			<th>Personas en Tienda</th>
+			<% (@from.to_datetime..@to.to_datetime).each do |d| %>
+				<td><%= number_with_delimiter @supplier_account.daily_store_data
+						.where('daily_store_data.date = ? and warehouse_id = ?', d.strftime("%Y-%m-%d"), @warehouse.id).sum('came_in_clients'), precision: 0 %></td>
+			<% end %>
+		</tr>
+	</tbody>
+</table>

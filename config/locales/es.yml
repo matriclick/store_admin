@@ -36,6 +36,7 @@ es:
       default: ! '%d/%m/%Y'
       long: ! '%A %d de %B de %Y'
       short: ! '%d de %b'
+      short_day: '%a %d %b %Y'
     month_names:
     -
     - enero
@@ -191,6 +192,7 @@ es:
       default: ! '%A, %d de %B de %Y %H:%M:%S %z'
       long: ! '%A %d de %B de %Y %H:%M'
       short: ! '%d de %b %H:%M'
+      short_day: '%a %d %b %Y'      
     pm: pm
   will_paginate:
     previous_label: "&#8592; Anterior"
@@ -292,6 +294,7 @@ es:
         came_in_clients: Número de Clientes
         comments: Comentarios
         created_at: Fecha de Creación
+        warehouse_id: Bodega
       supply_purchase:
         provider_id: Proveedor
         total_paid: Total Pagado
