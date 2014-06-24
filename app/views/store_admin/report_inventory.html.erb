@@ -1,0 +1,32 @@
+<%= javascript_include_tag("https://www.google.com/jsapi", "chartkick") %>
+<div class="pull-right">
+	<div class="input-group form-inline">
+	<%= collection_select :warehouse, :id, @supplier_account.warehouses, :id, :name, { selected: @warehouse.id }, { onchange: 'update_warehouse()' } %>
+	</div>
+</div>
+<h1>Inventario</h1>
+<hr>
+<!-- 
+<h2>Antiguedad</h2>
+<%= column_chart({
+	"0 a 30 días" => 
+		@products.where('products.created_at <= ? and products.created_at >= ?', Time.now.localtime, Time.now.localtime - 30.days).count,
+	"30 a 60 días" => 
+		@products.where('products.created_at < ? and products.created_at >= ?', Time.now.localtime - 30.days, Time.now.localtime - 60.days).count,
+	"60 a 90 días" => 
+		@products.where('products.created_at < ? and products.created_at >= ?', Time.now.localtime - 60.days, Time.now.localtime - 60.days).count,
+	"más de 90 días" => 
+		@products.where('products.created_at < ? and products.created_at >= ?', Time.now.localtime - 90.days, Time.now.localtime - 100.years).count}) %>
+<hr>
+-->
+<h2>Categorías</h2>
+<%= bar_chart(@product_categories.map { |pc| [pc.name.capitalize, 
+		pc.products.joins(product_stock_sizes: :warehouse_product_size_stocks)
+		.where('warehouse_product_size_stocks.warehouse_id = ?', @warehouse.id).sum('warehouse_product_size_stocks.stock')] }) %>
+<hr>
+<h2>Tallas</h2>
+<%= bar_chart(@sizes.map { |size| [size.name.capitalize, 
+		size.product_stock_sizes.joins(:warehouse_product_size_stocks)
+		.where('warehouse_product_size_stocks.warehouse_id = ?', @warehouse.id).sum('warehouse_product_size_stocks.stock')] }) %>
+<hr>
+<%= link_to 'Descargar Base de Productos en Bodegas', supplier_account_products_path(supplier_account_id: @supplier_account.id, format: :xls), class: "btn" %>

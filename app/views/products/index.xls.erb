@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Clientes">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Nombre</Data></Cell>
+        <Cell><Data ss:Type="String">Talla</Data></Cell>
+        <Cell><Data ss:Type="String">Color</Data></Cell>
+        <Cell><Data ss:Type="String">Bodega</Data></Cell>
+        <Cell><Data ss:Type="String">Stock</Data></Cell>
+        <Cell><Data ss:Type="String">Categoría</Data></Cell>
+      </Row>
+    <% @all_products.each do |product| %>
+    	<% product.product_stock_sizes.each do |product_stock_size| %>
+    		<% product_stock_size.warehouse_product_size_stocks.each do |warehouse_product_size_stock| %>
+	      	<Row>
+	        	<Cell><Data ss:Type="String"><%= product.name %></Data></Cell>
+	        	<Cell><Data ss:Type="String"><%= product_stock_size.size.name %></Data></Cell>
+	        	<Cell><Data ss:Type="String"><%= product_stock_size.color %></Data></Cell>
+	        	<Cell><Data ss:Type="String"><%= warehouse_product_size_stock.warehouse.name %></Data></Cell>
+	        	<Cell><Data ss:Type="Number"><%= warehouse_product_size_stock.stock %></Data></Cell>
+        		<Cell><Data ss:Type="String"><%= product.product_categories.map{ |cat| cat.name }.join(', ') %></Data></Cell>
+	      	</Row>
+			<% end %>
+		<% end %>
+	<% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

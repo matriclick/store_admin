@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Clientes">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Nombre</Data></Cell>
+        <Cell><Data ss:Type="String">Correo</Data></Cell>
+        <Cell><Data ss:Type="String">RUT</Data></Cell>
+        <Cell><Data ss:Type="String">Cumpleaños</Data></Cell>
+        <Cell><Data ss:Type="String">Teléfono</Data></Cell>
+        <Cell><Data ss:Type="String">Total gastado</Data></Cell>
+        <Cell><Data ss:Type="String">Productos comprados</Data></Cell>
+        <Cell><Data ss:Type="String">Fecha última compra</Data></Cell>
+        <Cell><Data ss:Type="String">Fecha creación cliente</Data></Cell>
+      </Row>
+    <% @all_customers.each do |customer| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= customer.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= customer.email %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= customer.rut %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= customer.birthday.in_time_zone(@time_zone).strftime("%Y-%m-%d") unless customer.birthday.blank? %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= customer.phone_number %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= customer.purchases.joins(:payments).sum(:amount) %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= customer.purchases.joins(shopping_cart: :shopping_cart_items).sum(:quantity) %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= customer.purchases.last.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") if customer.purchases.size > 0 %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= customer.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

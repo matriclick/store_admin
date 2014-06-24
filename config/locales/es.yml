@@ -352,3 +352,6 @@ es:
   back_to_point_of_sale: Volver al Punto de Venta
   print: Imprimir
   back: Volver
+  payment_method: Método de Pago
+  paid_amount: Total Pagado
+  category: Categoría

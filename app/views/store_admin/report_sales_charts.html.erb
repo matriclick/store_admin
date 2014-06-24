@@ -1,0 +1,12 @@
+<%= javascript_include_tag("https://www.google.com/jsapi", "chartkick") %>
+<h1>Resumen de Ventas</h1>
+<%= render 'layouts/date_range_selector' %>
+<hr>
+<h2 class="featurette-heading" style="margin-top:10px; margin-bottom:0px; font-size:18px; font-weight:lighter">Monto Vendido</h2>
+<%= line_chart @purchases.joins(:payments).group_by_day('purchases.created_at').sum('payments.amount') %>
+<hr>
+<h2 class="featurette-heading" style="margin-top:10px; margin-bottom:0px; font-size:18px; font-weight:lighter">Cantidad de Transacciones</h2>
+<%= line_chart @purchases.group_by_day(:created_at).count %>
+<hr>
+<h2 class="featurette-heading" style="margin-top:10px; margin-bottom:0px; font-size:18px; font-weight:lighter">Cantidad de productos vendidos</h2>
+<%= line_chart @purchases.joins(shopping_cart: :shopping_cart_items).group_by_day('purchases.created_at').sum(:quantity) %>

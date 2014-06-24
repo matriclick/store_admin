@@ -24,9 +24,10 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th style="width:25%"><%=t 'name' %></th>
+      <th style="width:20%"><%=t 'name' %></th>
       <th><%=t 'price' %></th>
       <th><%=t 'average_cost' %></th>
+      <th><%=t 'category' %></th>
       <th><%=t 'stock' %></th>
       <th><%=t 'distributed_in_warehouses' %></th>
       <th><%=t 'created_at' %></th>
@@ -39,6 +40,7 @@
         <td><%= link_to product.name, supplier_account_product_path(supplier_account_id: @supplier_account.id, id: product.id) %></td>
         <td><%= number_to_currency product.price, precision: 0 %></td>
         <td><%= number_to_currency product.product_stock_sizes.joins(:supply_purchase_product_sizes).average(:unit_cost) , precision: 0 %></td>
+		<td><%= raw product.product_categories.map{ |cat| cat.name }.join('<br />') %></td>
 		<td><%= raw product.product_stock_sizes.map{ |psz| psz.stock.to_s+' - '+psz.size.name+' - '+psz.color }.join('<br />') %></td>
 		<td>
 			<% aux =  WarehouseProductSizeStock.joins(:product_stock_size).where("product_stock_sizes.product_id = ?", product.id) %>
@@ -70,7 +72,8 @@
 <div class="well apple_pagination">
 	<%= will_paginate @products %>
 </div>
-<div class="well">
+<%= link_to 'Descargar Base de Productos en Bodegas', supplier_account_products_path(supplier_account_id: @supplier_account.id, format: :xls), class: "btn" %>
+<div class="well" style="margin-top:20px">
 	<h3>Carga masiva de productos</h3>
 	<p>El archivo que subas debe tener el mismo formato que <a href="/import_example.xls">este archivo ejemplo</a></p>
 	<%= form_tag import_supplier_account_products_path, multipart: true do %>

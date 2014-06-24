@@ -1,16 +1,31 @@
 <%- model_class = Customer -%>
+<div class="pull-right">
+	<%= link_to t('.new', :default => t("helpers.links.new")),
+	            new_supplier_account_customer_path(supplier_account_id: @supplier_account.id),
+	            :class => 'btn btn-primary' %>
+</div>
+
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
+<div class="row">
+	<div class="span12">
+		<%= form_tag(request.fullpath, :method => "get", :html => {class: 'form-search'}) do %>
+			<%= text_field_tag(:q, @q, class: "input-medium search-query", placeholder: "Ingresa el nombre o correo del cliente", style: "width:60%") %>
+			<%= submit_tag t('search'), class: "btn btn-primary" %>
+			<%= link_to 'Ver todos', supplier_account_customers_path(supplier_account_id: @supplier_account.id), class: "btn" %>
+		<% end %>
+	</div>
+</div>
+
 <table class="table table-striped">
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:rut) %></th>
-      <th><%= model_class.human_attribute_name(:birthday) %></th>
-      <th><%= model_class.human_attribute_name(:phone_number) %></th>
       <th><%= model_class.human_attribute_name(:email) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th>Total Gastado</th>
+      <th>Productos Comprados</th>
+      <th>Fecha Última Compra</th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -18,19 +33,14 @@
     <% @customers.each do |customer| %>
       <tr>
         <td><%= link_to customer.name, supplier_account_customer_path(supplier_account_id: @supplier_account.id, id: customer.id) %></td>
-        <td><%= customer.rut %></td>
-        <td><%= customer.birthday.strftime("%Y-%m-%d") unless customer.birthday.nil? %></td>
-        <td><%= customer.phone_number %></td>
         <td><%= customer.email %></td>
-        <td><%=l customer.created_at %></td>
+        <td><%= number_to_currency customer.purchases.joins(:payments).sum(:amount), precision: 0 %></td>
+        <td><%= customer.purchases.joins(shopping_cart: :shopping_cart_items).sum(:quantity) %></td>
+        <td><%= customer.purchases.last.created_at.strftime('%Y-%m-%d') unless customer.purchases.blank? %></td>
         <td>
+		  <%= link_to t('view'), supplier_account_customer_path(supplier_account_id: @supplier_account.id, id: customer.id), :class => 'btn btn-mini btn-primary' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_supplier_account_customer_path(supplier_account_id: @supplier_account.id, id: customer.id), :class => 'btn btn-mini' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      supplier_account_customer_path(supplier_account_id: @supplier_account.id, id: customer.id),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-mini btn-danger' %>
         </td>
       </tr>
     <% end %>
@@ -41,7 +51,4 @@
 	<%= will_paginate @customers %>
 </div>
 <% end %>
-
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_supplier_account_customer_path(supplier_account_id: @supplier_account.id),
-            :class => 'btn btn-primary' %>
+<%= link_to 'Descargar Base de Clientes', supplier_account_customers_path(supplier_account_id: @supplier_account.id, format: :xls), class: "btn" %>

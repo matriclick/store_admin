@@ -1,15 +1,22 @@
+# encoding: UTF-8
 class CustomersController < ApplicationController
   before_action :set_customer, only: [:show, :edit, :update, :destroy]
   before_action :set_supplier_account
   # GET /customers
   # GET /customers.json
   def index
-    @customers = @supplier_account.customers.paginate(:page => params[:page], :per_page => 15)
+    @all_customers = @supplier_account.find_customers(params[:q]).order('created_at DESC')
+    @customers = @supplier_account.find_customers(params[:q]).order('created_at DESC').paginate(:page => params[:page], :per_page => 15)
+    respond_to do |format|
+      format.html
+      format.xls
+    end
   end
 
   # GET /customers/1
   # GET /customers/1.json
   def show
+    @purchases = @customer.purchases
   end
 
   # GET /customers/new

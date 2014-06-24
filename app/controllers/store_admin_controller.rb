@@ -1,14 +1,10 @@
 # encoding: UTF-8
 class StoreAdminController < ApplicationController
   before_action :set_supplier_account, :check_if_user_has_related_supplier_account, except: [:stores]
-  before_action :set_date_range, only: [:purchase_details, :sales_summary, :report_daily]
+  before_action :set_date_range, only: [:purchase_details, :report_sales_charts, :report_daily]
   
   def point_of_sale
     @shopping_cart = params[:shopping_cart_id].blank? ? ShoppingCart.create(user_id: current_user.id) : ShoppingCart.find(params[:shopping_cart_id])
-    if cookies[:warehouse_id].blank?
-      cookies[:warehouse_id] = current_user.supplier_accounts.first.warehouses.first.id
-    end
-    @warehouse = Warehouse.find(cookies[:warehouse_id])
     @purchase_aux = Purchase.new
     @purchase_aux.payments.build
   end
@@ -110,19 +106,31 @@ class StoreAdminController < ApplicationController
   end
   
   def reports
+    add_breadcrumb "Reportes", store_admin_reports_path(id: @supplier_account.id)
   end
   
   def report_daily
-    @warehouse = Warehouse.find(cookies[:warehouse_id])
+    add_breadcrumb "Reportes", store_admin_reports_path(id: @supplier_account.id)
+    add_breadcrumb "Reporte de Venta Diario", store_admin_report_daily_path(id: @supplier_account.id)
   end
   
-  def sales_summary
+  def report_sales_charts
+    add_breadcrumb "Reportes", store_admin_reports_path(id: @supplier_account.id)
+    add_breadcrumb "Gráficos de Venta", store_admin_report_sales_charts_path(id: @supplier_account.id)
     @purchases = @supplier_account.purchases.where('purchases.created_at >= ? and purchases.created_at <= ?', @from, @to).order 'purchases.created_at DESC'
   end
   
-  def inventory
+  def report_inventory
+    add_breadcrumb "Reportes", store_admin_reports_path(id: @supplier_account.id)
+    add_breadcrumb "Inventario", store_admin_report_inventory_path(id: @supplier_account.id)
+    
     @products = @supplier_account.products
     @product_categories = @supplier_account.product_categories
+    @sizes = @supplier_account.sizes
+  end
+  
+  def report_customers
+    
   end
   
   def stores

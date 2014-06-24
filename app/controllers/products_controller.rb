@@ -11,7 +11,12 @@ class ProductsController < ApplicationController
   # GET /products.json
   def index
     @q = params[:q]
+    @all_products = @supplier_account.find_products(params[:q])
     @products = @supplier_account.find_products(params[:q]).paginate(:page => params[:page], :per_page => 15)
+    respond_to do |format|
+      format.html
+      format.xls
+    end
   end
 
   # GET /products/1

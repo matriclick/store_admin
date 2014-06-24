@@ -1,8 +1,18 @@
 <h1>Reportes</h1>
 <ul>
-	<li style="margin-bottom:10px;"><%= link_to 'Reporte de Venta Diario', store_admin_report_daily_path %></li>
-	<li style="margin-bottom:10px;"><%= link_to 'Gráficos de Venta', store_admin_sales_summary_path %></li>
-	<li style="margin-bottom:10px;"><%= link_to 'Inventario', store_admin_inventory_path %></li>
-	<li style="margin-bottom:10px;"><%= link_to 'Todos los productos existentes', supplier_account_products_path(supplier_account_id: @supplier_account.id, format: "csv") %></li>
-	<li style="margin-bottom:10px;"><%= link_to 'Reporte de Ventas', supplier_account_purchases_path(supplier_account_id: @supplier_account.id, format: "csv") %></li>
+	<li style="margin-bottom:10px;">
+		<%= link_to 'Reporte de Venta Diario', store_admin_report_daily_path %>
+	</li>
+	<li style="margin-bottom:10px;">
+		<%= link_to 'Gráficos de Venta', store_admin_report_sales_charts_path %>
+	</li>
+	<li style="margin-bottom:10px;">
+		<%= link_to 'Inventario', store_admin_report_inventory_path %>
+	</li>
+	<li style="margin-bottom:10px;">
+		<%= link_to 'Reporte de Clientes (TODO)', store_admin_report_customers_path %>
+	</li>
+	<li style="margin-bottom:10px;">
+		<%= link_to 'Reporte de Ingresos y Gastos (TODO)', '#' %>
+	</li>
 </ul>

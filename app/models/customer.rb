@@ -4,4 +4,5 @@ class Customer < ActiveRecord::Base
   
   validates :email, :uniqueness => {:scope => :supplier_account_id}
   validates :name, presence: true
+  
 end

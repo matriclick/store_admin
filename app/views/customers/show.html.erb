@@ -16,6 +16,15 @@
   <dd><%= @customer.email %></dd>
 </dl>
 
+<h2>Historial de Compras</h2>
+<div class="well">
+<% if @purchases.size > 0 %>
+	<%= render 'purchases/purchases_table' %>
+<% else %>
+	No hay compras asociadas a este cliente
+<% end %>
+</div>
+
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               supplier_account_customers_path(supplier_account_id: @supplier_account.id), :class => 'btn'  %>

@@ -1,0 +1,41 @@
+<%- model_class = Purchase -%>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%= t 'payment_method' %></th>
+      <th><%= t 'paid_amount' %></th>
+      <th><%= model_class.human_attribute_name(:customer_id) %></th>
+      <th><%= model_class.human_attribute_name(:discount) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:invoice_number) %></th>
+      <th><%= model_class.human_attribute_name(:status) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @purchases.each do |purchase| %>
+      <tr>
+        <td><%= purchase.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
+        <td><%= purchase.payments.each.map { |p| p.payment_method.name }.join ', '  %></td>
+        <td><%= number_to_currency purchase.paid_amount, precision: 0 %></td>
+        <td><%= purchase.customer.name unless purchase.customer.nil? %></td>
+		<% if purchase.discount_type == 'absolute' %>
+        	<td><%= number_to_currency purchase.discount, precision: 0 %></td>
+		<% elsif purchase.discount_type == 'percentage' %>
+        	<td><%= purchase.discount %>%</td>
+		<% else %>
+        	<td></td>
+		<% end %>
+        <td><%= purchase.user.email unless purchase.user.nil? %></td>
+        <td><%= purchase.invoice_number %></td>
+        <td><%= purchase.status %></td>
+        <td>
+	      <%= link_to t('view'), supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: purchase.id), :class => 'btn btn-mini btn-primary' %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: purchase.id), :class => 'btn btn-mini' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

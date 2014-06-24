@@ -47,6 +47,15 @@ class SupplierAccount < ActiveRecord::Base
     end
   end
   
+  def find_customers(q)
+    if q.blank?
+      return self.customers
+    else
+      q.gsub('.', '').gsub!(',', '')
+      return self.customers.where('name like "%'+q+'%" or email like "%'+q+'%" or rut like "%'+q+'%"')
+    end
+  end
+  
   def find_product_stock_sizes(q)
     if q.blank?
       return ProductStockSize.joins(:product).where('products.supplier_account_id = ?', self.id)

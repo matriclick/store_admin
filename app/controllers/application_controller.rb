@@ -1,9 +1,16 @@
 # encoding: UTF-8
 class ApplicationController < ActionController::Base
-  before_action :authenticate_user!, :add_time_zone_variable, except: [:set_time_zone]
+  before_action :authenticate_user!, :add_time_zone_variable, :set_warehouse, except: [:set_time_zone]
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+  
+  def set_warehouse
+    if cookies[:warehouse_id].blank?
+      cookies[:warehouse_id] = current_user.supplier_accounts.first.warehouses.first.id
+    end
+    @warehouse = Warehouse.find(cookies[:warehouse_id])
+  end
   
   def authenticate_admin
     unless current_user.is_admin?
