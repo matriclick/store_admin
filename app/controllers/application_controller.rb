@@ -6,10 +6,12 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   
   def set_warehouse
-    if cookies[:warehouse_id].blank?
-      cookies[:warehouse_id] = current_user.supplier_accounts.first.warehouses.first.id
+    unless current_user.blank?
+      if cookies[:warehouse_id].blank?
+        cookies[:warehouse_id] = current_user.supplier_accounts.first.warehouses.first.id
+      end
+      @warehouse = Warehouse.find(cookies[:warehouse_id])
     end
-    @warehouse = Warehouse.find(cookies[:warehouse_id])
   end
   
   def authenticate_admin

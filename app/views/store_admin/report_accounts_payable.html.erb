@@ -1,0 +1,56 @@
+<h3>Gastos por Pagar</h3>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Fecha Pago</th>
+			<th>Monto por Pagar</th>
+			<th>Detalle</th>
+			<th>Acciones</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @expenses.each do |expense| %>
+		<% if DateTime.parse(expense.pay_date.beginning_of_day.strftime('%Y-%m-%d')) < 
+				DateTime.parse(DateTime.now.in_time_zone(@time_zone).beginning_of_day.strftime('%Y-%m-%d')) %>
+			<tr class="error">
+		<% elsif expense.pay_date.beginning_of_day.strftime('%Y-%m-%d') == DateTime.now.in_time_zone(@time_zone).beginning_of_day.strftime('%Y-%m-%d') %>
+			<tr class="warning">
+		<% else %>
+			<tr>
+		<% end %>
+				<td><%=l expense.pay_date.in_time_zone(@time_zone), format: :short_day %></td>
+				<td><%= number_to_currency expense.amount, precision: 0 %> <%= expense.currency.symbol %></td>
+				<td><%= expense.expense_type.name %></td>
+				<td></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+<h3>Compras de Productos por Pagar</h3>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Fecha Pago</th>
+			<th>Monto por Pagar</th>
+			<th>Detalle</th>
+			<th>Acciones</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% @supply_purchase_payments.each do |supply_purchase_payment| %>
+		<% if DateTime.parse(supply_purchase_payment.pay_date.beginning_of_day.strftime('%Y-%m-%d')) < 
+				DateTime.parse(DateTime.now.in_time_zone(@time_zone).beginning_of_day.strftime('%Y-%m-%d')) %>
+			<tr class="error">
+		<% elsif supply_purchase_payment.pay_date.beginning_of_day.strftime('%Y-%m-%d') == DateTime.now.in_time_zone(@time_zone).beginning_of_day.strftime('%Y-%m-%d') %>
+			<tr class="warning">
+		<% else %>
+			<tr>
+		<% end %>
+				<td><%=l supply_purchase_payment.pay_date.in_time_zone(@time_zone), format: :short_day %></td>
+				<td><%= number_to_currency supply_purchase_payment.amount, precision: 0 %> <%= supply_purchase_payment.currency.symbol %></td>
+				<td>Compra relacionada</td>
+				<td></td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>

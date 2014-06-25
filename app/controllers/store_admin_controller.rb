@@ -129,8 +129,12 @@ class StoreAdminController < ApplicationController
     @sizes = @supplier_account.sizes
   end
   
-  def report_customers
+  def report_accounts_payable
+    add_breadcrumb "Reportes", store_admin_reports_path(id: @supplier_account.id)
+    add_breadcrumb "Gastos por Pagar", store_admin_report_accounts_payable_path(id: @supplier_account.id)
     
+    @expenses = @supplier_account.expenses.where('paid is not true')
+    @supply_purchase_payments = @supplier_account.supply_purchase_payments.where('supply_purchase_payments.paid is not true')
   end
   
   def stores

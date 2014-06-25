@@ -17,6 +17,7 @@ class SupplierAccount < ActiveRecord::Base
   has_many :expenses, :dependent => :destroy
   has_many :currencies, :dependent => :destroy
   has_many :supply_purchases, through: :providers
+  has_many :supply_purchase_payments, through: :supply_purchases
   has_many :petty_cashes, :dependent => :destroy
   has_many :payment_methods, :dependent => :destroy
   has_many :gift_cards, :dependent => :destroy
@@ -26,6 +27,7 @@ class SupplierAccount < ActiveRecord::Base
   has_attached_file :logo, :styles => { :medium => "300x", :thumb => "100x" }, :use_timestamp => false
 	validates_attachment_content_type :logo, :content_type => ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/x-png', 'image/pjpeg']
 	validates_attachment_size :logo, :less_than => 2.megabytes
+  
   
   def find_products(q)
     if q.blank?

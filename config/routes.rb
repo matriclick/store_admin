@@ -8,7 +8,7 @@ StoreAdmin::Application.routes.draw do
     get "store_admin/:id/report_daily" => 'store_admin#report_daily', as: 'store_admin_report_daily'
   get "store_admin/:id/report_sales_charts" => 'store_admin#report_sales_charts', as: 'store_admin_report_sales_charts'
   get "store_admin/:id/report_inventory" => 'store_admin#report_inventory', as: 'store_admin_report_inventory'
-  get "store_admin/:id/report_customers" => 'store_admin#report_customers', as: 'store_admin_report_customers'
+  get "store_admin/:id/report_accounts_payable" => 'store_admin#report_accounts_payable', as: 'store_admin_report_accounts_payable'
   get "store_admin/:id/menu" => 'store_admin#menu', as: 'store_admin_menu'
   get "store_admin/:id/inventory_reconciliation" => 'store_admin#inventory_reconciliation', as: 'inventory_reconciliation'
   

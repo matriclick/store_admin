@@ -3,6 +3,6 @@ class Expense < ActiveRecord::Base
   belongs_to :expense_type
   belongs_to :currency
   
-  validates :currency_id, :amount, :expense_type_id, presence: true
+  validates :currency_id, :amount, :expense_type_id, :pay_date, presence: true
   
 end
