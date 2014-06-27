@@ -1,7 +1,7 @@
 # encoding: UTF-8
 class StoreAdminController < ApplicationController
   before_action :set_supplier_account, :check_if_user_has_related_supplier_account, except: [:stores]
-  before_action :set_date_range, only: [:purchase_details, :report_sales_charts, :report_daily]
+  before_action :set_date_range, only: [:purchase_details, :report_sales_charts, :report_daily, :report_sales_and_costs]
   
   def point_of_sale
     @shopping_cart = params[:shopping_cart_id].blank? ? ShoppingCart.create(user_id: current_user.id) : ShoppingCart.find(params[:shopping_cart_id])
@@ -137,6 +137,22 @@ class StoreAdminController < ApplicationController
     @supply_purchase_payments = @supplier_account.supply_purchase_payments.where('supply_purchase_payments.paid is not true')
   end
   
+  def report_sales_and_costs
+    add_breadcrumb "Reportes", store_admin_reports_path(id: @supplier_account.id)
+    add_breadcrumb "Ingresos y Gastos", store_admin_report_sales_and_costs_path(id: @supplier_account.id)
+    
+    @hours_off_set = (DateTime.now.in_time_zone(@time_zone).utc_offset/60/60).abs
+    
+    if params[:interval] == 'day'
+      interval = 1.day
+    elsif params[:interval] == 'month'
+      interval = 1.week
+    else
+      interval = 1.month
+    end
+    
+  end
+  
   def stores
     if current_user.supplier_accounts.size == 1
       unless current_user.supplier_accounts.first.warehouses == 0
@@ -207,8 +223,8 @@ class StoreAdminController < ApplicationController
     
     def set_date_range
       if params[:from].nil? or params[:to].nil?
-        @from = DateTime.now.in_time_zone(@time_zone).beginning_of_day
-        @to = DateTime.now.in_time_zone(@time_zone).end_of_day
+        @from = DateTime.now.in_time_zone(@time_zone).beginning_of_week
+        @to = DateTime.now.in_time_zone(@time_zone).end_of_week
       else
         @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_day
         @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_day

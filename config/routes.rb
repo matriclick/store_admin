@@ -5,10 +5,12 @@ StoreAdmin::Application.routes.draw do
   get "store_admin/:id/users" => 'store_admin#users', as: 'store_admin_users'
 
   get "store_admin/:id/reports" => 'store_admin#reports', as: 'store_admin_reports'
-    get "store_admin/:id/report_daily" => 'store_admin#report_daily', as: 'store_admin_report_daily'
+  get "store_admin/:id/report_daily" => 'store_admin#report_daily', as: 'store_admin_report_daily'
   get "store_admin/:id/report_sales_charts" => 'store_admin#report_sales_charts', as: 'store_admin_report_sales_charts'
   get "store_admin/:id/report_inventory" => 'store_admin#report_inventory', as: 'store_admin_report_inventory'
   get "store_admin/:id/report_accounts_payable" => 'store_admin#report_accounts_payable', as: 'store_admin_report_accounts_payable'
+  get "store_admin/:id/report_sales_and_costs" => 'store_admin#report_sales_and_costs', as: 'store_admin_report_sales_and_costs'  
+    
   get "store_admin/:id/menu" => 'store_admin#menu', as: 'store_admin_menu'
   get "store_admin/:id/inventory_reconciliation" => 'store_admin#inventory_reconciliation', as: 'inventory_reconciliation'
   
@@ -18,7 +20,7 @@ StoreAdmin::Application.routes.draw do
   put 'store_admin/:id/remove_product_from_cart_path/:shopping_cart_id' => 'store_admin#remove_product_from_cart', as: 'store_admin_remove_product_from_cart'
   post 'store_admin/:id/adjust_product_stock' => 'store_admin#adjust_product_stock', as: 'store_admin_adjust_product_stock'
   post 'store_admin/:id/end_inventory_reconciliation/:inventory_reconciliation_id' => 'store_admin#end_inventory_reconciliation', as: 'store_admin_end_inventory_reconciliation'
-  
+
   
   post 'store_admin/:id/add_product_to_inventory_reconciliation_from_barcode/' => 'store_admin#add_product_to_inventory_reconciliation_from_barcode', as: 'store_admin_add_product_to_inventory_reconciliation_from_barcode'
   put 'store_admin/:id/remove_product_from_inventory_reconciliation/:inventory_reconciliation_id' => 'store_admin#remove_product_from_inventory_reconciliation', as: 'store_admin_remove_product_from_inventory_reconciliation'

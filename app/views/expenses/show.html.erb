@@ -8,12 +8,12 @@
   <dd><%= @expense.currency.symbol %> <%= number_to_currency @expense.amount, precision: 0 %></dd>
   <dt><strong><%= model_class.human_attribute_name(:expense_type_id) %>:</strong></dt>
   <dd><%= @expense.expense_type.name %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:paid_by) %>:</strong></dt>
-  <dd><%= @expense.pay_date.strftime('%Y-%m-%d') unless @expense.pay_date.blank? %></dd>
   <dt><strong><%= model_class.human_attribute_name(:paid) %>:</strong></dt>
   <dd><%= @expense.paid ? '✓' : '☓' %></dd>
-  <dd><%= @expense.paid_by %></dd>
   <dt><strong><%= model_class.human_attribute_name(:pay_date) %>:</strong></dt>
+  <dd><%= @expense.pay_date.blank? ? 'No pagado' : @expense.pay_date.strftime('%Y-%m-%d') %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:paid_by) %>:</strong></dt>
+  <dd><%= @expense.paid_by.blank? ? 'No asignado' : @expense.paid_by %></dd>
   <dt><strong><%= model_class.human_attribute_name(:comments) %>:</strong></dt>
   <dd><%= @expense.comments %></dd>
 </dl>

@@ -1,4 +1,5 @@
 <h3>Gastos por Pagar</h3>
+<% if @expenses.size > 0 %>
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -21,12 +22,21 @@
 				<td><%=l expense.pay_date.in_time_zone(@time_zone), format: :short_day %></td>
 				<td><%= number_to_currency expense.amount, precision: 0 %> <%= expense.currency.symbol %></td>
 				<td><%= expense.expense_type.name %></td>
-				<td></td>
+				<td>
+					<%= link_to 'Actualizar', edit_supplier_account_expense_path(supplier_account_id: @supplier_account.id, 
+						id: expense.id), :class => 'btn btn-primary btn-mini', target: '_blank' %>
+				</td>
 			</tr>
 		<% end %>
 	</tbody>
 </table>
+<% else %>
+<div class="well">
+	Yuhuuu!! Todos los gastos están pagados.
+</div>
+<% end %>
 <h3>Compras de Productos por Pagar</h3>
+<% if @supply_purchase_payments.size > 0 %>
 <table class="table table-striped">
 	<thead>
 		<tr>
@@ -48,9 +58,23 @@
 		<% end %>
 				<td><%=l supply_purchase_payment.pay_date.in_time_zone(@time_zone), format: :short_day %></td>
 				<td><%= number_to_currency supply_purchase_payment.amount, precision: 0 %> <%= supply_purchase_payment.currency.symbol %></td>
-				<td>Compra relacionada</td>
-				<td></td>
+				<td>Proveedor: <%= link_to supply_purchase_payment.supply_purchase.provider.name, 
+								supplier_account_provider_path(supplier_account_id: @supplier_account.id, id: supply_purchase_payment.supply_purchase.provider.id) %><br />
+					Fecha creación compra: <%= link_to l(supply_purchase_payment.supply_purchase.created_at, format: :long), 
+								supplier_account_provider_supply_purchase_path(supplier_account_id: @supplier_account.id, 
+								provider_id: supply_purchase_payment.supply_purchase.provider.id, id: supply_purchase_payment.supply_purchase.id) %>
+				</td>
+				<td>
+					<%= link_to 'Actualizar', edit_supplier_account_provider_supply_purchase_path(supplier_account_id: @supplier_account.id, 
+					provider_id: supply_purchase_payment.supply_purchase.provider.id, id: supply_purchase_payment.supply_purchase.id), 
+					:class => 'btn btn-primary btn-mini', target: '_blank' %>
+				</td>
 			</tr>
 		<% end %>
 	</tbody>
 </table>
+<% else %>
+<div class="well">
+	Yuhuuu!! Todas las compras de productos están pagadas.
+</div>
+<% end %>
