@@ -192,7 +192,9 @@ es:
       default: ! '%A, %d de %B de %Y %H:%M:%S %z'
       long: ! '%A %d de %B de %Y %H:%M'
       short: ! '%d de %b %H:%M'
-      short_day: '%a %d %b %Y'      
+      short_day: '%a %d %b %Y'
+      month: '%B %Y'
+      week: '%W/%Y'
     pm: pm
   will_paginate:
     previous_label: "&#8592; Anterior"

@@ -144,11 +144,17 @@ class StoreAdminController < ApplicationController
     @hours_off_set = (DateTime.now.in_time_zone(@time_zone).utc_offset/60/60).abs
     
     if params[:interval] == 'day'
-      interval = 1.day
+      @to = @to.end_of_day
+      @from = @to - 14.days
+      @interval = 1.day
     elsif params[:interval] == 'month'
-      interval = 1.week
+      @to = @to.end_of_day
+      @from = @to - 10.months
+      @interval = 1.month
     else
-      interval = 1.month
+      @to = @to.end_of_day
+      @from = @to - 14.weeks
+      @interval = 1.week
     end
     
   end
@@ -223,8 +229,8 @@ class StoreAdminController < ApplicationController
     
     def set_date_range
       if params[:from].nil? or params[:to].nil?
-        @from = DateTime.now.in_time_zone(@time_zone).beginning_of_week
-        @to = DateTime.now.in_time_zone(@time_zone).end_of_week
+        @from = DateTime.now.in_time_zone(@time_zone).beginning_of_week(start_day = :monday)
+        @to = DateTime.now.in_time_zone(@time_zone).end_of_week(start_day = :monday)
       else
         @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_day
         @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_day

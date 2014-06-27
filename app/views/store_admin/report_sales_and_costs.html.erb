@@ -1,7 +1,9 @@
 <h1>Reporte de Ingresos y Gastos</h1>
 <div class="pull-right">
 	<div class="input-group form-inline">
-		Aplica para todas las bodegas
+		<%= link_to 'Ver por Mes', store_admin_report_sales_and_costs_path(id: @supplier_account.id, from: @from, to: @to, interval: 'month'), class: 'btn' %> 
+		<%= link_to 'Ver por Semana', store_admin_report_sales_and_costs_path(id: @supplier_account.id, from: @from, to: @to, interval: 'week'), class: 'btn' %> 
+		<%= link_to 'Ver por Día', store_admin_report_sales_and_costs_path(id: @supplier_account.id, from: @from, to: @to, interval: 'day'), class: 'btn' %> 
 	</div>
 </div>
 <%= render 'layouts/date_range_selector' %>
@@ -11,60 +13,82 @@
 	<thead>
 		<tr>
 			<th></th>
-			<% (@from.to_datetime..@to.to_datetime).each do |d| %>
-				<th><%=l d.in_time_zone(@time_zone), format: :short_day %></th>
-			<% end %>
+			<% d = @from.to_datetime %>
+			<% begin %>
+				<th>
+					<% if params[:interval] == 'month' %>
+						<%=l d.in_time_zone(@time_zone), format: :month %>
+					<% elsif params[:interval] == 'day'%>
+						<%=l d.in_time_zone(@time_zone), format: :short_day %>
+					<% else %>
+						<%=l d.in_time_zone(@time_zone), format: :week %>
+					<% end %>
+				</th>
+				<% d = d + @interval %>
+			<% end while d < @to.to_datetime %>
 		</tr>
 	</thead>
 	<tbody>
 		<tr class="success">
 			<td><b>Ingresos</b></td>
 			<% aux_hash_income = Hash.new %>
-			<% (@from.to_datetime..@to.to_datetime).each do |d| %>
-				<% aux_hash_income[d] = @supplier_account.purchases.joins(:payments).where('payments.created_at > ? and payments.created_at < ? and purchases.warehouse_id = ?', d, d + 24.hours, @warehouse.id).sum('payments.amount') %>
+			<% d = @from.to_datetime %>
+			<% begin %>
+				<% aux_hash_income[d] = @supplier_account.purchases.joins(:payments).where('payments.created_at > ? and payments.created_at < ? and purchases.warehouse_id = ?', d, d + @interval, @warehouse.id).sum('payments.amount') %>
 				<td><%= number_to_currency aux_hash_income[d], precision: 0 %></td>
-			<% end %>
+				<% d = d + @interval %>
+			<% end while d < @to.to_datetime %>
 			<% result[:income] = aux_hash_income %>
 		</tr>
 		<tr>
 			<td># Ventas</td>
-			<% (@from.to_datetime..@to.to_datetime).each do |d| %>
+			<% d = @from.to_datetime %>
+			<% begin %>
 				<td><%= number_with_delimiter @supplier_account.purchases
-						.where('purchases.created_at > ? and purchases.created_at < ? and purchases.warehouse_id = ?', d, d + 24.hours, @warehouse.id).count, precision: 0 %></td>
-			<% end %>
+						.where('purchases.created_at > ? and purchases.created_at < ? and purchases.warehouse_id = ?', d, d + @interval, @warehouse.id).count, precision: 0 %></td>
+					<% d = d + @interval %>
+			<% end while d < @to.to_datetime %>
 		</tr>
 		<tr>
 			<td>Productos Vendidos</td>
-			<% (@from.to_datetime..@to.to_datetime).each do |d| %>
+			<% d = @from.to_datetime %>
+			<% begin %>
 				<td><%= number_with_delimiter @supplier_account.purchases.joins(shopping_cart: :shopping_cart_items)
-						.where('purchases.created_at > ? and purchases.created_at < ? and purchases.warehouse_id = ?', d, d + 24.hours, @warehouse.id).sum('shopping_cart_items.quantity'), precision: 0 %></td>
-			<% end %>
+						.where('purchases.created_at > ? and purchases.created_at < ? and purchases.warehouse_id = ?', d, d + @interval, @warehouse.id).sum('shopping_cart_items.quantity'), precision: 0 %></td>
+				<% d = d + @interval %>
+			<% end while d < @to.to_datetime %>
 		</tr>
 		<tr class="error">
 			<td>Gastos Generados</td>
 			<% aux_hash_expenses = Hash.new %>
-			<% (@from.to_datetime..@to.to_datetime).each do |d| %>
+			<% d = @from.to_datetime %>
+			<% begin %>
 				<% aux_hash_expenses[d] = @supplier_account.expenses
-								.where('pay_date >= ? and pay_date < ? and paid = true', d - @hours_off_set.hours, d + 24.hours - @hours_off_set.hours).sum('amount') %>
+								.where('pay_date >= ? and pay_date < ? and paid = true', d - @hours_off_set.hours, d + @interval - @hours_off_set.hours).sum('amount') %>
 				<td><%= number_to_currency aux_hash_expenses[d], precision: 0 %></td>
-			<% end %>
+				<% d = d + @interval %>
+			<% end while d < @to.to_datetime %>
 			<% result[:expenses] = aux_hash_expenses %>
 		</tr>
 		<tr class="error">
 			<td>Productos Pagados</td>
 			<% aux_hash_supply_purchase_payments = Hash.new %>
-			<% (@from.to_datetime..@to.to_datetime).each do |d| %>
+			<% d = @from.to_datetime %>
+			<% begin %>
 				<% aux_hash_supply_purchase_payments[d] = @supplier_account.providers.joins(supply_purchases: :supply_purchase_payments)
-						.where('supply_purchase_payments.pay_date >= ? and supply_purchase_payments.pay_date < ? and paid = true', d - @hours_off_set.hours, d + 24.hours  - @hours_off_set.hours).sum('supply_purchase_payments.amount') %>
+						.where('supply_purchase_payments.pay_date >= ? and supply_purchase_payments.pay_date < ? and paid = true', d - @hours_off_set.hours, d + @interval  - @hours_off_set.hours).sum('supply_purchase_payments.amount') %>
 				<td><%= number_to_currency aux_hash_supply_purchase_payments[d], precision: 0 %></td>
-			<% end %>
+				<% d = d + @interval %>
+			<% end while d < @to.to_datetime %>
 			<% result[:supply_purchase_payments] = aux_hash_supply_purchase_payments %>
 		</tr>
 		<tr class="info">
 			<td>Resultado</td>
-			<% (@from.to_datetime..@to.to_datetime).each do |d| %>
+			<% d = @from.to_datetime %>
+			<% begin %>
 				<td><%= number_to_currency (result[:income][d] - result[:expenses][d] - result[:supply_purchase_payments][d]), precision: 0 %></td>
-			<% end %>
+				<% d = d + @interval %>
+			<% end while d < @to.to_datetime %>
 		</tr>
 	</tbody>
 </table>
