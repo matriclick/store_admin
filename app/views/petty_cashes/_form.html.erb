@@ -7,7 +7,7 @@
 		<% unless @last_petty_cash.blank? %>
 		<tr>
 			<td>Valor último cierre</td>
-			<td><%= number_to_currency @last_petty_cash.close_amount, precision: 0 %></td>
+			<td>(+) <%= number_to_currency @last_petty_cash.close_amount, precision: 0 %></td>
 			<td><%= @last_petty_cash.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
 		</tr>
 		<% end %>
@@ -15,8 +15,17 @@
 			<% @payments_before_last.each do |payment| %>
 			<tr>
 				<td><%= link_to 'Compra ID '+payment.purchase.id.to_s, [@supplier_account, payment.purchase] %></td>
-				<td><%= number_to_currency payment.amount, precision: 0 %></td>
+				<td>(+) <%= number_to_currency payment.amount, precision: 0 %></td>
 				<td><%= payment.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
+			</tr>
+			<% end %>
+		<% end %>
+		<% unless @expenses.blank? %>
+			<% @expenses.each do |expense| %>
+			<tr>
+				<td><%= link_to 'Gasto ID '+expense.id.to_s, [@supplier_account, expense] %></td>
+				<td>(-) <%= number_to_currency expense.amount, precision: 0 %></td>
+				<td><%= expense.pay_date.in_time_zone(@time_zone).strftime("%Y-%m-%d") %></td>
 			</tr>
 			<% end %>
 		<% end %>

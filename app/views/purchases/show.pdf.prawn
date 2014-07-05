@@ -15,9 +15,9 @@ pdf.font_size font_size
 #start with EON Media Group
 pdf.text_box @supplier_account.name, :at => [address_x,  pdf.cursor]
 pdf.move_down lineheight_y
-pdf.text_box "1234 Some Street Suite 1703", :at => [address_x,  pdf.cursor]
+pdf.text_box @supplier_account.address, :at => [address_x,  pdf.cursor]
 pdf.move_down lineheight_y
-pdf.text_box "Some City, ST 12345", :at => [address_x,  pdf.cursor]
+pdf.text_box @supplier_account.store_web, :at => [address_x,  pdf.cursor]
 pdf.move_down lineheight_y
 
 last_measured_y = pdf.cursor
@@ -50,7 +50,7 @@ end
 pdf.move_down 45
 
 invoice_services_data = [ 
-  ["Producto", "Talla", "Color", "Cantidad", "Total"],
+  ["Producto", "Talla", "Color", "Cantidad", "Total"]
 ]
 
 @purchase.shopping_cart.shopping_cart_items.each_with_index do |sci, i|
@@ -66,8 +66,8 @@ pdf.table(invoice_services_data, :width => pdf.bounds.width) do
   style(row(0).columns(-1), :borders => [:top, :right, :bottom])
   style(row(-1), :border_width => 2)
   style(column(2..-1), :align => :right)
-  style(columns(0), :width => 75)
-  style(columns(1), :width => 275)
+  style(columns(0), :width => 275)
+  style(columns(1), :width => 75)
 end
 
 pdf.move_down 1

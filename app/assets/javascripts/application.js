@@ -146,6 +146,7 @@ function calculate_subtotal_with_discount(object, subtotal, type) {
 		total = subtotal - object.value
 	}
 	$('#total').html('$ '+Math.ceil(total));
+	$('#purchase_payments_attributes_0_amount').val(total);
 }
 
 function update_warehouse() {

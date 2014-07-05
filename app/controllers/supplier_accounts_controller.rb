@@ -1,7 +1,8 @@
 # encoding: UTF-8
 class SupplierAccountsController < ApplicationController
   autocomplete :user, :email
-
+  autocomplete :customer, :email
+  
   before_action :authenticate_admin, except: [:show, :edit, :update, :add_user, :remove_user, :edit_user_privileges, :update_user]
   before_action :set_supplier_account, :check_if_user_has_related_supplier_account, only: [:show, :edit, :update, :destroy, :add_user, :remove_user, :edit_user_privileges, :update_user]
 
@@ -115,6 +116,6 @@ class SupplierAccountsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def supplier_account_params
-      params.require(:supplier_account).permit(:name, :logo, :purchase_details_mail_text, :store_web)
+      params.require(:supplier_account).permit(:name, :logo, :purchase_details_mail_text, :store_web, :address)
     end
 end

@@ -5,8 +5,15 @@ class CustomersController < ApplicationController
   # GET /customers
   # GET /customers.json
   def index
-    @all_customers = @supplier_account.find_customers(params[:q]).order('created_at DESC')
-    @customers = @supplier_account.find_customers(params[:q]).order('created_at DESC').paginate(:page => params[:page], :per_page => 15)
+    if params[:from].nil? or params[:to].nil?
+      @all_customers = @supplier_account.find_customers(params[:q]).order('created_at DESC')
+      @customers = @supplier_account.find_customers(params[:q]).order('created_at DESC').paginate(:page => params[:page], :per_page => 15)
+    else
+      @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_day
+      @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_day
+      @all_customers = @supplier_account.find_customers(params[:q]).order('created_at DESC')
+      @customers = @supplier_account.find_customers(params[:q], @from, @to).order('created_at DESC').paginate(:page => params[:page], :per_page => 15)
+    end
     respond_to do |format|
       format.html
       format.xls

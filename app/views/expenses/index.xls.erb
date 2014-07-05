@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Gastos">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Valor</Data></Cell>
+        <Cell><Data ss:Type="String">Tipo</Data></Cell>
+        <Cell><Data ss:Type="String">Forma Pago</Data></Cell>
+        <Cell><Data ss:Type="String">¿Pagado?</Data></Cell>
+        <Cell><Data ss:Type="String">Pagado por</Data></Cell>
+        <Cell><Data ss:Type="String">Fecha de pago</Data></Cell>
+        <Cell><Data ss:Type="String">Comentarios</Data></Cell>
+        <Cell><Data ss:Type="String">Fecha creación</Data></Cell>
+      </Row>
+    <% @all_expenses.each do |expense| %>
+      <Row>
+        <Cell><Data ss:Type="Number"><%= expense.amount %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= expense.expense_type.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= expense.payment_type %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= expense.paid ? '✓' : '☓' %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= expense.paid_by %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= expense.pay_date.in_time_zone(@time_zone).strftime("%Y-%m-%d") %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= expense.comments %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= expense.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></Data></Cell>
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

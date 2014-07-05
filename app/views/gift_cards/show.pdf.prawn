@@ -1,4 +1,4 @@
-logopath = "#{Rails.root}/public/"+@supplier_account.logo.url
+logopath = "#{Rails.root}/public"+@supplier_account.logo.url(:medium)
 initial_y = pdf.cursor
 initialmove_y = 5
 address_x = 35
@@ -33,26 +33,10 @@ last_measured_y = pdf.cursor
 
 pdf.move_cursor_to last_measured_y
 
-invoice_header_data = [ 
-  ["Boleta #", @purchase.invoice_number]
-]
-
-pdf.table(invoice_header_data, :position => invoice_header_x, :width => 215) do
-  style(row(0..1).columns(0..1), :padding => [1, 5, 1, 5], :borders => [])
-  style(row(2), :background_color => 'e9e9e9', :border_color => 'dddddd', :font_style => :bold)
-  style(column(1), :align => :right)
-end
-
-pdf.move_down 45
-
 invoice_services_data = [ 
-  ["Producto", "Talla", "Color", "Cantidad"]
+  ["Valor", "Válido Hasta", "Código"],
+  [number_to_currency(@gift_card.amount, precision: 0), l(@gift_card.valid_until.in_time_zone(@time_zone), format: :long), @gift_card.barcode]
 ]
-
-@purchase.shopping_cart.shopping_cart_items.each_with_index do |sci, i|
-	invoice_services_data[i+1] = [sci.product_stock_size.product.name, sci.product_stock_size.size.name, 
-									sci.product_stock_size.color, sci.quantity]
-end
 
 pdf.table(invoice_services_data, :width => pdf.bounds.width) do
   style(row(1..-1).columns(0..-1), :padding => [4, 5, 4, 5], :borders => [:bottom], :border_color => 'dddddd')
@@ -62,12 +46,22 @@ pdf.table(invoice_services_data, :width => pdf.bounds.width) do
   style(row(0).columns(-1), :borders => [:top, :right, :bottom])
   style(row(-1), :border_width => 2)
   style(column(2..-1), :align => :right)
-  style(columns(0), :width => 275)
-  style(columns(1), :width => 75)
+  style(columns(0), :width => 200)
+  style(columns(1), :width => 200)
 end
+
+pdf.move_down 10
+pdf.image "#{Rails.root}/public/system/gift_cards/"+@gift_card.supplier_account.name+'/'+@gift_card.id.to_s+"_barcode.png", :width => 100, :at => [400,  pdf.cursor]
 
 pdf.move_down 25
 
-pdf.text_box "Ticket de Cambio", :at => [20,  pdf.cursor]
-pdf.move_down 10
-pdf.image "#{Rails.root}/public/system/change_tickets/"+@purchase.supplier_account.name+'/'+@purchase.id.to_s+"_barcode.png", :width => 100, :at => [20,  pdf.cursor]
+invoice_notes_data = [ 
+  ["Disfruta de esta GiftCard"],
+  ["Esperamos que verte pronto!"],
+  ["Un abrazo!"]
+]
+
+pdf.table(invoice_notes_data, :width => 275) do
+  style(row(0..-1).columns(0..-1), :padding => [1, 0, 1, 0], :borders => [])
+  style(row(0).columns(0), :font_style => :bold)
+end

@@ -312,6 +312,7 @@ es:
         paid: ¿Pagado?
         comments: Comentarios
         created_at: Fecha de Creación
+        payment_type: Forma de pago
       expense_type:
         created_at: Fecha de Creación
       petty_cash:

@@ -49,6 +49,9 @@ gem 'groupdate'
 #PDF
 gem "prawnto_2", :require => "prawnto"
 
+#Multipart post
+gem 'multipart-post'
+
 #Barcode
 gem 'barby'
 gem 'chunky_png'

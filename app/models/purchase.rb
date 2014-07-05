@@ -5,11 +5,13 @@ require 'barby/outputter/png_outputter'
 class Purchase < ActiveRecord::Base
   after_save :generate_barcode
   
-  belongs_to :shopping_cart
+  belongs_to :shopping_cart, :dependent => :destroy
+  has_many :shopping_cart_items, through: :shopping_cart
   belongs_to :supplier_account
   belongs_to :customer
+  belongs_to :warehouse
   belongs_to :user
-  has_many :payments
+  has_many :payments, :dependent => :destroy
   
   accepts_nested_attributes_for :payments, :allow_destroy => true
   

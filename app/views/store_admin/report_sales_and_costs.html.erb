@@ -35,7 +35,8 @@
 			<% d = @from.to_datetime %>
 			<% begin %>
 				<% aux_hash_income[d] = @supplier_account.purchases.joins(:payments).where('payments.created_at > ? and payments.created_at < ? and purchases.warehouse_id = ?', d, d + @interval, @warehouse.id).sum('payments.amount') %>
-				<td><%= number_to_currency aux_hash_income[d], precision: 0 %></td>
+				<td><%= link_to raw(number_to_currency aux_hash_income[d], precision: 0), 
+						supplier_account_purchases_path(supplier_account_id: @supplier_account.id, from: d, to: d + @interval), target: '_blank' %></td>
 				<% d = d + @interval %>
 			<% end while d < @to.to_datetime %>
 			<% result[:income] = aux_hash_income %>
@@ -59,7 +60,7 @@
 			<% end while d < @to.to_datetime %>
 		</tr>
 		<tr class="error">
-			<td>Gastos Generados</td>
+			<td>Gastos Pagados</td>
 			<% aux_hash_expenses = Hash.new %>
 			<% d = @from.to_datetime %>
 			<% begin %>
@@ -70,6 +71,42 @@
 			<% end while d < @to.to_datetime %>
 			<% result[:expenses] = aux_hash_expenses %>
 		</tr>
+		<% @supplier_account.expense_types.each do |expense_type| %>
+			<tr style="padding:0px 0px 0px 0px;">
+				<td><span style="padding-left:10px; font-style:italic"><%= expense_type.name %> pagados</span></td>
+				<% d = @from.to_datetime %>
+				<% begin %>
+					<% aux = @supplier_account.expenses
+									.where('pay_date >= ? and pay_date < ? and paid = true and expense_type_id = ?', d - @hours_off_set.hours, d + @interval - @hours_off_set.hours, expense_type.id).sum('amount') %>
+					<td><span style="padding-left:10px;"><%= number_to_currency aux, precision: 0 %></span></td>
+					<% d = d + @interval %>
+				<% end while d < @to.to_datetime %>
+			</tr>
+		<% end %>
+		<tr class="error">
+			<td>Gastos No Pagados</td>
+			<% aux_hash_expenses_not_paid = Hash.new %>
+			<% d = @from.to_datetime %>
+			<% begin %>
+				<% aux_hash_expenses_not_paid[d] = @supplier_account.expenses
+								.where('pay_date >= ? and pay_date < ? and paid = false', d - @hours_off_set.hours, d + @interval - @hours_off_set.hours).sum('amount') %>
+				<td><%= number_to_currency aux_hash_expenses_not_paid[d], precision: 0 %></td>
+				<% d = d + @interval %>
+			<% end while d < @to.to_datetime %>
+			<% result[:expenses_not_paid] = aux_hash_expenses %>
+		</tr>
+		<% @supplier_account.expense_types.each do |expense_type| %>
+			<tr style="padding:0px 0px 0px 0px;">
+				<td><span style="padding-left:10px; font-style:italic"><%= expense_type.name %> no pagados</span></td>
+				<% d = @from.to_datetime %>
+				<% begin %>
+					<% aux = @supplier_account.expenses
+									.where('pay_date >= ? and pay_date < ? and paid = false and expense_type_id = ?', d - @hours_off_set.hours, d + @interval - @hours_off_set.hours, expense_type.id).sum('amount') %>
+					<td><span style="padding-left:10px;"><%= number_to_currency aux, precision: 0 %></span></td>
+					<% d = d + @interval %>
+				<% end while d < @to.to_datetime %>
+			</tr>
+		<% end %>
 		<tr class="error">
 			<td>Productos Pagados</td>
 			<% aux_hash_supply_purchase_payments = Hash.new %>
@@ -82,11 +119,11 @@
 			<% end while d < @to.to_datetime %>
 			<% result[:supply_purchase_payments] = aux_hash_supply_purchase_payments %>
 		</tr>
-		<tr class="info">
+		<tr class="info" style="border-top:2px solid black">
 			<td>Resultado</td>
 			<% d = @from.to_datetime %>
 			<% begin %>
-				<td><%= number_to_currency (result[:income][d] - result[:expenses][d] - result[:supply_purchase_payments][d]), precision: 0 %></td>
+				<td><%= number_to_currency (result[:income][d] - result[:expenses][d] - result[:expenses_not_paid][d] - result[:supply_purchase_payments][d]), precision: 0 %></td>
 				<% d = d + @interval %>
 			<% end while d < @to.to_datetime %>
 		</tr>

@@ -10,13 +10,20 @@
   <div class="control-group">
     <%= f.label :currency_id, :class => 'control-label' %>
     <div class="controls">
-	  <%= f.collection_select :currency_id, @supplier_account.currencies, :id, :symbol, {:prompt => 'Moneda', :allow_blank => false} %>
+	  <%= f.collection_select :currency_id, @supplier_account.currencies, :id, :symbol, {:prompt => false, :allow_blank => false} %>
     </div>
   </div>
   <div class="control-group">
     <%= f.label :expense_type_id, :class => 'control-label' %>
     <div class="controls">
 	  <%= f.collection_select :expense_type_id, @supplier_account.expense_types, :id, :name, {:prompt => 'Tipo de Gasto', :allow_blank => false} %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :payment_type, :class => 'control-label' %>
+    <div class="controls">
+	  <%= f.select :payment_type, 
+			options_for_select([["Caja Chica", "petty_cash"], ["Efectivo No Caja Chica", "cash"], ["Cheque", "check"], ["Transferencia Bancaria", "transfer"]], @expense.payment_type) %>
     </div>
   </div>
   <div class="control-group">

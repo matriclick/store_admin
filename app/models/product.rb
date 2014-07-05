@@ -1,6 +1,12 @@
 # encoding: UTF-8
 require 'roo'
-class Product < ActiveRecord::Base  
+require "uri"
+require "net/http"
+require 'net/http/post/multipart'
+
+class Product < ActiveRecord::Base
+  #after_save :send_to_marketplace
+  
   has_and_belongs_to_many :product_categories
   has_many :product_images, :dependent => :destroy
 	has_many :product_stock_sizes, :dependent => :destroy
@@ -65,5 +71,23 @@ class Product < ActiveRecord::Base
     else raise "Unknown file type: #{file.original_filename}"
     end
   end
+    
+  def send_to_marketplace
+    #Define Store ID
+    store_id = 1
+    params = { :'product[store_id]' => store_id.to_s, :'product[name]' => "Ruby_9", :'product[price]' => 10000 }
+    self.product_images.each do |image|
+      params.merge!({ 'product[product_images_attributes]['+image.id.to_s+'][photo]' => UploadIO.new(File.new("#{Rails.root}/public"+image.photo.url(:original, timestamp: false)), image.photo_content_type, image.photo_file_name) })
+    end
+    self.product_stock_sizes.each do |pss|
+      params.merge!({ 'product[product_stock_sizes_attributes]['+pss.id.to_s+'][stock]' =>  pss.stock, 'product[product_stock_sizes_attributes]['+pss.id.to_s+'][size]' => pss.size.name, 'product[product_stock_sizes_attributes]['+pss.id.to_s+'][color]' => pss.color })
+    end
   
+    url = URI.parse('http://localhost:3000/stores/'+store_id.to_s+'/products')
+    req = Net::HTTP::Post::Multipart.new(url.path, params)
+    res = Net::HTTP.start(url.host, url.port) do |http|
+      http.request(req)
+    end
+    
+  end
 end

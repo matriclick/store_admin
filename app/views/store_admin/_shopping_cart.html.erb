@@ -14,6 +14,7 @@
 		  	<strong>Precio:</strong> <%= number_to_currency sci.product_stock_size.product.price %> | 
 			<strong>Talla:</strong> <%= sci.product_stock_size.size.name unless sci.product_stock_size.size.nil? %> | 
 			<strong>Color:</strong> <%= sci.product_stock_size.color.to_s if !sci.product_stock_size.color.nil? %>
+			<br /><%= sci.product_stock_size.barcode %> <%= sci.product_stock_size.internal_code.blank? ? '' : '/ '+ sci.product_stock_size.internal_code %>
 			</div>
 		</div>
 	</div>

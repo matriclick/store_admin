@@ -30,6 +30,7 @@ StoreAdmin::Application.routes.draw do
   put "supplier_accounts/:id/add_user" => 'supplier_accounts#add_user', as: 'supplier_account_add_user'
   post "supplier_accounts/:id/update_user/:user_id" => 'supplier_accounts#update_user', as: 'supplier_account_update_user'
   get 'supplier_accounts/autocomplete_user_email' => 'supplier_accounts#autocomplete_user_email'
+  get 'supplier_accounts/autocomplete_customer_email' => 'supplier_accounts#autocomplete_customer_email'
   
   post 'set_time_zone' => 'application#set_time_zone', as: 'set_time_zone'
   post 'check_if_costumer_exists' => 'application#check_if_costumer_exists', as: 'check_if_costumer_exists'

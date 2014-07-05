@@ -1,11 +1,21 @@
 <div id="barcodes">
 	<% @product.product_stock_sizes.each do |psz| %>
-		<% psz.stock.times do %>
-		<div style="float:left; margin:10px">
-			<%= @product.name %><br/><%= psz.size.name %> - <%= psz.color %><br />
-			<%= image_tag("/system/barcodes/"+@product.supplier_account.name+'/'+psz.size.name+'_'+psz.color+'_'+@product.id.to_s+"_barcode.png") %><br />
-			<p><%= psz.barcode %></p>
-		</div>
+		<% unless @quantity.nil? %>
+			<% @quantity.times do %>
+			<div style="float:left; margin:10px">
+				<%= @product.name %><br/><%= psz.size.name %> - <%= psz.color %><br />
+				<%= image_tag("/system/barcodes/"+@product.supplier_account.name+'/'+psz.size.name+'_'+psz.color+'_'+@product.id.to_s+"_barcode.png") %><br />
+				<p><%= psz.barcode %></p>
+			</div>
+			<% end %>
+		<% else %>
+			<% psz.stock.times do %>
+			<div style="float:left; margin:10px">
+				<%= @product.name %><br/><%= psz.size.name %> - <%= psz.color %><br />
+				<%= image_tag("/system/barcodes/"+@product.supplier_account.name+'/'+psz.size.name+'_'+psz.color+'_'+@product.id.to_s+"_barcode.png") %><br />
+				<p><%= psz.barcode %></p>
+			</div>
+			<% end %>
 		<% end %>
 	<% end %>
 </div>

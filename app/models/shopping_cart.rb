@@ -1,6 +1,6 @@
 class ShoppingCart < ActiveRecord::Base
   has_many :shopping_cart_items, :dependent => :destroy
-  has_one :purchase
+  has_one :purchase, :dependent => :destroy
   
   def price
     price = 0

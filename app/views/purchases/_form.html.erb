@@ -1,51 +1,38 @@
-<%= form_for [@supplier_account, @purchase], :html => { :class => 'form-horizontal' } do |f| %>
+<%= nested_form_for [@supplier_account, @purchase], :html => { :class => 'form-horizontal' } do |f| %>
 <%= render 'layouts/form_errors', object: @purchase %>
   <div class="control-group">
-    <%= f.label :payment_method_id, :class => 'control-label' %>
+	<h4>Datos del Pago</h4>
+	<div class="control-group" style="margin-bottom:5px">
+		<%= render 'payment_fields', :f => f %>
+	</div>
+  </div>
+  <div class="control-group">
+    <%= f.label :customer_id, 'Correo Cliente', :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :payment_method_id, :class => 'text_field' %>
+      <%= autocomplete_field_tag :customer_email, (@purchase.customer.email unless @purchase.customer.nil?), supplier_accounts_autocomplete_customer_email_path, class: 'form-control' %> Solo se puede agregar correos de clientes ya creados.
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :shopping_cart_id, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :shopping_cart_id, :class => 'text_field' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :supplier_account_id, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :supplier_account_id, :class => 'text_field' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :paid_amount, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :paid_amount, :class => 'text_field' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :customer_id, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :customer_id, :class => 'text_field' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :discount, :class => 'control-label' %>
+    <%= f.label :discount, 'Descuento (solo números)', :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :discount, :class => 'text_field' %>
+	  Si es un porcentaje poner el número sin el símbolo %.
+	  Por ejemplo un 20% de descuento sería 20.
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :discount_type, :class => 'control-label' %>
+    <%= f.label :discount_type, 'Tipo de Descuento', :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :discount_type, :class => 'text_field' %>
+	  <%= f.select :discount_type, options_for_select([["Sin descuento", ""], ["Valor Absoluto", "absolute"], ["Porcentaje", "precentage"]], @purchase.discount_type) %>
+	  <br />Valor absoluto significa que en el campo anterior pusiste el valor total que se le descontó.
+	  <br />Porcentaje significa que en el campo anterior agregaste un porcentaje.
     </div>
   </div>
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :user_id, :class => 'text_field' %>
+	  <%= autocomplete_field_tag :user_email, @purchase.user.email, supplier_accounts_autocomplete_user_email_path, class: 'form-control' %> 
+	  Solo se puede agregar correos de vendedores ya creados.
     </div>
   </div>
   <div class="control-group">
@@ -58,6 +45,12 @@
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>
     <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-                supplier_account_purchases_path(supplier_account_id: @supplier_account.id), :class => 'btn' %>
+                supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: @purchase.id), :class => 'btn' %>
+	  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+	              supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: @purchase.id),
+	              :method => 'delete',
+	              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+	              :class => 'btn btn-danger' %>
+
   </div>
 <% end %>

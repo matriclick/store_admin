@@ -78,4 +78,8 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def is_numeric?(obj) 
+     obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
+  end
+  
 end

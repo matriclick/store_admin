@@ -5,19 +5,59 @@
 
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:close_amount) %>:</strong></dt>
-  <dd><%= @petty_cash.close_amount %></dd>
+  <dd><%= number_to_currency @petty_cash.close_amount, precision: 0 %></dd>
   <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
   <dd><%= @petty_cash.user.email %></dd>
 </dl>
+<h2>Movimientos</h2>
+<div class="well">
+	<table class="table table-striped" style="width:30%">
+		<thead>
+			<tr><th></th><th>Monto</th><th>Fecha/Hora</th></tr>
+		</thead>
+		<tbody>
+		<% unless @last_petty_cash.blank? %>
+		<tr>
+			<td>Valor último cierre</td>
+			<td>(+) <%= number_to_currency @last_petty_cash.close_amount, precision: 0 %></td>
+			<td><%= @last_petty_cash.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
+		</tr>
+		<% end %>
+		<% unless @payments_before_last.blank? %>
+			<% @payments_before_last.each do |payment| %>
+			<tr>
+				<td><%= link_to 'Compra ID '+payment.purchase.id.to_s, [@supplier_account, payment.purchase] %></td>
+				<td>(+) <%= number_to_currency payment.amount, precision: 0 %></td>
+				<td><%= payment.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></td>
+			</tr>
+			<% end %>
+		<% end %>
+		<% unless @expenses.blank? %>
+			<% @expenses.each do |expense| %>
+			<tr>
+				<td><%= link_to 'Gasto ID '+expense.id.to_s, [@supplier_account, expense] %></td>
+				<td>(-) <%= number_to_currency expense.amount, precision: 0 %></td>
+				<td><%= expense.pay_date.in_time_zone(@time_zone).strftime("%Y-%m-%d") %></td>
+			</tr>
+			<% end %>
+		<% end %>
+		<% unless @cash_in_petty_cash.blank? %>
+		<tr>
+			<th>Valor final en caja</th><th><%= number_to_currency @cash_in_petty_cash, precision: 0 %></th>
+			<th><%= @petty_cash.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></th>
+		</tr>
+		<tr>
+			<th>Monto después de cierre</th><th><%= number_to_currency @petty_cash.close_amount, precision: 0 %></th>
+			<th><%= @petty_cash.created_at.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></th>
+		</tr>
+		<% end %>
+		</tbody>
+	</table>
+</div>
 
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               supplier_account_petty_cashes_path, :class => 'btn'  %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_supplier_account_petty_cash_path(supplier_account_id: @supplier_account.id, id: @petty_cash.id), :class => 'btn' %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              supplier_account_petty_cash_path(supplier_account_id: @supplier_account.id, id: @petty_cash.id),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
 </div>

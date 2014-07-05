@@ -135,6 +135,12 @@ class StoreAdminController < ApplicationController
     
     @expenses = @supplier_account.expenses.where('paid is not true')
     @supply_purchase_payments = @supplier_account.supply_purchase_payments.where('supply_purchase_payments.paid is not true')
+    
+    respond_to do |format|
+      format.html
+      format.xls
+    end
+    
   end
   
   def report_sales_and_costs
@@ -144,17 +150,21 @@ class StoreAdminController < ApplicationController
     @hours_off_set = (DateTime.now.in_time_zone(@time_zone).utc_offset/60/60).abs
     
     if params[:interval] == 'day'
+      if (@to - @from).days > 20
+        @from = @to - 20.days
+      end
       @to = @to.end_of_day
-      @from = @to - 14.days
+      @from = @from.beginning_of_day
       @interval = 1.day
-    elsif params[:interval] == 'month'
-      @to = @to.end_of_day
-      @from = @to - 10.months
-      @interval = 1.month
-    else
-      @to = @to.end_of_day
-      @from = @to - 14.weeks
+    elsif params[:interval] == 'week'
+      @to = @to.end_of_week
+      @from = @from.beginning_of_week
       @interval = 1.week
+    else
+      params[:interval] = 'month'
+      @to = @to.end_of_month
+      @from = @from.beginning_of_month
+      @interval = 1.month
     end
     
   end

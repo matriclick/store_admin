@@ -44,14 +44,16 @@ class SupplierAccount < ActiveRecord::Base
         end
       else #If it's not a number, lookup in description, name and color
         return self.products.joins(:product_stock_sizes)
-                .where('products.name like "%'+q+'%" or products.description like "%'+q+'%" or product_stock_sizes.color like "%'+q+'%"').uniq
+                .where('products.name like "%'+q+'%" or product_stock_sizes.internal_code like "%'+q+'%" or products.description like "%'+q+'%" or product_stock_sizes.color like "%'+q+'%"').uniq
       end
     end
   end
   
-  def find_customers(q)
-    if q.blank?
+  def find_customers(q, from = nil, to = nil)
+    if q.blank? and from.nil? and to.nil?
       return self.customers
+    elsif q.blank?
+      return self.customers.joins(:purchases).where('purchases.created_at <= ? and purchases.created_at >= ?', to, from).uniq
     else
       q.gsub('.', '').gsub!(',', '')
       return self.customers.where('name like "%'+q+'%" or email like "%'+q+'%" or rut like "%'+q+'%"')
@@ -81,7 +83,7 @@ class SupplierAccount < ActiveRecord::Base
     if q.blank?
       return self.purchases.where('purchases.created_at >= ? and purchases.created_at <= ?', from, to).order 'purchases.created_at DESC'
     else
-      return self.purchases.joins(:customer).where('change_ticket_barcode = ? or invoice_number = ? or customers.name like "%'+q+'%"', q, q).order 'purchases.created_at DESC'
+      return self.purchases.includes(:customer).includes(shopping_cart_items: [product_stock_size: :product]).where('change_ticket_barcode = ? or invoice_number = ? or products.name like "%'+q+'%" or product_stock_sizes.barcode like "%'+q+'%" or product_stock_sizes.internal_code like "%'+q+'%" or customers.name like "%'+q+'%"', q, q).order 'purchases.created_at DESC'
     end
   end
   

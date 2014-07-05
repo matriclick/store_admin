@@ -66,6 +66,12 @@ class PurchasesController < ApplicationController
   # PATCH/PUT /purchases/1
   # PATCH/PUT /purchases/1.json
   def update
+    user = User.find_by_email params[:user_email]
+    customer = Customer.find_by_email params[:customer_email]
+
+    @purchase.user = user unless user.blank?
+    @purchase.customer = customer unless customer.blank? 
+      
     respond_to do |format|
       if @purchase.update(purchase_params)
         format.html { redirect_to [@supplier_account, @purchase], notice: 'Purchase was successfully updated.' }
@@ -99,7 +105,7 @@ class PurchasesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def purchase_params
-      params.require(:purchase).permit(:payment_method_id, :shopping_cart_id, :supplier_account_id, :paid_amount, :customer_id, :discount, :discount_type, :user_id, :invoice_number, :change_ticket_barcode)
+      params.require(:purchase).permit(:payment_method_id, :shopping_cart_id, :supplier_account_id, :paid_amount, :customer_id, :discount, :discount_type, :user_id, :invoice_number, :change_ticket_barcode, :user_email, :customer_email, payments_attributes: [:id, :amount, :payment_method_id, :_destroy])
     end
 
     def set_date_range

@@ -10,6 +10,19 @@ class PettyCashesController < ApplicationController
   # GET /petty_cashes/1
   # GET /petty_cashes/1.json
   def show
+    
+    efectivo = PaymentMethod.where('name like "%efectivo%"').first
+    @previous_petty_cash = PettyCash.where('created_at < ?', @petty_cash.created_at).first
+    unless @previous_petty_cash.blank?
+      @last_petty_cash = @previous_petty_cash
+      @payments_before_last = Payment.where('created_at > ? and created_at <= ? and payment_method_id = ?', @previous_petty_cash.created_at, @petty_cash.created_at, efectivo.id)
+      @expenses = Expense.where('created_at > ? and created_at <= ? and payment_type = ?', @previous_petty_cash.created_at, @petty_cash.created_at, 'petty_cash')
+      @cash_in_petty_cash = @last_petty_cash.close_amount + @payments_before_last.sum(:amount) - @expenses.sum(:amount)
+    else
+      @payments_before_last = Payment.where('created_at <= ? and payment_method_id = ?', @petty_cash.created_at, efectivo.id)
+      @expenses = Expense.where('created_at <= ? and payment_type = ?', @petty_cash.created_at, 'petty_cash')
+      @cash_in_petty_cash = @payments_before_last.sum(:amount) - @expenses.sum(:amount)
+    end
   end
 
   # GET /petty_cashes/new
@@ -17,12 +30,15 @@ class PettyCashesController < ApplicationController
     @petty_cash = PettyCash.new
     @last_petty_cash = PettyCash.all.last
     efectivo = PaymentMethod.where('name like "%efectivo%"').first
+    
     unless @last_petty_cash.blank?
       @payments_before_last = Payment.where('created_at > ? and payment_method_id = ?', @last_petty_cash.created_at, efectivo.id)
-      @cash_in_petty_cash = @last_petty_cash.close_amount + @payments_before_last.where('payment_method_id = ?', efectivo.id).sum(:amount)
+      @expenses = Expense.where('created_at > ? and payment_type = ?', @last_petty_cash.created_at, 'petty_cash')
+      @cash_in_petty_cash = @last_petty_cash.close_amount + @payments_before_last.sum(:amount) - @expenses.sum(:amount)
     else
       @payments_before_last = Payment.where('payment_method_id = ?', efectivo.id)
-      @cash_in_petty_cash = @payments_before_last.sum(:amount)
+      @expenses = Expense.where('payment_type = ?', 'petty_cash')
+      @cash_in_petty_cash = @payments_before_last.sum(:amount) - @expenses.sum(:amount)
     end
   end
 

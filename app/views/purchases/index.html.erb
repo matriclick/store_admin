@@ -12,7 +12,7 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
 <%= form_tag(request.fullpath, :method => "get", :html => {class: 'form-search'}) do %>
-	<%= text_field_tag(:q, @q, class: "input-medium search-query", placeholder: "Ingresa el ticket de cambio, número de boleta o nombre del cliente", style: "width:50%") %>
+	<%= text_field_tag(:q, @q, class: "input-medium search-query", placeholder: "Ingresa el ticket de cambio, número de boleta, nombre del cliente, producto, código de barra o código interno del producto que se compró", style: "width:60%") %>
 	<%= submit_tag t('search'), class: "btn btn-primary" %>
 	<%= link_to 'Ver todos', supplier_account_purchases_path(supplier_account_id: @supplier_account.id), class: "btn" %>
 <% end %>

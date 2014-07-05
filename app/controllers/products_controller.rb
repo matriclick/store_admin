@@ -11,8 +11,8 @@ class ProductsController < ApplicationController
   # GET /products.json
   def index
     @q = params[:q]
-    @all_products = @supplier_account.find_products(params[:q])
-    @products = @supplier_account.find_products(params[:q]).paginate(:page => params[:page], :per_page => 15)
+    @all_products = @supplier_account.find_products(params[:q]).order 'created_at DESC'
+    @products = @supplier_account.find_products(params[:q]).paginate(:page => params[:page], :per_page => 15).order 'created_at DESC'
     respond_to do |format|
       format.html
       format.xls
@@ -26,7 +26,7 @@ class ProductsController < ApplicationController
   end
 
   def barcodes
-    
+    @quantity = is_numeric?(params[:quantity]) ? params[:quantity].to_i : 1
   end
   
   # GET /products/new
@@ -163,6 +163,6 @@ class ProductsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:name, :description, :price, :supplier_account_id, product_category_ids: [], product_images_attributes: [:id, :photo, :_destroy], product_stock_sizes_attributes: [:id, :stock, :size_id, :color, :warehouse_id, :_destroy])
+      params.require(:product).permit(:name, :description, :price, :supplier_account_id, product_category_ids: [], product_images_attributes: [:id, :photo, :_destroy], product_stock_sizes_attributes: [:id, :stock, :size_id, :color, :warehouse_id, :internal_code, :_destroy])
     end
 end

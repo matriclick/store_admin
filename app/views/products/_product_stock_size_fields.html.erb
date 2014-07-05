@@ -10,7 +10,7 @@
 			<%= pdz.collection_select :size_id, @supplier_account.sizes, :id, :name, {:prompt => 'Talla', :allow_blank => false}, :disabled => true %>
 			<%= pdz.text_field :color, placeholder: 'Color', :disabled => true %>
 		<% end %>
-			
+		<%= pdz.text_field :internal_code, placeholder: 'Código Interno' %>
 	</div>
 </div>
 <% end %>

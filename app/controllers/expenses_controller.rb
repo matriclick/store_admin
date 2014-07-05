@@ -4,7 +4,19 @@ class ExpensesController < ApplicationController
   # GET /expenses
   # GET /expenses.json
   def index
-    @expenses = @supplier_account.expenses.paginate(:page => params[:page], :per_page => 15).order 'created_at DESC'
+    if params[:from].nil? or params[:to].nil?
+      @all_expenses = @supplier_account.expenses.order 'created_at DESC'
+      @expenses = @supplier_account.expenses.paginate(:page => params[:page], :per_page => 15).order 'created_at DESC'
+    else
+      @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_day
+      @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_day
+      @all_expenses = @supplier_account.expenses.where('expenses.created_at >= ? and expenses.created_at <= ?', @from, @to).order 'created_at DESC'
+      @expenses = @supplier_account.expenses.where('expenses.created_at >= ? and expenses.created_at <= ?', @from, @to).paginate(:page => params[:page], :per_page => 15).order 'created_at DESC'
+    end
+    respond_to do |format|
+      format.html
+      format.xls
+    end
   end
 
   # GET /expenses/1
@@ -73,6 +85,6 @@ class ExpensesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def expense_params
-      params.require(:expense).permit(:amount, :currency_id, :expense_type_id, :paid_by, :pay_date, :paid, :comments, :supplier_account_id)
+      params.require(:expense).permit(:amount, :currency_id, :expense_type_id, :paid_by, :pay_date, :paid, :comments, :supplier_account_id, :payment_type)
     end
 end

@@ -51,7 +51,9 @@
 	<% @product.product_stock_sizes.each do |psz| %>
 		<li><%= psz.stock %> - <%= psz.size.name %> - <%= psz.color %><br />
 			<%= image_tag("/system/barcodes/"+@product.supplier_account.name+'/'+psz.size.name+'_'+psz.color+'_'+@product.id.to_s+"_barcode.png") %><br />
-			<p><%= psz.barcode %> <a href="#<%= psz.barcode %>" role="button" data-toggle="modal">(editar)</a></p>
+			<p><%= psz.barcode %> <a href="#<%= psz.barcode %>" role="button" data-toggle="modal">(editar)</a>
+			<br/><%= psz.internal_code.blank? ? '' : 'Código Interno: '+psz.internal_code %></p>
+			
 			<!-- Modal -->
 			<script>
 				$(document).on('shown', "<%= '#'+psz.barcode %>", function() {
@@ -78,6 +80,9 @@
 </ul>
 <%= link_to 'Imprimir Códigos de Barra PDF', barcodes_supplier_account_products_path(id: @product.id, :format => 'pdf'), :class => 'btn btn-default', target: '_blank' %>
 <%= link_to 'Imprimir Códigos de Barra HTML', barcodes_supplier_account_products_path(id: @product.id), :class => 'btn btn-default' %>
+<br /><br />
+<%= link_to 'Imprimir 1 Código de Barra PDF', barcodes_supplier_account_products_path(id: @product.id, :format => 'pdf', :quantity => 1), :class => 'btn btn-default', target: '_blank' %>
+<%= link_to 'Imprimir 1 Código de Barra HTML', barcodes_supplier_account_products_path(id: @product.id, :quantity => 1), :class => 'btn btn-default' %>
 <% else %>
 	Sin tallas y modelos creados
 <% end %>

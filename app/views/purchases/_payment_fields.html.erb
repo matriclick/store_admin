@@ -1,0 +1,12 @@
+<%= f.fields_for :payments do |payment| %>
+<div class="control-group">
+	<div class="controls">
+		<%= payment.text_field :amount, placeholder: 'Total Pagado' %>
+		<%= payment.collection_select :payment_method_id, @supplier_account.payment_methods, :id, :name, {:prompt => 'Medio de Pago', :allow_blank => false} %>
+	</div>
+</div>
+<% end %>
+
+<div>
+<%= f.link_to_add 'Agregar Pago', :payments, :class => 'btn btn-success btn-mini' %>
+</div>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Gastos">
+    <Table>
+      <Row>
+        <Cell><Data ss:Type="String">Tipo</Data></Cell>
+        <Cell><Data ss:Type="String">Fecha Pago</Data></Cell>
+        <Cell><Data ss:Type="String">Monto por Pagar</Data></Cell>
+        <Cell><Data ss:Type="String">Detalle</Data></Cell>
+      </Row>
+    <% @expenses.each do |expense| %>
+      <Row>
+        <Cell><Data ss:Type="String">Gastos de Operación</Data></Cell>
+        <Cell><Data ss:Type="String"><%= expense.pay_date.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= expense.amount %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= expense.expense_type.name %></Data></Cell>
+      </Row>
+    <% end %>
+    <% @supply_purchase_payments.each do |supply_purchase_payment| %>
+      <Row>
+        <Cell><Data ss:Type="String">Compra de Productos</Data></Cell>
+        <Cell><Data ss:Type="String"><%= supply_purchase_payment.pay_date.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= supply_purchase_payment.amount %></Data></Cell>
+        <Cell><Data ss:Type="String">Proveedor: <%= supply_purchase_payment.supply_purchase.provider.name %> - Fecha creación compra: <%= l(supply_purchase_payment.supply_purchase.created_at, format: :long) %>
+		</Data></Cell>      
+	</Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>

@@ -37,7 +37,7 @@
 <% end %>
 <h3>Compras de Productos por Pagar</h3>
 <% if @supply_purchase_payments.size > 0 %>
-<table class="table table-striped">
+<table class="table">
 	<thead>
 		<tr>
 			<th>Fecha Pago</th>
@@ -78,3 +78,5 @@
 	Yuhuuu!! Todas las compras de productos están pagadas.
 </div>
 <% end %>
+
+<%= link_to 'Descargar Gastos y Compras por Pagar', store_admin_report_accounts_payable_path(id: @supplier_account.id, format: :xls), class: "btn" %>

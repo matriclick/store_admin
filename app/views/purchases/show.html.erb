@@ -96,9 +96,4 @@
   <%= link_to t('view_all_purchases'), supplier_account_purchases_path(supplier_account_id: @supplier_account.id), :class => 'btn'  %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: @purchase.id), :class => 'btn' %>
-  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: @purchase.id),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
 </div>

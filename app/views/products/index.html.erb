@@ -14,7 +14,7 @@
 <div class="row">
 	<div class="span12">
 		<%= form_tag(request.fullpath, :method => "get", :html => {class: 'form-search'}) do %>
-			<%= text_field_tag(:q, @q, class: "input-medium search-query", placeholder: "Ingresa el código de barra, Nombre, Descripción, Color o Precio", style: "width:60%") %>
+			<%= text_field_tag(:q, @q, class: "input-medium search-query", placeholder: "Ingresa el código de barra, Código Interno, Nombre, Descripción, Color o Precio", style: "width:60%") %>
 			<%= submit_tag t('search'), class: "btn btn-primary" %>
 			<%= link_to 'Ver todos', supplier_account_products_path(supplier_account_id: @supplier_account.id), class: "btn" %>
 		<% end %>
@@ -47,7 +47,8 @@
  			<ul>
 			<% if aux.size > 0 %>
 				<% aux.each do |wpss| %>
-					<li><%= wpss.stock %> en <%= wpss.warehouse.name %> de <%= wpss.product_stock_size.size.name %> <%= wpss.product_stock_size.color %></li>
+					<li><%= wpss.stock %> en <%= wpss.warehouse.name %> de <%= wpss.product_stock_size.size.name %> <%= wpss.product_stock_size.color %> 
+						<br /><%= wpss.product_stock_size.barcode %> <%= wpss.product_stock_size.internal_code.blank? ? '' : '/ '+ wpss.product_stock_size.internal_code %></li>
 			    <% end %>
 			<% else %>
 				<li class="text-error">No distribuído</li>
@@ -69,9 +70,11 @@
 	No se han encontrado productos para esta búsqueda.
 </div>
 <% end %>
+<% if @products.total_pages > 1 %>
 <div class="well apple_pagination">
 	<%= will_paginate @products %>
 </div>
+<% end %>
 <%= link_to 'Descargar Base de Productos en Bodegas', supplier_account_products_path(supplier_account_id: @supplier_account.id, format: :xls), class: "btn" %>
 <div class="well" style="margin-top:20px">
 	<h3>Carga masiva de productos</h3>

@@ -38,6 +38,8 @@
 		<dl class="dl-horizontal">
 			<dt><strong>Web:</strong></dt>
 			<dd><%= link_to @supplier_account.store_web, @supplier_account.store_web, target: '_blank' %></dd>
+			<dt><strong>Dirección:</strong></dt>
+			<dd><%= @supplier_account.address %></dd>
 			<dt><strong>Texto Correo:</strong></dt>
 			<dd><%= @supplier_account.purchase_details_mail_text %></dd>
 		</dl>
