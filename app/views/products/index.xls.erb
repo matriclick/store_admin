@@ -11,6 +11,7 @@
         <Cell><Data ss:Type="String">Talla</Data></Cell>
         <Cell><Data ss:Type="String">Color</Data></Cell>
         <Cell><Data ss:Type="String">Barcode</Data></Cell>
+        <Cell><Data ss:Type="String">Código Interno</Data></Cell>
         <Cell><Data ss:Type="String">Bodega</Data></Cell>
         <Cell><Data ss:Type="String">Stock</Data></Cell>
         <Cell><Data ss:Type="String">Categoría</Data></Cell>
@@ -23,6 +24,7 @@
 	        	<Cell><Data ss:Type="String"><%= product_stock_size.size.name %></Data></Cell>
 	        	<Cell><Data ss:Type="String"><%= product_stock_size.color %></Data></Cell>
 	        	<Cell><Data ss:Type="String"><%= product_stock_size.barcode %></Data></Cell>
+	        	<Cell><Data ss:Type="String"><%= product_stock_size.internal_code %></Data></Cell>
 	        	<Cell><Data ss:Type="String"><%= warehouse_product_size_stock.warehouse.name %></Data></Cell>
 	        	<Cell><Data ss:Type="Number"><%= warehouse_product_size_stock.stock %></Data></Cell>
         		<Cell><Data ss:Type="String"><%= product.product_categories.map{ |cat| cat.name }.join(', ') %></Data></Cell>
