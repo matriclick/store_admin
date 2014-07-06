@@ -116,6 +116,6 @@ class SupplierAccountsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def supplier_account_params
-      params.require(:supplier_account).permit(:name, :logo, :purchase_details_mail_text, :store_web, :address)
+      params.require(:supplier_account).permit(:name, :logo, :purchase_details_mail_text, :store_web, :address, :sender_email_username, :sender_email_password, :sender_email_provider)
     end
 end

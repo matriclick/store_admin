@@ -78,6 +78,13 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def search_product_ajax
+    pss = ProductStockSize.joins(:product).where('products.supplier_account_id = ? and product_stock_sizes.barcode = ?', params[:supplier_account_id], params[:q]).first
+    respond_to do |format|
+      format.json  { render :json => {:name => (pss.blank? ? 'Producto No Encontrado' : pss.string_for_select)} }
+    end
+  end
+  
   def is_numeric?(obj) 
      obj.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
   end

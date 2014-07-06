@@ -6,7 +6,7 @@
 		<%= sppz.text_field :quantity, placeholder: 'Stock' %>
 		<!-- Button to trigger modal -->
 		<a href="#myModal" data-toggle="modal"><i class="icon-search"></i></a>
-		<%= sppz.text_field :product_stock_size_barcode, placeholder: 'Código de Barra del Producto', onchange: 'update_product_name_label(this)' %>		
+		<%= sppz.text_field :product_stock_size_barcode, placeholder: 'Código de Barra del Producto', onchange: 'update_product_name_label(this, '+@supplier_account.id.to_s+')' %>		
 		<%= sppz.text_field :unit_cost, placeholder: 'Costo Unitario' %>
 	  	<%= sppz.collection_select :currency_id, @supplier_account.currencies, :id, :symbol, {:allow_blank => false} %>
 		<%= sppz.link_to_remove 'Eliminar', :class => 'btn btn-default btn-mini' %>

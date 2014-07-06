@@ -215,8 +215,11 @@ class StoreAdminController < ApplicationController
       purchase = create_purchase(customer)
       #Disable Cart
       @shopping_cart.update_attribute :status, 'comprado'
+        puts '1****************************************'
       unless purchase.customer.blank? or purchase.customer.email.blank?
+        puts '2*****************************************'
         Notifications.purchase_details(purchase).deliver
+        puts '3*****************************************'
       end
       redirect_to supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: purchase.id), notice: 'Venta generada exitosamente'
     rescue Exception => exc    
@@ -288,11 +291,14 @@ class StoreAdminController < ApplicationController
         purchase = Purchase.create(shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], warehouse_id: cookies[:warehouse_id],
               supplier_account_id: @supplier_account.id, discount: discount, discount_type: discount_type, customer_id: customer.id, user_id: current_user.id, gift_card_id: gift_card_id)
       end
-      @error_message = 'Error al guardar generar los pagos. Consulta con el administrador.'
+      @error_message = 'Error al generar los pagos. Consulta con el administrador.'
       unless params[:purchase][:payments_attributes].blank?
         params[:purchase][:payments_attributes].each do |payment_params|
           unless payment_params[1][:amount].blank? or payment_params[1][:payment_method_id].blank?
             Payment.create(amount: payment_params[1][:amount], payment_method_id: payment_params[1][:payment_method_id], purchase_id: purchase.id)
+          else
+            @error_message = 'Debes agregar un Monto a pagar y el Medio de Pago.'
+            raise "error"
           end
         end
       end

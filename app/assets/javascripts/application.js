@@ -110,9 +110,24 @@ function search_products_ajax(supplier_account_id) {
     });
 }
 
-function update_product_name_label(field) {
+function update_product_name_label(field, supplier_account_id) {
 	aux = field.id.replace(/[^0-9]/g,'');
-	$("[for='supply_purchase_supply_purchase_product_sizes_attributes_"+aux+"_product_stock_size_barcode']")[0].innerHTML = 'OK'	
+	$.ajax({
+        url: "/search_product_ajax",
+        type: "POST",
+        dataType: "html",
+		headers: {
+		   'X-Transaction': 'POST SearchProduct',
+		   'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content') },
+        data: { 'q' : field.value, 'supplier_account_id' : supplier_account_id }, 
+		success: function(data) {
+			if(data != "null") {
+				$( "#records_table tbody tr" ).remove();
+				var response = JSON.parse(data);
+		        $("[for='supply_purchase_supply_purchase_product_sizes_attributes_"+aux+"_product_stock_size_barcode']")[0].innerHTML = response.name;
+        	}
+		}
+    });
 }
 
 function get_gift_card_value() {

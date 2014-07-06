@@ -35,6 +35,7 @@ StoreAdmin::Application.routes.draw do
   post 'set_time_zone' => 'application#set_time_zone', as: 'set_time_zone'
   post 'check_if_costumer_exists' => 'application#check_if_costumer_exists', as: 'check_if_costumer_exists'
   post 'search_products_ajax' => 'application#search_products_ajax', as: 'search_products_ajax'
+  post 'search_product_ajax' => 'application#search_product_ajax', as: 'search_product_ajax'
   post 'get_gift_card_value' => 'application#get_gift_card_value', as: 'get_gift_card_value'
   resources :supplier_accounts do
     put 'product/:id/update_barcode/:product_stock_size_id' => 'products#update_barcode', as: 'update_barcode'

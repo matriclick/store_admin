@@ -32,6 +32,25 @@
       <%= f.text_area :purchase_details_mail_text, :cols => "30", :rows => "10" %>
     </div>
   </div>
+  <div class="control-group">
+    <%= f.label :sender_email_username, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :sender_email_username, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :sender_email_password, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.password_field :sender_email_password, :class => 'text_field' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :sender_email_provider, :class => 'control-label' %>
+    <div class="controls">
+	  <%= f.select :sender_email_provider, 
+			options_for_select([["Gmail", "Gmail"]], @supplier_account.sender_email_provider) %>
+    </div>
+  </div>
 
   <div class="form-actions">
     <%= f.submit nil, :class => 'btn btn-primary' %>

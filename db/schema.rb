@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140706141715) do
+ActiveRecord::Schema.define(version: 20140706165842) do
 
   create_table "currencies", force: true do |t|
     t.string   "symbol"
@@ -240,6 +240,9 @@ ActiveRecord::Schema.define(version: 20140706141715) do
     t.text     "purchase_details_mail_text"
     t.string   "store_web"
     t.string   "address"
+    t.string   "sender_email_username"
+    t.string   "sender_email_password"
+    t.string   "sender_email_provider"
   end
 
   create_table "supplier_accounts_users", id: false, force: true do |t|
