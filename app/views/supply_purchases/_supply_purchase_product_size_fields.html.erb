@@ -1,13 +1,18 @@
 <%= f.fields_for :supply_purchase_product_sizes do |sppz| %>
 <div class="control-group">
-	<div class="controls">
+		<%= sppz.label :product_stock_size_barcode, (sppz.object.product_stock_size.blank? ? '-' : sppz.object.product_stock_size.string_for_select), 
+						:class => 'control-label', :style => 'font-weight:bold' %>	
+		<div class="controls">
 		<%= sppz.text_field :quantity, placeholder: 'Stock' %>
 		<!-- Button to trigger modal -->
 		<a href="#myModal" data-toggle="modal"><i class="icon-search"></i></a>
-		<%= sppz.text_field :product_stock_size_id, placeholder: 'Código de Interno del Producto' %>		
-		<%= sppz.text_field :unit_cost, placeholder: 'Costo en moneda local' %>
-	  	<%= sppz.collection_select :currency_id, @supplier_account.currencies, :id, :symbol, {:prompt => 'Moneda', :allow_blank => false} %>
+		<%= sppz.text_field :product_stock_size_barcode, placeholder: 'Código de Barra del Producto', onchange: 'update_product_name_label(this)' %>		
+		<%= sppz.text_field :unit_cost, placeholder: 'Costo Unitario' %>
+	  	<%= sppz.collection_select :currency_id, @supplier_account.currencies, :id, :symbol, {:allow_blank => false} %>
 		<%= sppz.link_to_remove 'Eliminar', :class => 'btn btn-default btn-mini' %>
+		<label class="checkbox inline">
+  			<%= sppz.check_box :update_stock %> ¿Ajustar stock del producto agregando la cantidad ingresada en esta compra?
+		</label>
 	</div>
 </div>
 <% end %>

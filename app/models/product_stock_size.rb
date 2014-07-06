@@ -10,7 +10,7 @@ class ProductStockSize < ActiveRecord::Base
   belongs_to :warehouse
   has_many :shopping_cart_items
   has_many :shopping_carts, through: :shopping_cart_items
-  has_many :supply_purchase_product_sizes
+  has_many :supply_purchase_product_sizes, primary_key: "barcode", foreign_key: "product_stock_size_barcode"
   has_many :warehouse_product_size_stocks
   has_many :product_reconciliations
   has_many :inventory_reconciliations, through: :product_reconciliations
@@ -32,7 +32,7 @@ class ProductStockSize < ActiveRecord::Base
   end
   
   def string_for_select
-    return self.product.name+' '+self.size.name+' '+self.color
+    return self.product.name.capitalize+' '+self.size.name.upcase+' '+self.color.capitalize
   end
   
   def generate_barcode(force = false)

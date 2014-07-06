@@ -19,13 +19,23 @@ aux.each { |x| puts x.name }
 puts "\n"
 
 puts "--> PaymentMethod:"
-aux = []
-aux << (PaymentMethod.find_by_name("Tarjeta de Credito") || PaymentMethod.create(:name => 'Tarjeta de Credito'))
-aux << (PaymentMethod.find_by_name("Tarjeta de Debito") || PaymentMethod.create(:name => 'Tarjeta de Debito'))
-aux << (PaymentMethod.find_by_name("Efectivo") || PaymentMethod.create(:name => 'Efectivo'))
-aux << (PaymentMethod.find_by_name("Cheque") || PaymentMethod.create(:name => 'Cheque'))
-aux.each { |x| puts x.name }
-puts "\n"
+SupplierAccount.all.each do |supplier_account|
+  aux = []
+  aux << (PaymentMethod.find_by_name_and_supplier_account_id("Tarjeta de Credito", supplier_account.id) || PaymentMethod.create(:name => 'Tarjeta de Credito', supplier_account_id: supplier_account.id))
+  aux << (PaymentMethod.find_by_name_and_supplier_account_id("Tarjeta de Debito", supplier_account.id) || PaymentMethod.create(:name => 'Tarjeta de Debito', supplier_account_id: supplier_account.id))
+  aux << (PaymentMethod.find_by_name_and_supplier_account_id("Efectivo", supplier_account.id) || PaymentMethod.create(:name => 'Efectivo', supplier_account_id: supplier_account.id))
+  aux << (PaymentMethod.find_by_name_and_supplier_account_id("Cheque", supplier_account.id) || PaymentMethod.create(:name => 'Cheque', supplier_account_id: supplier_account.id))
+  aux.each { |x| puts x.name }
+  puts "\n"
+end
+
+puts "--> Provider:"
+SupplierAccount.all.each do |supplier_account|
+  aux = []
+  aux << (Provider.find_by_name_and_supplier_account_id("Sin Proveedor", supplier_account.id) || Provider.create(:name => 'Sin Proveedor', address: 'Sin asignar', supplier_account_id: supplier_account.id))
+  aux.each { |x| puts x.name }
+  puts "\n"
+end
 
 puts "--> Roles:"
 aux = []

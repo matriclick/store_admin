@@ -103,12 +103,16 @@ function search_products_ajax(supplier_account_id) {
 			            $('<td>').text(item.name),
 			            $('<td>').text(item.size),
 						$('<td>').text(item.color),
-						$('<td>').text(item.barcode),
-			            $('<td>').text(item.id)).appendTo('#records_table');
+						$('<td>').text(item.barcode)).appendTo('#records_table');
 			    });
         	}
 		}
     });
+}
+
+function update_product_name_label(field) {
+	aux = field.id.replace(/[^0-9]/g,'');
+	$("[for='supply_purchase_supply_purchase_product_sizes_attributes_"+aux+"_product_stock_size_barcode']")[0].innerHTML = 'OK'	
 }
 
 function get_gift_card_value() {

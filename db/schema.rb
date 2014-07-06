@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140705202804) do
+ActiveRecord::Schema.define(version: 20140706141715) do
 
   create_table "currencies", force: true do |t|
     t.string   "symbol"
@@ -260,11 +260,13 @@ ActiveRecord::Schema.define(version: 20140705202804) do
   create_table "supply_purchase_product_sizes", force: true do |t|
     t.integer  "product_stock_size_id"
     t.integer  "quantity"
-    t.decimal  "unit_cost",             precision: 10, scale: 0
+    t.decimal  "unit_cost",                  precision: 10, scale: 0
     t.integer  "currency_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "supply_purchase_id"
+    t.string   "product_stock_size_barcode"
+    t.boolean  "update_stock"
   end
 
   create_table "supply_purchases", force: true do |t|

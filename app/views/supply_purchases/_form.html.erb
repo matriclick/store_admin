@@ -1,10 +1,18 @@
 <%= nested_form_for [@supplier_account, @provider, @supply_purchase], :html => { :class => 'form-horizontal' } do |f| %>
-<%= render 'layouts/form_errors', object: @supply_purchase %>
-  	<%= f.hidden_field :provider_id, :value => @provider.id %> 
+	<%= render 'layouts/form_errors', object: @supply_purchase %>
+  <div class="control-group">
+    <%= f.label :provider_id, :class => 'control-label' %>
+    <div class="controls">
+	  <%= f.collection_select :provider_id, @supplier_account.providers, :id, :name, {:allow_blank => false, :selected => @provider.id} %>
+    </div>
+  </div>
+  
   	<h2>Productos Comprados</h2>
+	<p style="margin-top:-10px">Agrega los productos que compraste en esta compra.</p>
   	<%= render 'supply_purchase_product_size_fields', :f => f %>
 
 	<h2>Pago</h2>
+	<p style="margin-top:-10px">Agrega los pagos que vas a hacer al proveedor para pagar la compra.</p>
 	<%= render 'supply_purchase_payment_fields', :f => f %>
 	
 <h2>Comentarios de la compra</h2>
@@ -33,7 +41,7 @@
 		<%= link_to t('search'), '#', type: 'button', class: "btn btn-primary", onclick: 'search_products_ajax('+@supplier_account.id.to_s+')' %>
 		<table id="records_table" class="table table-striped">
 			<thead>
-				<tr><th>Imagen</th><th>Producto</th><th>Talla</th><th>Color</th><th>Código de Barra</th><th>Código Interno del Producto</th></tr>
+				<tr><th>Imagen</th><th>Producto</th><th>Talla</th><th>Color</th><th>Código de Barra</th></tr>
 			</thead>
 			<tbody>
 				

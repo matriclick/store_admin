@@ -23,6 +23,7 @@ class ProductsController < ApplicationController
   # GET /products/1.json
   def show
     @warehouse_product_size_stocks = WarehouseProductSizeStock.joins(:product_stock_size).where("product_stock_sizes.product_id = ?", @product.id)
+    @default_provider = Provider.find_by_name('Sin Proveedor')
   end
 
   def barcodes

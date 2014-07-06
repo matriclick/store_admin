@@ -25,7 +25,8 @@
 					</li>
 				<% end %>
 			<% else %>
-				<li><%= psz.stock %> - <%= psz.size.name %> - <%= psz.color %> <b class="text-error">sin costo definido (no tiene compras asociadas)</b>
+				<li><%= psz.stock %> - <%= psz.size.name %> - <%= psz.color %> 
+					<span class="text-error">sin costo definido <%= link_to '(asociar compra)', new_supplier_account_provider_supply_purchase_path(supplier_account_id: @supplier_account.id, provider_id: @default_provider.id, psz_stock: psz.stock, barcode: psz.barcode), target: '_blank' %></span>
 				</li>
 			<% end %>
 		<% end %>
@@ -122,7 +123,7 @@
 	No se han agregado imágenes para este producto
 <% end %>
 </div>
-<h2>Compras asociadas</h2>
+<h2>Ventas asociadas</h2>
 <% @product.product_stock_sizes.each do |psz| %>
 <div class="well">
 	<h3><%= psz.size.name %> - <%= psz.color %></h3>

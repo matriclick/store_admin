@@ -6,7 +6,7 @@ class SupplyPurchasesController < ApplicationController
   def search_product
     #    @q = params[:q]
     #    @products = @supplier_account.find_products(params[:q])
-    @products = Product.all
+    @products = @supplier_account.products
     respond_to do |format|
       format.json { render json: @products }
     end
@@ -26,7 +26,7 @@ class SupplyPurchasesController < ApplicationController
   # GET /supply_purchases/new
   def new
     @supply_purchase = SupplyPurchase.new
-    @supply_purchase.supply_purchase_product_sizes.build
+    @supply_purchase.supply_purchase_product_sizes.build(quantity: params[:psz_stock], product_stock_size_barcode: params[:barcode])
     @supply_purchase.supply_purchase_payments.build
   end
 
@@ -88,6 +88,6 @@ class SupplyPurchasesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def supply_purchase_params
-      params.require(:supply_purchase).permit(:provider_id, :comments, supply_purchase_product_sizes_attributes: [:id, :quantity, :barcode, :product_stock_size_id, :unit_cost, :currency_id, :_destroy], supply_purchase_payments_attributes: [:id, :amount, :pay_date, :paid, :currency_id, :_destroy])
+      params.require(:supply_purchase).permit(:provider_id, :comments, supply_purchase_product_sizes_attributes: [:id, :quantity, :barcode, :product_stock_size_barcode, :update_stock, :unit_cost, :currency_id, :_destroy], supply_purchase_payments_attributes: [:id, :amount, :pay_date, :paid, :currency_id, :_destroy])
     end
 end
