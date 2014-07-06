@@ -1,6 +1,6 @@
 # coding: utf-8
 class Notifications < ActionMailer::Base
-  
+	  
   def purchase_details(purchase)
     @purchase = purchase
     unless purchase.customer.blank? or purchase.customer.email.blank? 
@@ -16,7 +16,7 @@ class Notifications < ActionMailer::Base
       else
         raise "Error al enviar el correo: no tienes configurada la cuenta Gmail"
       end
-  	  mail to: purchase.customer.email, subject: "Detalle de tu compra en "+purchase.supplier_account.name
+  	  mail from: purchase.supplier_account.sender_email_username, to: purchase.customer.email, subject: "Detalle de tu compra en "+purchase.supplier_account.name
 	  end
   end
 
