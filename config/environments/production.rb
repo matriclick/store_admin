@@ -87,6 +87,6 @@ StoreAdmin::Application.configure do
     :enable_starttls_auto => true
   }
   
-  config.action_mailer.default_url_options = { :host => "ec2-54-221-156-223.compute-1.amazonaws.com" }
-  config.action_mailer.asset_host = "ec2-54-221-156-223.compute-1.amazonaws.com"
+  config.action_mailer.default_url_options = { :host => "inventariolibre.com" }
+  config.action_mailer.asset_host = "inventariolibre.com"
 end
