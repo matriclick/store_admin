@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140706165842) do
+ActiveRecord::Schema.define(version: 20140706233412) do
 
   create_table "currencies", force: true do |t|
     t.string   "symbol"
@@ -261,7 +261,6 @@ ActiveRecord::Schema.define(version: 20140706165842) do
   end
 
   create_table "supply_purchase_product_sizes", force: true do |t|
-    t.integer  "product_stock_size_id"
     t.integer  "quantity"
     t.decimal  "unit_cost",                  precision: 10, scale: 0
     t.integer  "currency_id"
