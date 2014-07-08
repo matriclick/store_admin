@@ -12,9 +12,11 @@ class Purchase < ActiveRecord::Base
   belongs_to :warehouse
   belongs_to :user
   has_many :payments, :dependent => :destroy
-  
+  has_many :gift_cards, :dependent => :destroy
+    
   accepts_nested_attributes_for :payments, :allow_destroy => true
-  
+  accepts_nested_attributes_for :gift_cards, :allow_destroy => true
+    
   validates :shopping_cart_id, :invoice_number, presence: true
   
   def paid_amount

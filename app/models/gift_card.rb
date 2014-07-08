@@ -8,6 +8,7 @@ class GiftCard < ActiveRecord::Base
   belongs_to :user
   belongs_to :supplier_account
   belongs_to :customer
+  belongs_to :purchase
   has_and_belongs_to_many :shopping_cart_items
   
   validates :amount, :valid_until, presence: true

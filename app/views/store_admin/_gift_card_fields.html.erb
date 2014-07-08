@@ -1,0 +1,14 @@
+<%= f.fields_for :gift_cards do |gift_card| %>
+<div class="control-group">
+	<%= gift_card.label :barcode, 'Agregar GiftCard', :class => 'control-label', :style => 'font-weight:bold' %>	
+	<div class="controls">
+		<%= gift_card.text_field :barcode, placeholder: 'Código de Barra de la GiftCard', onchange: 'get_gift_card_value(this)' %>
+		<span id="gift_card_message"></span>
+		<%= gift_card.link_to_remove 'Eliminar', :class => 'btn btn-default btn-mini' %>
+	</div>
+</div>
+<% end %>
+
+<div>
+<%= f.link_to_add 'Agregar GiftCard', :gift_cards, :class => 'btn btn-success btn-mini' %>
+</div>

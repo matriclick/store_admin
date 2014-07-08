@@ -28,6 +28,12 @@ class GiftCardsController < ApplicationController
   def create
     @gift_card = GiftCard.new(gift_card_params)
 
+    user = current_user
+    customer = Customer.find_by_email params[:customer_email]
+
+    @gift_card.user = user unless user.blank?
+    @gift_card.customer = customer unless customer.blank? 
+
     respond_to do |format|
       if @gift_card.save
         format.html { redirect_to [@supplier_account, @gift_card], notice: 'Gift card was successfully created.' }
@@ -42,6 +48,12 @@ class GiftCardsController < ApplicationController
   # PATCH/PUT /gift_cards/1
   # PATCH/PUT /gift_cards/1.json
   def update
+    user = current_user
+    customer = Customer.find_by_email params[:customer_email]
+
+    @gift_card.user = user unless user.blank?
+    @gift_card.customer = customer unless customer.blank? 
+    
     respond_to do |format|
       if @gift_card.update(gift_card_params)
         format.html { redirect_to [@supplier_account, @gift_card], notice: 'Gift card was successfully updated.' }

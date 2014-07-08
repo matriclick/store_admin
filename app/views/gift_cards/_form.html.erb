@@ -1,15 +1,9 @@
 <%= form_for [@supplier_account, @gift_card], :html => { :class => 'form-horizontal' } do |f| %>
   <%= f.hidden_field :supplier_account_id, :value => @supplier_account.id %>
   <div class="control-group">
-    <%= f.label :customer_id, :class => 'control-label' %>
+    <%= f.label :customer_id, 'Correo Cliente Asociado', :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :customer_id, :class => 'text_field' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :barcode, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :barcode, :class => 'text_field' %>
+      <%= autocomplete_field_tag :customer_email, (@gift_card.customer.email unless @gift_card.customer.nil?), supplier_accounts_autocomplete_customer_email_path, class: 'form-control' %> Solo se puede asociar correos de clientes ya creados.
     </div>
   </div>
   <div class="control-group">
@@ -27,13 +21,7 @@
   <div class="control-group">
     <%= f.label :status, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :status, :class => 'text_field' %>
-    </div>
-  </div>
-  <div class="control-group">
-    <%= f.label :user_id, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :user_id, :class => 'text_field' %>
+	  <%= f.select :status, options_for_select([["Válida", "valid"], ["Usada", "used"]], @gift_card.status) %>
     </div>
   </div>
 

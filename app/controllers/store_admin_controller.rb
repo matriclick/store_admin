@@ -7,6 +7,7 @@ class StoreAdminController < ApplicationController
     @shopping_cart = params[:shopping_cart_id].blank? ? ShoppingCart.create(user_id: current_user.id) : ShoppingCart.find(params[:shopping_cart_id])
     @purchase_aux = Purchase.new
     @purchase_aux.payments.build
+    @purchase_aux.gift_cards.build
   end
 
   def menu
@@ -204,7 +205,7 @@ class StoreAdminController < ApplicationController
   
   def generate_purchase
     @error_message = 'Error desconocido al generar la compra'
-  #  begin
+    begin
       @error_message = 'No se puede generar la compra porque la bodega no ha sido seleccionada'
       @warehouse = Warehouse.find(cookies[:warehouse_id])
       @error_message = 'No se puede generar la compra porque el carrito de compras no se ha encontrado'
@@ -220,9 +221,9 @@ class StoreAdminController < ApplicationController
         Notifications.purchase_details(purchase).deliver
       end
       redirect_to supplier_account_purchase_path(supplier_account_id: @supplier_account.id, id: purchase.id), notice: 'Venta generada exitosamente'
-   # rescue Exception => exc    
-  #    redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), alert: @error_message
-  #  end
+    rescue Exception => exc    
+      redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), alert: @error_message
+    end
   end
   
   def remove_product_from_cart
@@ -263,14 +264,23 @@ class StoreAdminController < ApplicationController
         total = @shopping_cart.price
       end
       
-      gift_card_id = nil
-      unless params[:gifcard_barcode].blank?
-        @error_message = 'GiftCard no encontrada'
-        gift_card = GiftCard.find_by_barcode params[:gifcard_barcode]
-        gift_card_id = gift_card.id
-        if gift_card.status == 'valid'
-          gift_card.update_attribute :status, 'used'
-          total = total - gift_card.amount
+      gift_cards = Array.new
+      unless params[:purchase][:gift_cards_attributes].blank?
+        params[:purchase][:gift_cards_attributes].each do |gift_card_params|
+          unless gift_card_params[1][:barcode].blank?
+            gift_card = GiftCard.find_by_barcode gift_card_params[1][:barcode]
+            unless gift_card.blank? or gift_card.status == 'used'
+              gift_card.update_attribute :status, 'used'
+              total = total - gift_card.amount
+              gift_cards << gift_card
+            else 
+              @error_message = 'GiftCard no válida.'
+              raise "error"
+            end
+          else
+            @error_message = 'GiftCard no existe.'
+            raise "error"
+          end
         end
       end
       
@@ -284,10 +294,10 @@ class StoreAdminController < ApplicationController
       @error_message = 'Error al guardar la compra. Consulta con el administrador.'
       if customer.blank?
         purchase = Purchase.create(shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], warehouse_id: cookies[:warehouse_id],
-              supplier_account_id: @supplier_account.id, discount: discount, discount_type: discount_type, user_id: current_user.id, gift_card_id: gift_card_id)
+              supplier_account_id: @supplier_account.id, discount: discount, discount_type: discount_type, user_id: current_user.id)
       else
         purchase = Purchase.create(shopping_cart_id: @shopping_cart.id, invoice_number: params[:invoice_number], warehouse_id: cookies[:warehouse_id],
-              supplier_account_id: @supplier_account.id, discount: discount, discount_type: discount_type, customer_id: customer.id, user_id: current_user.id, gift_card_id: gift_card_id)
+              supplier_account_id: @supplier_account.id, discount: discount, discount_type: discount_type, customer_id: customer.id, user_id: current_user.id)
       end
       @error_message = 'Error al generar los pagos. Consulta con el administrador.'
       unless params[:purchase][:payments_attributes].blank?
@@ -300,6 +310,11 @@ class StoreAdminController < ApplicationController
           end
         end
       end
+      
+      gift_cards.each do |gc|
+        gc.update_attribute(:purchase_id, purchase.id) unless gc.blank?
+      end
+      
       return purchase
     end
     

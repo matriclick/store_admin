@@ -122,7 +122,6 @@ function update_product_name_label(field, supplier_account_id) {
         data: { 'q' : field.value, 'supplier_account_id' : supplier_account_id }, 
 		success: function(data) {
 			if(data != "null") {
-				$( "#records_table tbody tr" ).remove();
 				var response = JSON.parse(data);
 		        $("[for='supply_purchase_supply_purchase_product_sizes_attributes_"+aux+"_product_stock_size_barcode']")[0].innerHTML = response.name;
         	}
@@ -130,8 +129,9 @@ function update_product_name_label(field, supplier_account_id) {
     });
 }
 
-function get_gift_card_value() {
-	barcode = $("#gifcard_barcode").val();
+function get_gift_card_value(field) {
+	aux = field.id.replace(/[^0-9]/g,'');
+	barcode = field.value
 	total = $('#total').html().replace(/\D/g,'');
 	$.ajax({
         url: "/get_gift_card_value",
@@ -145,12 +145,15 @@ function get_gift_card_value() {
 			if(data != "null") {
 				var json = JSON.parse(data);
 				if(json['status'] == 'valid') {
-					$('#gift_card_message').html('Valor de la GiftCard: $ '+json['amount']);
+			        $("[for='purchase_gift_cards_attributes_"+aux+"_barcode']")[0].innerHTML = 'Valor GiftCard: $ '+json['amount'];
 					new_total = total - json['amount']
 					$('#total').html('$ '+new_total);
+					$('#purchase_payments_attributes_0_amount').val(new_total);
 				} else {
-					$('#gift_card_message').html('GiftCard ya utilizada');
+			        $("[for='purchase_gift_cards_attributes_"+aux+"_barcode']")[0].innerHTML = 'GiftCard ya utilizada';
 				}
+			} else {
+			        $("[for='purchase_gift_cards_attributes_"+aux+"_barcode']")[0].innerHTML = 'GiftCard no encontrada';
 			}
         }
     });
