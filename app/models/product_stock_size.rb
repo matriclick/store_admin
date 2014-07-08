@@ -18,7 +18,7 @@ class ProductStockSize < ActiveRecord::Base
   validates :size_id, :color, presence: true
   
   def distribute_stock_in_default_warehouse
-    warehouse = Warehouse.where(:default => true).first
+    warehouse = self.product.supplier_account.warehouses.where(:default => true).first
     unless warehouse.blank?
       distributed_stock = WarehouseProductSizeStock.where("product_stock_size_id = ?", self.id).sum(:stock)
       not_distributed_stock = self.stock - distributed_stock

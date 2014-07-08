@@ -21,7 +21,7 @@
   <tbody>
     <% @warehouse_product_size_stocks.each do |wpss| %>
       <tr>
-		<td><%= text_field_tag 'stock['+wpss.id.to_s+']', wpss.stock %></td>
+		<td><%= text_field_tag 'stock['+wpss.id.to_s+']', (wpss.stock.blank? ? 0 : wpss.stock) %></td>
 		<td><%= wpss.warehouse.name %></td>
 		<td><%= wpss.product_stock_size.size.name %></td>
 		<td><%= wpss.product_stock_size.color %></td>
