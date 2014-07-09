@@ -18,8 +18,7 @@
       <tr>
         <td><%= link_to warehouse.name, supplier_account_warehouse_path(supplier_account_id: @supplier_account.id, id: warehouse.id) %></td>
         <td><%= warehouse.products.sum('warehouse_product_size_stocks.stock') %></td>
-        <td><%= number_to_currency warehouse.products.
-				joins(product_stock_sizes: :supply_purchase_product_sizes).sum('supply_purchase_product_sizes.unit_cost*warehouse_product_size_stocks.stock'), precision: 0 %></td>
+        <td><%= number_to_currency warehouse.products.joins(:product_stock_sizes).sum('products.cost*warehouse_product_size_stocks.stock'), precision: 0 %></td>
         <td><%= warehouse.default ? '✓' : '☓' %></td>
         <td><%=l warehouse.created_at %></td>
         <td>

@@ -60,11 +60,7 @@ StoreAdmin::Application.routes.draw do
     post 'purchase/:id/return_product' => 'purchases#return_product', as: 'purchase_return_product'
     get 'purchase/:id/change_ticket' => 'purchases#change_ticket', as: 'purchase_change_ticket'
     resources :purchases
-    resources :providers do
-        resources :supply_purchases do
-          collection { post :search_product }
-        end
-    end
+    resources :providers
   end
 
   devise_for :users

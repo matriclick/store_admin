@@ -10,28 +10,11 @@
   <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
   <dd><%= @product.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:price) %>:</strong></dt>
-  <dd><b><%= number_to_currency @product.price, precision: 0 %></b></dd>
+  <dd><%= number_to_currency @product.price, precision: 0 %></dd>
   <dt><strong><%= model_class.human_attribute_name(:cost) %>:</strong></dt>
-  <dd>
-	<ul>
-		<% @product.product_stock_sizes.each do |psz| %>
-			<% if psz.supply_purchase_product_sizes.size > 0 %>
-				<% psz.supply_purchase_product_sizes.each do |spps| %>
-					<li><b><%= psz.size.name %> - <%= psz.color %></b>
-						comprado a <b><%= number_to_currency spps.unit_cost, precision: 0 %></b> 
-						al proveedor <%= spps.supply_purchase.provider.name %>
-						el <%= spps.created_at.in_time_zone(@time_zone).strftime('%Y-%m-%d') %> 
-						<%= link_to '(ver detalle de la compra)', supplier_account_provider_supply_purchase_path(supplier_account_id: @supplier_account.id, provider_id: spps.supply_purchase.provider.id, id: spps.supply_purchase.id), target: '_blank' %>
-					</li>
-				<% end %>
-			<% else %>
-				<li><%= psz.stock %> - <%= psz.size.name %> - <%= psz.color %> 
-					<span class="text-error">sin costo definido <%= link_to '(asociar compra)', new_supplier_account_provider_supply_purchase_path(supplier_account_id: @supplier_account.id, provider_id: @default_provider.id, psz_stock: psz.stock, barcode: psz.barcode), target: '_blank' %></span>
-				</li>
-			<% end %>
-		<% end %>
-	</ul>
-  </dd>
+  <dd><%= number_to_currency @product.cost, precision: 0 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:provider_id) %>:</strong></dt>
+  <dd><%= @product.provider.blank? ? 'No Asignado' : @product.provider.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
   <dd><%= @product.description %></dd>
 </dl>

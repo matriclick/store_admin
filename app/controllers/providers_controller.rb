@@ -1,15 +1,22 @@
+# encoding: UTF-8
 class ProvidersController < ApplicationController
   before_action :set_provider, only: [:show, :edit, :update, :destroy]
   before_action :set_supplier_account
   # GET /providers
   # GET /providers.json
   def index
+    add_breadcrumb "Menú", store_admin_menu_path(id: @supplier_account.id)
+    add_breadcrumb "Proveedores", supplier_account_providers_path(supplier_account_id: @supplier_account.id)
+    
     @providers = @supplier_account.providers
   end
 
   # GET /providers/1
   # GET /providers/1.json
   def show
+    add_breadcrumb "Menú", store_admin_menu_path(id: @supplier_account.id)
+    add_breadcrumb "Proveedores", supplier_account_providers_path(supplier_account_id: @supplier_account.id)
+    add_breadcrumb @provider.name, supplier_account_provider_path(supplier_account_id: @supplier_account.id, id: @provider.id)
   end
 
   # GET /providers/new

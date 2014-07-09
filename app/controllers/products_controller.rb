@@ -27,7 +27,7 @@ class ProductsController < ApplicationController
   end
 
   def barcodes
-    @quantity = is_numeric?(params[:quantity]) ? params[:quantity].to_i : 1
+    @quantity = is_numeric?(params[:quantity]) ? params[:quantity].to_i : nil
   end
   
   # GET /products/new
@@ -164,6 +164,6 @@ class ProductsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def product_params
-      params.require(:product).permit(:name, :description, :price, :supplier_account_id, product_category_ids: [], product_images_attributes: [:id, :photo, :_destroy], product_stock_sizes_attributes: [:id, :stock, :size_id, :color, :warehouse_id, :internal_code, :_destroy])
+      params.require(:product).permit(:name, :description, :price, :cost, :provider_id, :supplier_account_id, product_category_ids: [], product_images_attributes: [:id, :photo, :_destroy], product_stock_sizes_attributes: [:id, :stock, :size_id, :color, :warehouse_id, :internal_code, :_destroy])
     end
 end

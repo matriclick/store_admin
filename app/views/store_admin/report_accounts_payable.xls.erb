@@ -20,15 +20,6 @@
         <Cell><Data ss:Type="String"><%= expense.expense_type.name %></Data></Cell>
       </Row>
     <% end %>
-    <% @supply_purchase_payments.each do |supply_purchase_payment| %>
-      <Row>
-        <Cell><Data ss:Type="String">Compra de Productos</Data></Cell>
-        <Cell><Data ss:Type="String"><%= supply_purchase_payment.pay_date.in_time_zone(@time_zone).strftime("%Y-%m-%d %H:%M:%S") %></Data></Cell>
-        <Cell><Data ss:Type="Number"><%= supply_purchase_payment.amount %></Data></Cell>
-        <Cell><Data ss:Type="String">Proveedor: <%= supply_purchase_payment.supply_purchase.provider.name %> - Fecha creación compra: <%= l(supply_purchase_payment.supply_purchase.created_at, format: :long) %>
-		</Data></Cell>      
-	</Row>
-    <% end %>
     </Table>
   </Worksheet>
 </Workbook>

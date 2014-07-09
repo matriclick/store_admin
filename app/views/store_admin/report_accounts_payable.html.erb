@@ -35,48 +35,5 @@
 	Yuhuuu!! Todos los gastos están pagados.
 </div>
 <% end %>
-<h3>Compras de Productos por Pagar</h3>
-<% if @supply_purchase_payments.size > 0 %>
-<table class="table">
-	<thead>
-		<tr>
-			<th>Fecha Pago</th>
-			<th>Monto por Pagar</th>
-			<th>Detalle</th>
-			<th>Acciones</th>
-		</tr>
-	</thead>
-	<tbody>
-		<% @supply_purchase_payments.each do |supply_purchase_payment| %>
-		<% if DateTime.parse(supply_purchase_payment.pay_date.beginning_of_day.strftime('%Y-%m-%d')) < 
-				DateTime.parse(DateTime.now.in_time_zone(@time_zone).beginning_of_day.strftime('%Y-%m-%d')) %>
-			<tr class="error">
-		<% elsif supply_purchase_payment.pay_date.beginning_of_day.strftime('%Y-%m-%d') == DateTime.now.in_time_zone(@time_zone).beginning_of_day.strftime('%Y-%m-%d') %>
-			<tr class="warning">
-		<% else %>
-			<tr>
-		<% end %>
-				<td><%=l supply_purchase_payment.pay_date.in_time_zone(@time_zone), format: :short_day %></td>
-				<td><%= number_to_currency supply_purchase_payment.amount, precision: 0 %> <%= supply_purchase_payment.currency.symbol %></td>
-				<td>Proveedor: <%= link_to supply_purchase_payment.supply_purchase.provider.name, 
-								supplier_account_provider_path(supplier_account_id: @supplier_account.id, id: supply_purchase_payment.supply_purchase.provider.id) %><br />
-					Fecha creación compra: <%= link_to l(supply_purchase_payment.supply_purchase.created_at, format: :long), 
-								supplier_account_provider_supply_purchase_path(supplier_account_id: @supplier_account.id, 
-								provider_id: supply_purchase_payment.supply_purchase.provider.id, id: supply_purchase_payment.supply_purchase.id) %>
-				</td>
-				<td>
-					<%= link_to 'Actualizar', edit_supplier_account_provider_supply_purchase_path(supplier_account_id: @supplier_account.id, 
-					provider_id: supply_purchase_payment.supply_purchase.provider.id, id: supply_purchase_payment.supply_purchase.id), 
-					:class => 'btn btn-primary btn-mini', target: '_blank' %>
-				</td>
-			</tr>
-		<% end %>
-	</tbody>
-</table>
-<% else %>
-<div class="well">
-	Yuhuuu!! Todas las compras de productos están pagadas.
-</div>
-<% end %>
 
-<%= link_to 'Descargar Gastos y Compras por Pagar', store_admin_report_accounts_payable_path(id: @supplier_account.id, format: :xls), class: "btn" %>
+<%= link_to 'Descargar Gastos por Pagar', store_admin_report_accounts_payable_path(id: @supplier_account.id, format: :xls), class: "btn" %>

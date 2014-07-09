@@ -15,6 +15,18 @@
 	  </div>
 	</div>
 	<div class="control-group">
+	  <%= f.label :cost, t('cost'), :class => 'control-label' %>
+	  <div class="controls">
+	    <%= f.text_field :cost, :class => 'text_field' %>
+	  </div>
+	</div>
+	<div class="control-group">
+	  <%= f.label :provider_id, t('provider'), :class => 'control-label' %>
+	  <div class="controls">
+		<%= f.collection_select :provider_id, @supplier_account.providers, :id, :name, {:allow_blank => false} %>
+	  </div>
+	</div>
+	<div class="control-group">
 	  <%= f.label :description, t('description'), :class => 'control-label' %>
 	  <div class="controls">
 	    <%= f.text_area :description, rows: 4, :class => 'text_field' %>

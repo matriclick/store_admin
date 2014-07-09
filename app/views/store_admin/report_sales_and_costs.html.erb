@@ -107,23 +107,11 @@
 				<% end while d < @to.to_datetime %>
 			</tr>
 		<% end %>
-		<tr class="error">
-			<td>Productos Pagados</td>
-			<% aux_hash_supply_purchase_payments = Hash.new %>
-			<% d = @from.to_datetime %>
-			<% begin %>
-				<% aux_hash_supply_purchase_payments[d] = @supplier_account.providers.joins(supply_purchases: :supply_purchase_payments)
-						.where('supply_purchase_payments.pay_date >= ? and supply_purchase_payments.pay_date < ? and paid = true', d - @hours_off_set.hours, d + @interval  - @hours_off_set.hours).sum('supply_purchase_payments.amount') %>
-				<td><%= number_to_currency aux_hash_supply_purchase_payments[d], precision: 0 %></td>
-				<% d = d + @interval %>
-			<% end while d < @to.to_datetime %>
-			<% result[:supply_purchase_payments] = aux_hash_supply_purchase_payments %>
-		</tr>
 		<tr class="info" style="border-top:2px solid black">
 			<td>Resultado</td>
 			<% d = @from.to_datetime %>
 			<% begin %>
-				<td><%= number_to_currency (result[:income][d] - result[:expenses][d] - result[:expenses_not_paid][d] - result[:supply_purchase_payments][d]), precision: 0 %></td>
+				<td><%= number_to_currency (result[:income][d] - result[:expenses][d] - result[:expenses_not_paid][d]), precision: 0 %></td>
 				<% d = d + @interval %>
 			<% end while d < @to.to_datetime %>
 		</tr>

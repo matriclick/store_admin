@@ -27,7 +27,7 @@ class StoreAdminController < ApplicationController
     @products_to_reconcile = 0
     product_stock_size_to_reconcile_ids = Array.new
     @inventory_reconciliation.product_reconciliations.each do |pr|
-      wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", pr.product_stock_size.id, @warehouse.id).first
+      wpss = WarehouseProductSizeStock.where("product_stock_size_barcode = ? and warehouse_id = ?", pr.product_stock_size.barcode, @warehouse.id).first
       unless wpss.blank?
         if wpss.stock != pr.count
           product_stock_size_to_reconcile_ids << pr.id
@@ -135,7 +135,6 @@ class StoreAdminController < ApplicationController
     add_breadcrumb "Gastos por Pagar", store_admin_report_accounts_payable_path(id: @supplier_account.id)
     
     @expenses = @supplier_account.expenses.where('paid is not true')
-    @supply_purchase_payments = @supplier_account.supply_purchase_payments.where('supply_purchase_payments.paid is not true')
     
     respond_to do |format|
       format.html
@@ -277,9 +276,6 @@ class StoreAdminController < ApplicationController
               @error_message = 'GiftCard no válida.'
               raise "error"
             end
-          else
-            @error_message = 'GiftCard no existe.'
-            raise "error"
           end
         end
       end

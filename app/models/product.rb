@@ -12,12 +12,13 @@ class Product < ActiveRecord::Base
 	has_many :product_stock_sizes, :dependent => :destroy
 	has_many :sizes, :through => :product_stock_sizes
   belongs_to :supplier_account
-  
+  belongs_to :provider
+    
   accepts_nested_attributes_for :product_images, :allow_destroy => true
 	accepts_nested_attributes_for :product_stock_sizes, :allow_destroy => true
 	
   validates :name, presence: true, :uniqueness => {:scope => :supplier_account_id}
-  validates :price, presence: true
+  validates :price, :cost, :provider_id, presence: true
 	
 	def self.import(file)
     CSV.foreach(file.path, headers: true) do |row|
@@ -40,7 +41,7 @@ class Product < ActiveRecord::Base
         provider = Provider.find_by_name('Sin Proveedor')
       end
       puts provider.name
-      product = Product.find_by_name(row["Nombre Producto"]) || Product.create(:name => row["Nombre Producto"], :internal_code => row["Código Producto"], price: row["Precio"], supplier_account_id: supplier_account.id)
+      product = Product.find_by_name(row["Nombre Producto"]) || Product.create(:name => row["Nombre Producto"], :provider_id => provider.id, cost: row['Costo por Unidad'], :internal_code => row["Código Producto"], price: row["Precio"], supplier_account_id: supplier_account.id)
       puts product.name
       unless row["Talla"].blank?
         size = Size.find_by_name(row["Talla"]) || Size.create(:name => row["Talla"], supplier_account_id: supplier_account.id)
@@ -61,9 +62,6 @@ class Product < ActiveRecord::Base
         product_stock_size = ProductStockSize.create(size_id: size.id, stock: row['Stock'], color: row['Color'], product_id: product.id, internal_code: row['Código Producto'])
       end
       puts product_stock_size.color
-      supply_purchase = SupplyPurchase.new(provider_id: provider.id, comments: 'Generada automáticamente por una carga desde archivo .csv')
-      supply_purchase.save!(:validate => false)
-      supply_purchase_product_size = SupplyPurchaseProductSize.create(quantity: row['Unidades Compradas'], unit_cost: row['Costo por Unidad'], currency_id: 1, supply_purchase_id: supply_purchase.id, product_stock_size_barcode: product_stock_size.barcode, update_stock: false)
     end
   end
 
