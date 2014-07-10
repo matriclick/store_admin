@@ -30,22 +30,26 @@ class SupplierAccount < ActiveRecord::Base
   
   
   def find_products(q)
+    products = Array.new
     if q.blank?
       return self.products
     else
+      puts '0'
+      where = 'products.name like "%'+q+'%" or products.internal_code like "%'+q+'%" or products.description like "%'+q+'%" or product_stock_sizes.color like "%'+q+'%"';
       q.gsub('.', '').gsub('$', '').gsub!(',', '')
       if is_number?(q)
+        puts '1'
         begin
+          puts '2'
           pdz = ProductStockSize.find_by_barcode q
-          return self.products.joins(:product_stock_sizes).where('product_stock_sizes.product_id = ?', pdz.product_id).uniq
+          where = 'product_stock_sizes.product_id = '+pdz.product_id.to_s+' or '+where;
         rescue Exception => exc
+          puts '3'
           #Si tira error se está buscando por precio
-          return self.products.where('price = ?', q)
+          where = 'products.price = '+q+' or '+where;
         end
-      else #If it's not a number, lookup in description, name and color
-        return self.products.joins(:product_stock_sizes)
-                .where('products.name like "%'+q+'%" or product_stock_sizes.internal_code like "%'+q+'%" or products.description like "%'+q+'%" or product_stock_sizes.color like "%'+q+'%"').uniq
       end
+      return self.products.joins(:product_stock_sizes).where(where).uniq
     end
   end
   
