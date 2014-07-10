@@ -12,7 +12,7 @@ class PettyCashesController < ApplicationController
   def show
     
     efectivo = PaymentMethod.where('name like "%efectivo%"').first
-    @previous_petty_cash = PettyCash.where('created_at < ?', @petty_cash.created_at).first
+    @previous_petty_cash = PettyCash.where('created_at < ?', @petty_cash.created_at).order('created_at DESC').first
     unless @previous_petty_cash.blank?
       @last_petty_cash = @previous_petty_cash
       @payments_before_last = Payment.where('created_at > ? and created_at <= ? and payment_method_id = ?', @previous_petty_cash.created_at, @petty_cash.created_at, efectivo.id)
@@ -28,7 +28,7 @@ class PettyCashesController < ApplicationController
   # GET /petty_cashes/new
   def new
     @petty_cash = PettyCash.new
-    @last_petty_cash = PettyCash.all.last
+    @last_petty_cash = PettyCash.all.order('created_at DESC').first
     efectivo = PaymentMethod.where('name like "%efectivo%"').first
     
     unless @last_petty_cash.blank?
