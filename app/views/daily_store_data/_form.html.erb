@@ -10,7 +10,8 @@
   <div class="control-group">
     <%= f.label :warehouse_id, :class => 'control-label' %>
     <div class="controls">
-      <%= f.collection_select :warehouse_id, @supplier_account.warehouses, :id, :name, {:prompt => true, :allow_blank => false} %>
+      <%= f.collection_select :warehouse_id, @supplier_account.warehouses, :id, :name, 
+								{ :allow_blank => false, :default => @supplier_account.warehouses.where(:default => true).first.id } %>
     </div>
   </div>
   <div class="control-group">

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140709034012) do
+ActiveRecord::Schema.define(version: 20140710022219) do
 
   create_table "currencies", force: true do |t|
     t.string   "symbol"

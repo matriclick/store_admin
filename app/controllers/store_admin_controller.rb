@@ -27,7 +27,7 @@ class StoreAdminController < ApplicationController
     @products_to_reconcile = 0
     product_stock_size_to_reconcile_ids = Array.new
     @inventory_reconciliation.product_reconciliations.each do |pr|
-      wpss = WarehouseProductSizeStock.where("product_stock_size_barcode = ? and warehouse_id = ?", pr.product_stock_size.barcode, @warehouse.id).first
+      wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", pr.product_stock_size.barcode, @warehouse.id).first
       unless wpss.blank?
         if wpss.stock != pr.count
           product_stock_size_to_reconcile_ids << pr.id
