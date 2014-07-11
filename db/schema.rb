@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140710022219) do
+ActiveRecord::Schema.define(version: 20140711023608) do
 
   create_table "currencies", force: true do |t|
     t.string   "symbol"
@@ -204,6 +204,7 @@ ActiveRecord::Schema.define(version: 20140710022219) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "status"
+    t.decimal  "price",                 precision: 10, scale: 0
   end
 
   create_table "shopping_carts", force: true do |t|

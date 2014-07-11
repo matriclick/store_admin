@@ -52,7 +52,7 @@ class Purchase < ActiveRecord::Base
     	   if self.discount_type == 'absolute' 
     	     discount = amount*self.discount.to_f/self.shopping_cart.price
     	   elsif self.discount_type == 'percentage' 
-    	     discount = amount*(1-self.discount.to_f/100)
+    	     discount = amount*(self.discount.to_f/100)
          end
       end
       unless self.gift_cards.size == 0

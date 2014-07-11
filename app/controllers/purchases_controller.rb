@@ -38,7 +38,7 @@ class PurchasesController < ApplicationController
       shopping_cart_item = ShoppingCartItem.find sci_id
       shopping_cart_item.update_attribute :status, 'refunded'
       shopping_cart_item.product_stock_size.update_attribute :stock, shopping_cart_item.product_stock_size.stock + 1
-      refund_amount = refund_amount + @purchase.reduce_applicable_discount(shopping_cart_item.product_stock_size.product.price)
+      refund_amount = refund_amount + @purchase.reduce_applicable_discount(shopping_cart_item.price.blank? ? shopping_cart_item.product.price : shopping_cart_item.price)
       gift_card.shopping_cart_items << shopping_cart_item
     end
     @purchase.update_attribute :status, 'refund'

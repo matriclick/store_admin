@@ -5,7 +5,11 @@ class ShoppingCart < ActiveRecord::Base
   def price
     price = 0
     self.shopping_cart_items.each do |sci|
-      price = price + sci.product_stock_size.product.price
+      unless sci.price.blank?
+        price = price + sci.price
+      else
+        price = price + sci.product_stock_size.product.price
+      end
     end
     return price
   end
