@@ -43,17 +43,23 @@ class Purchase < ActiveRecord::Base
   end
   
   def reduce_applicable_discount(amount)
-    if self.discount.blank? 
+    
+    if self.discount.blank? and self.gift_cards.size == 0
       return amount
     else
-  	   if self.discount_type == 'absolute' 
-  	     return amount - amount*self.discount.to_f/self.shopping_cart.price
-  	   elsif self.discount_type == 'percentage' 
-  	     return amount*(1-self.discount.to_f/100)
-       else
-         return amount
-       end
+      discount = 0
+      unless self.discount.blank?
+    	   if self.discount_type == 'absolute' 
+    	     discount = amount*self.discount.to_f/self.shopping_cart.price
+    	   elsif self.discount_type == 'percentage' 
+    	     discount = amount*(1-self.discount.to_f/100)
+         end
+      end
+      unless self.gift_cards.size == 0
+        discount = discount + gift_cards.sum(:amount).to_f/self.shopping_cart.shopping_cart_items.size
+      end
     end
+    return amount - discount
   end
   
   private
