@@ -291,6 +291,7 @@ es:
         status: "Estado"
         user_id: "Creada por"
         created_at: "Fecha de Creación"
+        purchase_id: Usada en Venta
       daily_store_datum:
         date: Fecha Observación
         warehouse: Bodega

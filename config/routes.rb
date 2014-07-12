@@ -13,8 +13,9 @@ StoreAdmin::Application.routes.draw do
     
   get "store_admin/:id/menu" => 'store_admin#menu', as: 'store_admin_menu'
   get "store_admin/:id/inventory_reconciliation" => 'store_admin#inventory_reconciliation', as: 'inventory_reconciliation'
-  
-  
+  get "store_admin/:id/product_reception" => 'store_admin#product_reception', as: 'product_reception'  
+  put "store_admin/:id/product_reception" => 'store_admin#product_reception'
+    
   post 'store_admin/:id/add_product_to_cart_from_barcode/' => 'store_admin#add_product_to_cart_from_barcode', as: 'store_admin_add_product_to_cart_from_barcode'
   put 'store_admin/:id/generate_purchase/:shopping_cart_id' => 'store_admin#generate_purchase', as: 'store_admin_generate_purchase'
   put 'store_admin/:id/remove_product_from_cart_path/:shopping_cart_id' => 'store_admin#remove_product_from_cart', as: 'store_admin_remove_product_from_cart'

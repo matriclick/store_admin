@@ -1,5 +1,5 @@
 class ShoppingCartItem < ActiveRecord::Base
-  before_create :set_price
+  before_update :set_price
   belongs_to :shopping_cart
   belongs_to :product_stock_size
   has_one :product, through: :product_stock_size
@@ -10,6 +10,6 @@ class ShoppingCartItem < ActiveRecord::Base
   end
   
   def set_price
-    self.price = self.product.price
+    self.price = self.product.price*self.quantity
   end
 end

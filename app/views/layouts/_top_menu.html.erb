@@ -23,6 +23,8 @@
 						<li class="<%= 'active' if params[:action].include? 'report' %>"><%= link_to 'Reportes', store_admin_reports_path(id: @supplier_account.id) %></li>
 					<% end %>
 					<li class="<%= 'active' if params[:action] == 'inventory_reconciliation' %>"><%= link_to 'Consolidación de Inventario', inventory_reconciliation_path(id: @supplier_account.id) %></li>
+					<li class="<%= 'active' if params[:action] == 'product_reception' %>"><%= link_to 'Recepción Productos', product_reception_path(id: @supplier_account.id) %></li>
+					
 				</ul>
 			<% end %>
 			<ul class="nav navbar-nav navbar-right pull-right">

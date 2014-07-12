@@ -50,6 +50,24 @@ class StoreAdminController < ApplicationController
     end
   end
   
+  def product_reception
+    @q = params[:q]
+    unless @q.blank?
+      @product_stock_sizes = @warehouse.product_stock_sizes.joins(:product).where('products.name like "%'+@q+'%" or products.internal_code like "%'+@q+'%" or products.description like "%'+@q+'%" or product_stock_sizes.size_id like "%'+@q+'%" or product_stock_sizes.color like "%'+@q+'%" or product_stock_sizes.barcode like "%'+@q+'%"').paginate(:page => params[:page], :per_page => 15).order 'created_at DESC'
+    end
+    unless params[:product_stock_size_id].blank? or params[:add_stock].blank?
+      begin
+        psz = ProductStockSize.find params[:product_stock_size_id]
+        wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", psz.id, @warehouse.id).first  
+        wpss.update_attribute :stock, wpss.stock + params[:add_stock].to_i
+        psz.update_attribute :stock, psz.stock + params[:add_stock].to_i
+        flash[:notice] = 'Stock actualizado del producto '+psz.string_for_select+'<br />Pasó de '+(wpss.stock - params[:add_stock].to_i).to_s+' a '+wpss.stock.to_s
+      rescue Exception => exc
+        flash[:alert] = 'Error al actualizar el stock. Producto no encontrato o Stock ingresado en formato inválido'
+      end
+    end
+  end
+  
   def add_product_to_inventory_reconciliation_from_barcode
     begin
       @inventory_reconciliation = InventoryReconciliation.find params[:inventory_reconciliation_id] if !params[:inventory_reconciliation_id].nil? 
@@ -150,9 +168,6 @@ class StoreAdminController < ApplicationController
     @hours_off_set = (DateTime.now.in_time_zone(@time_zone).utc_offset/60/60).abs
     
     if params[:interval] == 'day'
-      if (@to - @from).days > 20
-        @from = @to - 20.days
-      end
       @to = @to.end_of_day
       @from = @from.beginning_of_day
       @interval = 1.day
@@ -166,7 +181,6 @@ class StoreAdminController < ApplicationController
       @from = @from.beginning_of_month
       @interval = 1.month
     end
-    
   end
   
   def stores
@@ -191,7 +205,12 @@ class StoreAdminController < ApplicationController
         if product_stock_size.stock == 0
           redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), alert: 'Error: Producto Agotado en el Sistema'
         else
-          @shopping_cart.shopping_cart_items << ShoppingCartItem.create(shopping_cart_id: @shopping_cart.id, product_stock_size_id: product_stock_size.id, quantity: 1)
+          sci = ShoppingCartItem.where('product_stock_size_id = ? and shopping_cart_id = ?', product_stock_size.id, @shopping_cart.id).first
+          unless sci.blank? 
+            sci.update_attribute :quantity, sci.quantity + 1
+          else
+            @shopping_cart.shopping_cart_items << ShoppingCartItem.create(shopping_cart_id: @shopping_cart.id, product_stock_size_id: product_stock_size.id, quantity: 1)
+          end
           redirect_to point_of_sale_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), notice: 'Producto Agregado'
         end
       else
@@ -284,8 +303,8 @@ class StoreAdminController < ApplicationController
       @shopping_cart.shopping_cart_items.each do |sci|
         @error_message = 'El producto no se encuentra disponible en la bodega '+@warehouse.name
         wpss = WarehouseProductSizeStock.where("product_stock_size_id = ? and warehouse_id = ?", sci.product_stock_size.id, @warehouse.id).first  
-        wpss.update_attribute :stock, wpss.stock - 1
-        sci.product_stock_size.update_attribute :stock, sci.product_stock_size.stock - 1
+        wpss.update_attribute :stock, wpss.stock - sci.quantity
+        sci.product_stock_size.update_attribute :stock, sci.product_stock_size.stock - sci.quantity
       end
       @error_message = 'Error al guardar la compra. Consulta con el administrador.'
       if customer.blank?

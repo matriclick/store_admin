@@ -18,10 +18,13 @@
   <dd><%= @gift_card.status %></dd>
   <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
   <dd><%= @gift_card.user.email %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:purchase_id) %>:</strong></dt>
+  <dd><%= @gift_card.purchase.blank? ? 'No Usada' : link_to('Boleta # '+@gift_card.purchase.invoice_number, [@supplier_account, @gift_card.purchase]) %></dd>
+
 </dl>
 
 <div class="form-actions">
-  <%= link_to t('.back', :default => t("helpers.links.back")),
+  <%= link_to 'Ver Todas las GiftCards',
               supplier_account_gift_cards_path(supplier_account_id: @supplier_account.id), :class => 'btn'  %>
   <%= link_to 'Generar PDF', supplier_account_gift_card_path(supplier_account_id: @supplier_account.id, id: @gift_card.id, :format => 'pdf'), 
 							:class => 'btn btn-primary', target: '_blank' %>

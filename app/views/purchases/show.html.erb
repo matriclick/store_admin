@@ -80,7 +80,7 @@
 		<td><%= sci.product_stock_size.color %></td>
 		<td><%= sci.quantity %></td>
 		<td><%= number_to_currency(sci.product_stock_size.product.price, precision: 0) %></td>
-		<td><%= sci.price.blank? ? 'No Registrado' : number_to_currency(sci.price, precision: 0) %></td>
+		<td><%= sci.price.blank? ? 'No Registrado' : number_to_currency(sci.price/sci.quantity, precision: 0) %></td>
 		<td><%= number_to_currency(@purchase.reduce_applicable_discount(sci.price.blank? ? sci.product.price : sci.price), precision: 0) %></td>
       	<td><%= sci.status.blank? ? 'OK' : t(sci.status) %></td>
 		<td>

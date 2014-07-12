@@ -1,0 +1,71 @@
+<script>
+	$(function() {
+		$("#barcode").focus();
+	});
+</script>
+	
+<div class="pull-right">
+	<div class="input-group form-inline">
+		<%= collection_select :warehouse, :id, @supplier_account.warehouses, :id, :name, { selected: @warehouse.id }, { onchange: 'update_warehouse()' } %>
+	</div>
+</div>
+
+<h2>Recibir productos en bodega <%= @warehouse.name %></h2>
+
+<div class="row">
+	<div class="span12">
+		<%= form_tag(request.fullpath, :method => "get", :html => {class: 'form-search'}) do %>
+			<%= text_field_tag(:q, @q, class: "input-medium search-query", placeholder: "Ingresa el código de barra, Código Interno, Nombre, Descripción, Color o Precio", style: "width:60%") %>
+			<%= submit_tag t('search'), class: "btn btn-primary" %>
+		<% end %>
+	</div>
+</div>
+
+<% unless @product_stock_sizes.blank? or @product_stock_sizes.size == 0 %>
+	<table class="table table-striped">
+	  <thead>
+	    <tr>
+	      <th style="width:20%"><%=t 'name' %></th>
+	      <th><%=t 'size' %></th>
+	      <th><%=t 'color' %></th>
+	      <th><%=t 'category' %></th>
+	      <th><%=t 'price' %></th>
+	      <th><%=t 'cost' %></th>
+	      <th><%=t 'provider' %></th>
+	      <th>Stock en <%= @warehouse.name %></th>
+		  <th></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <% @product_stock_sizes.each do |psz| %>
+	      <tr>
+	        <td><%= link_to psz.product.name, supplier_account_product_path(supplier_account_id: @supplier_account.id, id: psz.product.id) %></td>
+	        <td><%= psz.size.name %></td>
+	        <td><%= psz.color %></td>
+			<td><%= psz.product.product_categories.size == 0 ? 'No Asignada' : raw(psz.product.product_categories.map{ |cat| cat.name }.join('<br />')) %></td>
+	        <td><%= number_to_currency psz.product.price, precision: 0 %></td>
+	        <td><%= number_to_currency psz.product.cost , precision: 0 %></td>
+	        <td><%= psz.product.provider.blank? ? 'No Asignado' : psz.product.provider.name %></td>
+	      	<td><%= @warehouse.product_stock_sizes.where('product_stock_size_id = ?', psz.id).first.stock %></td>
+			<td>
+				<%= form_tag(request.fullpath, :method => "put", :html => {class: 'form-search'}) do %>
+					<%= text_field_tag(:add_stock, '', class: "input-medium search-query", placeholder: "Cantidad", style: 'width:50px') %>
+					<%= hidden_field_tag(:product_stock_size_id, psz.id) %>
+					<%= hidden_field_tag(:q, @q) %>
+					<%= submit_tag 'Aumentar Stock', class: "btn btn-primary btn-mini" %>
+				<% end %>
+			</td>
+	      </tr>
+	    <% end %>
+	  </tbody>
+	</table>
+	<% if @product_stock_sizes.total_pages > 1 %>
+	<div class="well apple_pagination">
+		<%= will_paginate @product_stock_sizes %>
+	</div>
+	<% end %>
+<% else %>
+	<div class="well">
+		No se han encontrado productos
+	</div>
+<% end %>
