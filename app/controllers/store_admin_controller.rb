@@ -168,17 +168,17 @@ class StoreAdminController < ApplicationController
     @hours_off_set = (DateTime.now.in_time_zone(@time_zone).utc_offset/60/60).abs
     
     if params[:interval] == 'day'
-      @to = @to.end_of_day
-      @from = @from.beginning_of_day
+      @to = @to.in_time_zone(@time_zone).end_of_day
+      @from = @from.in_time_zone(@time_zone).beginning_of_day
       @interval = 1.day
     elsif params[:interval] == 'week'
-      @to = @to.end_of_week
-      @from = @from.beginning_of_week
+      @to = @to.in_time_zone(@time_zone).end_of_week
+      @from = @from.in_time_zone(@time_zone).beginning_of_week
       @interval = 1.week
     else
       params[:interval] = 'month'
-      @to = @to.end_of_month
-      @from = @from.beginning_of_month
+      @to = @to.in_time_zone(@time_zone).end_of_month
+      @from = @from.in_time_zone(@time_zone).beginning_of_month
       @interval = 1.month
     end
   end

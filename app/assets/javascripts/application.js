@@ -36,7 +36,7 @@ $(document).ready(function() {
 	}
 	
 	$('.datepicker').datepicker({
-		format: "yyyy-mm-dd"
+		format: "dd-mm-yyyy"
 	});
 		
 	$('#myModal').on('shown.bs.modal', function() {
