@@ -6,6 +6,10 @@
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:amount) %>:</strong></dt>
   <dd><%= @expense.currency.symbol %> <%= number_to_currency @expense.amount, precision: 0 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:tax_exception) %>:</strong></dt>
+  <dd><%= @expense.tax_exception ? 'Sí (IVA $ 0)' : 'No (IVA '+number_to_currency(@expense.amount*(1-1/1.19), precision: 0)+')' %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:provider_id) %>:</strong></dt>
+  <dd><%= @expense.provider.blank? ? 'No Asignado' : @expense.provider.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:expense_type_id) %>:</strong></dt>
   <dd><%= @expense.expense_type.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:payment_type) %>:</strong></dt>

@@ -5,6 +5,16 @@
     <%= f.label :amount, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :amount, :class => 'text_field' %>
+	  <br />
+	  <label class="checkbox">
+	      	<%= f.check_box :tax_exception, :class => 'text_field' %> ¿Exento de IVA?
+	  </label>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :provider_id, :class => 'control-label' %>
+    <div class="controls">
+	  <%= f.collection_select :provider_id, @supplier_account.providers, :id, :name, {:prompt => 'Proveedor asociado', :allow_blank => false} %>
     </div>
   </div>
   <div class="control-group">
@@ -27,15 +37,15 @@
     </div>
   </div>
   <div class="control-group">
-    <%= f.label :paid, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.check_box :paid, :class => 'text_field' %>
-    </div>
-  </div>
-  <div class="control-group">
     <%= f.label :pay_date, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :pay_date, :class => 'text_field datepicker' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :paid, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.check_box :paid, :class => 'text_field' %>
     </div>
   </div>
   <div class="control-group">

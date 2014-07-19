@@ -309,6 +309,8 @@ es:
         comments: Comentarios
         created_at: Fecha de Creación
         payment_type: Forma de pago
+        provider_id: Proveedor
+        tax_exception: ¿Exento de IVA?
       expense_type:
         created_at: Fecha de Creación
       petty_cash:

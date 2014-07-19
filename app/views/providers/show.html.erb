@@ -12,6 +12,15 @@
   <dd><%= @provider.country %></dd>
 </dl>
 
+<h2>Gastos Asociados</h2>
+<% if @provider.expenses.size == 0 %>
+	<div class="well">
+		No hay gastos asociados
+	</div>
+<% else %>
+	<%= render 'expenses/expenses_table', expenses: @provider.expenses  %>
+<% end %>
+
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
               supplier_account_providers_path(supplier_account_id: @supplier_account.id), :class => 'btn'  %>

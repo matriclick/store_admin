@@ -4,7 +4,7 @@ i = 0
 j = 0
 
 @product.product_stock_sizes.each do |psz|
-	if @quantity.nil?
+	if @quantity.blank?
 		psz.stock.times do
 			pdf.grid([i,j], [i,j+1]).bounding_box do
 				pdf.text @product.name[0..30]+(@product.name.length > 30 ? '...' : ''), size: 6
@@ -13,7 +13,7 @@ j = 0
 				pdf.move_down 1
 				pdf.image "#{Rails.root}/public/system/barcodes/"+@product.supplier_account.name+"/"+psz.size.name+"_"+psz.color+"_"+@product.id.to_s+"_barcode.png"
 				pdf.move_down 1
-				pdf.text psz.barcode, size: 6
+				pdf.text psz.barcode+' / '+psz.internal_code, size: 6
 				pdf.move_down 20
 				i = i + 1
 				if i == 6
@@ -35,7 +35,7 @@ j = 0
 				pdf.move_down 1
 				pdf.image "#{Rails.root}/public/system/barcodes/"+@product.supplier_account.name+"/"+psz.size.name+"_"+psz.color+"_"+@product.id.to_s+"_barcode.png"
 				pdf.move_down 1
-				pdf.text psz.barcode, size: 6
+				pdf.text psz.barcode+' / '+psz.internal_code, size: 6
 				pdf.move_down 20
 				i = i + 1
 				if i == 6

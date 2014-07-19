@@ -35,7 +35,7 @@ class SupplierAccount < ActiveRecord::Base
       return self.products
     else
       puts '0'
-      where = 'products.name like "%'+q+'%" or products.internal_code like "%'+q+'%" or products.description like "%'+q+'%" or product_stock_sizes.color like "%'+q+'%"';
+      where = 'products.name like "%'+q+'%" or product_stock_sizes.internal_code like "%'+q+'%" or products.description like "%'+q+'%" or product_stock_sizes.color like "%'+q+'%"';
       q.gsub('.', '').gsub('$', '').gsub!(',', '')
       if is_number?(q)
         puts '1'

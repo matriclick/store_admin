@@ -8,6 +8,8 @@
     <Table>
       <Row>
         <Cell><Data ss:Type="String">Valor</Data></Cell>
+        <Cell><Data ss:Type="String">¿Exento de IVA?</Data></Cell>
+        <Cell><Data ss:Type="String">Proveedor</Data></Cell>
         <Cell><Data ss:Type="String">Tipo</Data></Cell>
         <Cell><Data ss:Type="String">Forma Pago</Data></Cell>
         <Cell><Data ss:Type="String">¿Pagado?</Data></Cell>
@@ -19,6 +21,8 @@
     <% @all_expenses.each do |expense| %>
       <Row>
         <Cell><Data ss:Type="Number"><%= expense.amount %></Data></Cell>
+	 	<Cell><Data ss:Type="String"><%= expense.tax_exception ? '✓' : '☓' %></Data></Cell>
+	  	<Cell><Data ss:Type="String"><%= expense.provider.blank? ? 'No Asignado' : @expense.provider.name %></Data></Cell>
         <Cell><Data ss:Type="String"><%= expense.expense_type.name %></Data></Cell>
         <Cell><Data ss:Type="String"><%= expense.payment_type %></Data></Cell>
         <Cell><Data ss:Type="String"><%= expense.paid ? '✓' : '☓' %></Data></Cell>

@@ -18,7 +18,8 @@
 </h2>
 <%= form_tag(store_admin_add_product_to_cart_from_barcode_path(id: @supplier_account.id, shopping_cart_id: @shopping_cart.id), method: :post, html: {class: 'form-group'}) %>
 	<div class="input-group">
-		<%= text_field_tag(:barcode, '', placeholder: 'Código del producto', class: "form-control", style: 'font-weight:lighter; width:100%') %>
+		<%= text_field_tag(:barcode, '', placeholder: 'Ingresa código de barra o código interno del producto', 
+				class: "form-control", style: 'font-weight:lighter; width:100%') %>
 		<span class="input-group-btn">
 			<%= submit_tag("Ingresar", :name => nil, class: "btn btn-default") %>
 	 	</span>									       
