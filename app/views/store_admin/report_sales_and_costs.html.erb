@@ -52,6 +52,14 @@
 			<% end while d < @to.to_datetime %>
 			<% result[:income] = aux_hash_income %>
 		</tr>
+		<tr class="error">
+			<td>IVA Ingresos</td>
+			<% d = @from.to_datetime %>
+			<% begin %>
+				<td><%= number_to_currency (result[:income][d]*(1-1/1.19)), precision: 0 %></td>
+				<% d = d + @interval %>
+			<% end while d < @to.to_datetime %>
+		</tr>
 		<tr>
 			<td># Ventas</td>
 			<% d = @from.to_datetime %>
@@ -104,7 +112,7 @@
 				<td><%= number_to_currency aux_hash_expenses_not_paid[d], precision: 0 %></td>
 				<% d = d + @interval %>
 			<% end while d < @to.to_datetime %>
-			<% result[:expenses_not_paid] = aux_hash_expenses %>
+			<% result[:expenses_not_paid] = aux_hash_expenses_not_paid %>
 		</tr>
 		<% @supplier_account.expense_types.each do |expense_type| %>
 			<tr style="padding:0px 0px 0px 0px;">
@@ -118,11 +126,23 @@
 				<% end while d < @to.to_datetime %>
 			</tr>
 		<% end %>
+		<tr class="success">
+			<td>IVA Gastos</td>
+			<% aux_tax_expenses = Hash.new %>
+			<% d = @from.to_datetime %>
+			<% begin %>
+				<% aux_tax_expenses[d] = @supplier_account.expenses
+								.where('pay_date >= ? and pay_date < ? and tax_exception is not true', d - @hours_off_set.hours, d + @interval - @hours_off_set.hours).sum('amount')*(1-1/1.19) %>
+				<td><%= number_to_currency aux_tax_expenses[d], precision: 0 %></td>
+				<% d = d + @interval %>
+			<% end while d < @to.to_datetime %>
+			<% result[:tax_expenses] = aux_tax_expenses %>
+		</tr>
 		<tr class="info" style="border-top:2px solid black">
 			<td>Resultado</td>
 			<% d = @from.to_datetime %>
 			<% begin %>
-				<td><%= number_to_currency (result[:income][d] - result[:expenses][d] - result[:expenses_not_paid][d]), precision: 0 %></td>
+				<td><%= number_to_currency (result[:income][d]/1.19 + result[:tax_expenses][d] - result[:expenses][d] - result[:expenses_not_paid][d]), precision: 0 %></td>
 				<% d = d + @interval %>
 			<% end while d < @to.to_datetime %>
 		</tr>
