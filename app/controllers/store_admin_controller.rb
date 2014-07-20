@@ -168,23 +168,25 @@ class StoreAdminController < ApplicationController
     @hours_off_set = (DateTime.now.in_time_zone(@time_zone).utc_offset/60/60).abs
     
     if params[:from].nil? or params[:to].nil?
-      @from = DateTime.now.in_time_zone(@time_zone).beginning_of_week(start_day = :monday)
-      @to = DateTime.now.in_time_zone(@time_zone).end_of_week(start_day = :monday)
-    end
-    
-    if params[:interval] == 'day'
-      @to = Time.parse(params[:to]).end_of_day
-      @from = Time.parse(params[:from]).beginning_of_day
-      @interval = 1.day
-    elsif params[:interval] == 'week'
-      @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_week
-      @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_week
-      @interval = 1.week
-    else
       params[:interval] = 'month'
-      @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_month
-      @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_month
+      @from = DateTime.now.in_time_zone(@time_zone).end_of_month
+      @to = DateTime.now.in_time_zone(@time_zone).beginning_of_month
       @interval = 1.month
+    else    
+      if params[:interval] == 'day'
+        @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_day
+        @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_day
+        @interval = 1.day
+      elsif params[:interval] == 'week'
+        @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_week
+        @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_week
+        @interval = 1.week
+      else
+        params[:interval] = 'month'
+        @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_month
+        @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_month
+        @interval = 1.month
+      end
     end
   end
   
