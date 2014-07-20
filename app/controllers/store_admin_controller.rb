@@ -1,7 +1,7 @@
 # encoding: UTF-8
 class StoreAdminController < ApplicationController
   before_action :set_supplier_account, :check_if_user_has_related_supplier_account, except: [:stores]
-  before_action :set_date_range, only: [:purchase_details, :report_sales_charts, :report_daily, :report_sales_and_costs]
+  before_action :set_date_range, only: [:purchase_details, :report_sales_charts, :report_daily]
   
   def point_of_sale
     @shopping_cart = params[:shopping_cart_id].blank? ? ShoppingCart.create(user_id: current_user.id) : ShoppingCart.find(params[:shopping_cart_id])
@@ -167,16 +167,23 @@ class StoreAdminController < ApplicationController
     
     @hours_off_set = (DateTime.now.in_time_zone(@time_zone).utc_offset/60/60).abs
     
+    if params[:from].nil? or params[:to].nil?
+      @from = DateTime.now.in_time_zone(@time_zone).beginning_of_week(start_day = :monday)
+      @to = DateTime.now.in_time_zone(@time_zone).end_of_week(start_day = :monday)
+    end
+    
     if params[:interval] == 'day'
+      @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_day
+      @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_day
       @interval = 1.day
     elsif params[:interval] == 'week'
-      @to = @to.in_time_zone(@time_zone).end_of_week
-      @from = @from.in_time_zone(@time_zone).beginning_of_week
+      @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_week
+      @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_week
       @interval = 1.week
     else
       params[:interval] = 'month'
-      @to = @to.in_time_zone(@time_zone).end_of_month
-      @from = @from.in_time_zone(@time_zone).beginning_of_month
+      @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_month
+      @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_month
       @interval = 1.month
     end
   end
