@@ -173,8 +173,8 @@ class StoreAdminController < ApplicationController
     end
     
     if params[:interval] == 'day'
-      @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_day
-      @from = Time.parse(params[:from]).in_time_zone(@time_zone).beginning_of_day
+      @to = Time.parse(params[:to]).end_of_day
+      @from = Time.parse(params[:from]).beginning_of_day
       @interval = 1.day
     elsif params[:interval] == 'week'
       @to = Time.parse(params[:to]).in_time_zone(@time_zone).end_of_week
