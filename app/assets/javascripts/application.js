@@ -36,7 +36,8 @@ $(document).ready(function() {
 	}
 	
 	$('.datepicker').datepicker({
-		format: "dd-mm-yyyy"
+		format: "dd-mm-yyyy",
+		weekStart: 1 // day of the week start. 0 for Sunday - 6 for Saturday
 	});
 		
 	$('#myModal').on('shown.bs.modal', function() {
