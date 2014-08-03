@@ -1,5 +1,5 @@
 class PurchasesController < ApplicationController
-  before_action :set_purchase, only: [:show, :edit, :update, :change_ticket, :return_product, :destroy]
+  before_action :set_purchase, only: [:show, :edit, :update, :change_ticket, :return_product, :print, :destroy]
   before_action :set_supplier_account
   before_action :set_date_range, only: [:index]
   
@@ -13,6 +13,10 @@ class PurchasesController < ApplicationController
   # GET /purchases/1
   # GET /purchases/1.json
   def show
+  end
+  
+  def print
+    
   end
 
   # GET /purchases/new

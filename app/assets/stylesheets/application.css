@@ -13,3 +13,17 @@
 *= require jquery.ui.all
  *= require_tree .
  */
+
+@media print {
+  body * {
+      visibility:hidden;
+  } 
+  #printable, #printable * {
+      visibility:visible;
+  }
+  #printable { /* aligning the printable area */
+      position:absolute;
+      left:40;
+      top:40;
+  }
+}

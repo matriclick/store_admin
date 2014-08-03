@@ -59,6 +59,7 @@ StoreAdmin::Application.routes.draw do
     resources :daily_store_data
     resources :warehouses
     post 'purchase/:id/return_product' => 'purchases#return_product', as: 'purchase_return_product'
+    get 'purchase/:id/print' => 'purchases#print', as: 'purchase_print'
     get 'purchase/:id/change_ticket' => 'purchases#change_ticket', as: 'purchase_change_ticket'
     resources :purchases
     resources :providers
