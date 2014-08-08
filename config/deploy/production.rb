@@ -15,7 +15,7 @@
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server 'ec2-107-22-67-86.compute-1.amazonaws.com', user: 'ubuntu', roles: %w{web app}
+server 'inventariolibre.com', user: 'ubuntu', roles: %w{web app}
 
 
 # Custom SSH Options

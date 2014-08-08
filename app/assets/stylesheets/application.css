@@ -17,13 +17,12 @@
 @media print {
   body * {
       visibility:hidden;
+	  margin: 0;
   } 
   #printable, #printable * {
       visibility:visible;
   }
   #printable { /* aligning the printable area */
-      position:absolute;
-      left:40;
-      top:40;
+	margin: 0;
   }
 }
